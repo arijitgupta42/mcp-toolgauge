@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "acme-directory": {
+      "command": "python",
+      "args": ["server.py"]
+    }
+  }
+}

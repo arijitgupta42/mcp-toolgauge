@@ -1,0 +1,76 @@
+[project]
+name = "mcp-doctor"
+version = "0.1.0"
+description = "Lint, evaluate, and CI-gate MCP servers. Find out why your tools don't get called."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Arijit Gupta" }]
+keywords = ["mcp", "model-context-protocol", "linter", "eval", "llm", "tools"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+]
+dependencies = [
+    "mcp>=2.0.0",
+    "typer>=0.15.0",
+    "rich>=13.0.0",
+    "pydantic>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/arijitgupta42/mcp-doctor"
+Issues = "https://github.com/arijitgupta42/mcp-doctor/issues"
+
+[project.scripts]
+mcp-doctor = "mcp_doctor.cli:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mcp_doctor"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# Fixture servers are deliberately awful; that is the point of them.
+"tests/fixtures/**" = ["D", "E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration: spawns a real fixture server subprocess",
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# Strict on the shared vocabulary and, later, on eval/score.py -- the models everything
+# crosses and the maths everything is judged by are worth the extra rigour.
+module = ["mcp_doctor.model.*"]
+strict = true
