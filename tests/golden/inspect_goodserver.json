@@ -1,0 +1,416 @@
+{
+  "server": {
+    "instructions": "Look up people and organizations in the Acme staff directory, and manage the support tickets attached to them. Search tools are read-only; ticket tools mutate state.",
+    "name": "acme-directory",
+    "protocol_version": "2026-07-28",
+    "version": "1.0.0"
+  },
+  "target": "python server.py",
+  "tools": [
+    {
+      "annotations": {
+        "destructive_hint": false,
+        "idempotent_hint": true,
+        "read_only_hint": true
+      },
+      "description": "Find individual people in the staff directory by name, email, or employee ID.\n\nUse this when the user is looking for a *person*. If they are looking for a company,\nteam, or other organization, use `search_organizations` instead. Returns one entry per\nmatching person with their name, email, title, and organization.",
+      "input_schema": {
+        "properties": {
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of people to return.",
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "organization_id": {
+            "anyOf": [
+              {
+                "pattern": "^org_[a-z0-9]+$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Restrict results to one organization, e.g. 'org_9f2b'. Omit to search all.",
+            "title": "Organization Id"
+          },
+          "query": {
+            "description": "Full or partial name, email address, or employee ID to match on.",
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "search_usersArguments",
+        "type": "object"
+      },
+      "name": "search_users",
+      "output_schema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "search_usersOutput",
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructive_hint": false,
+        "idempotent_hint": true,
+        "read_only_hint": true
+      },
+      "description": "Find organizations -- companies, teams, and departments -- by name or email domain.\n\nUse this when the user is looking for a *group*, not a person. To find an individual\ninside one of these organizations, use `search_users` instead. Returns one entry per\nmatching organization with its ID, display name, primary domain, and member count.",
+      "input_schema": {
+        "properties": {
+          "include_inactive": {
+            "default": false,
+            "description": "Include organizations that have been marked inactive.",
+            "title": "Include Inactive",
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 20,
+            "description": "Maximum number of organizations to return.",
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "query": {
+            "description": "Full or partial organization name or email domain to match on.",
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "search_organizationsArguments",
+        "type": "object"
+      },
+      "name": "search_organizations",
+      "output_schema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "search_organizationsOutput",
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructive_hint": false,
+        "idempotent_hint": true,
+        "read_only_hint": true
+      },
+      "description": "Retrieve the full profile for one known person, including contact details and manager.\n\nUse this only when you already have a user ID. If you have a name or email and need to\nresolve it to an ID first, call `search_users`.",
+      "input_schema": {
+        "properties": {
+          "user_id": {
+            "description": "The user's stable identifier, e.g. 'usr_1a2b'. Get one from `search_users`.",
+            "pattern": "^usr_[a-z0-9]+$",
+            "title": "User Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "get_user_profileArguments",
+        "type": "object"
+      },
+      "name": "get_user_profile",
+      "output_schema": {
+        "additionalProperties": true,
+        "title": "get_user_profileDictOutput",
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructive_hint": false,
+        "idempotent_hint": false,
+        "read_only_hint": false
+      },
+      "description": "Open a new support ticket on behalf of a user and return the created ticket.\n\nUse this to file a *new* problem. To change something about a ticket that already\nexists, use `update_ticket_status` instead.",
+      "input_schema": {
+        "properties": {
+          "body": {
+            "description": "Full description of the problem, including any error messages.",
+            "title": "Body",
+            "type": "string"
+          },
+          "priority": {
+            "default": "normal",
+            "description": "How quickly the ticket needs attention.",
+            "enum": [
+              "low",
+              "normal",
+              "high",
+              "urgent"
+            ],
+            "title": "Priority",
+            "type": "string"
+          },
+          "requester_id": {
+            "description": "User ID of the person reporting the problem.",
+            "pattern": "^usr_[a-z0-9]+$",
+            "title": "Requester Id",
+            "type": "string"
+          },
+          "subject": {
+            "description": "One-line summary of the problem.",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Subject",
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject",
+          "body",
+          "requester_id"
+        ],
+        "title": "create_support_ticketArguments",
+        "type": "object"
+      },
+      "name": "create_support_ticket",
+      "output_schema": {
+        "additionalProperties": true,
+        "title": "create_support_ticketDictOutput",
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructive_hint": false,
+        "idempotent_hint": false,
+        "read_only_hint": false
+      },
+      "description": "Move an existing support ticket to a new status, optionally attaching a note.\n\nUse this to progress or resolve a ticket. To permanently remove a ticket from the\nactive queue, use `archive_ticket` instead.",
+      "input_schema": {
+        "properties": {
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional note explaining the status change.",
+            "title": "Comment"
+          },
+          "status": {
+            "description": "The status to move the ticket to.",
+            "enum": [
+              "open",
+              "pending",
+              "solved",
+              "closed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "ticket_id": {
+            "description": "Identifier of the ticket to update.",
+            "pattern": "^tkt_[a-z0-9]+$",
+            "title": "Ticket Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticket_id",
+          "status"
+        ],
+        "title": "update_ticket_statusArguments",
+        "type": "object"
+      },
+      "name": "update_ticket_status",
+      "output_schema": {
+        "additionalProperties": true,
+        "title": "update_ticket_statusDictOutput",
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructive_hint": false,
+        "idempotent_hint": true,
+        "read_only_hint": true
+      },
+      "description": "Read the comment thread on one support ticket, oldest first.\n\nUse this to understand a ticket's history before acting on it. This returns only the\nconversation; the ticket's own fields come from `create_support_ticket`'s response or\nfrom `update_ticket_status`.",
+      "input_schema": {
+        "properties": {
+          "since": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Only return comments posted on or after this date, as ISO-8601 (2026-01-31).",
+            "format": "date",
+            "title": "Since"
+          },
+          "ticket_id": {
+            "description": "Identifier of the ticket to read.",
+            "pattern": "^tkt_[a-z0-9]+$",
+            "title": "Ticket Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticket_id"
+        ],
+        "title": "list_ticket_commentsArguments",
+        "type": "object"
+      },
+      "name": "list_ticket_comments",
+      "output_schema": {
+        "properties": {
+          "result": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Result",
+            "type": "array"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "list_ticket_commentsOutput",
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructive_hint": true,
+        "idempotent_hint": true,
+        "read_only_hint": false
+      },
+      "description": "Permanently archive a support ticket, removing it from the active queue.\n\nThis cannot be undone from this API -- archived tickets are restorable only by an\nadministrator. To close a ticket in a way that can be reopened, use\n`update_ticket_status` with status 'closed' instead.",
+      "input_schema": {
+        "properties": {
+          "reason": {
+            "description": "Why the ticket is being archived, for the audit log.",
+            "minLength": 1,
+            "title": "Reason",
+            "type": "string"
+          },
+          "ticket_id": {
+            "description": "Identifier of the ticket to archive.",
+            "pattern": "^tkt_[a-z0-9]+$",
+            "title": "Ticket Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ticket_id",
+          "reason"
+        ],
+        "title": "archive_ticketArguments",
+        "type": "object"
+      },
+      "name": "archive_ticket",
+      "output_schema": {
+        "additionalProperties": true,
+        "title": "archive_ticketDictOutput",
+        "type": "object"
+      }
+    },
+    {
+      "annotations": {
+        "destructive_hint": false,
+        "idempotent_hint": true,
+        "read_only_hint": true
+      },
+      "description": "Export one organization's member list as a CSV document and return it as text.\n\nUse this when the user wants the whole membership as a file or table rather than a\nhandful of matches; for looking up specific people, `search_users` is cheaper.",
+      "input_schema": {
+        "properties": {
+          "fields": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "name",
+                    "email",
+                    "title",
+                    "manager",
+                    "start_date"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Columns to include. Defaults to name, email, and title.",
+            "title": "Fields"
+          },
+          "organization_id": {
+            "description": "Organization whose members should be exported.",
+            "pattern": "^org_[a-z0-9]+$",
+            "title": "Organization Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "organization_id"
+        ],
+        "title": "export_directory_csvArguments",
+        "type": "object"
+      },
+      "name": "export_directory_csv",
+      "output_schema": {
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "title": "export_directory_csvOutput",
+        "type": "object"
+      }
+    }
+  ]
+}
