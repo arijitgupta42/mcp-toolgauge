@@ -1,0 +1,41 @@
+acme-directory 0.4.2
+python server.py
+
+(server)
+  MCP004  warning  Tool names mix conventions: 2 snake_case, 1 camelCase. The odd ones out are
+                   doStuff.
+
+search_users
+  MCP003  warning  search_users promises user in its name, but the description never mentions it.
+  MCP013  error    search_users and search_orgs share 78% of their meaningful words -- their
+                   descriptions are near-identical.
+                   Rewrite one of them around what makes it different. If search_users and
+                   search_orgs really do the same thing, delete one; if they do not, the first
+                   sentence of each should name the thing only that one handles. Two descriptions
+                   this close are a coin flip at selection time, and the model has no way to know it
+                   guessed wrong.
+  MCP014  warning  search_users overlaps with search_orgs, and its description never says which to
+                   prefer.
+  MCP020  warning  search_users.query has no description.
+  MCP041  warning  search_users reads as read-only but declares no readOnlyHint.
+
+search_orgs
+  MCP003  warning  search_orgs promises org in its name, but the description never mentions it.
+  MCP014  warning  search_orgs overlaps with search_users, and its description never says which to
+                   prefer.
+  MCP020  warning  search_orgs.query has no description.
+  MCP041  warning  search_orgs reads as read-only but declares no readOnlyHint.
+
+doStuff
+  MCP002  warning  Every word in doStuff is generic, so the name says nothing about what the tool
+                   operates on.
+  MCP011  warning  doStuff's description is 4 words long.
+  MCP015  error    doStuff's description still contains placeholder text ('TODO').
+                   Replace it with a real description of what doStuff does. Placeholder text is not
+                   neutral: the model reads it, and a tool whose description says TODO reads as
+                   unfinished and unsafe to call.
+  MCP020  warning  doStuff.params has no description.
+  MCP024  warning  doStuff.params has no declared type.
+
+3 tools, 19 findings   2 errors, 13 warnings, 4 info   4 hidden, -v to show
+Most common: MCP020 (3), MCP025 (3), MCP003 (2)
