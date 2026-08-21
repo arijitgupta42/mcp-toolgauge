@@ -1,0 +1,4 @@
+# Golden files are compared against generated output character for character. Keep their
+# line endings exactly as committed, so a checkout on Windows does not rewrite them into
+# something the renderer never produced.
+tests/golden/** -text

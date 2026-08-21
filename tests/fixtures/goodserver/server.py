@@ -62,7 +62,12 @@ def search_users(
 @mcp.tool(annotations=READ_ONLY)
 def search_organizations(
     query: Annotated[
-        str, Field(description="Full or partial organization name or email domain to match on.")
+        str, Field(
+            description=(
+                "Full or partial organization name or email domain to match on, "
+                "e.g. 'Acme' or 'acme.test'."
+            )
+        )
     ],
     include_inactive: Annotated[
         bool,
@@ -109,7 +114,10 @@ def create_support_ticket(
     ],
     requester_id: Annotated[
         str,
-        Field(description="User ID of the person reporting the problem.", pattern=r"^usr_[a-z0-9]+$"),
+        Field(
+            description="User ID of the person reporting the problem, e.g. 'usr_1a2b'.",
+            pattern=r"^usr_[a-z0-9]+$",
+        ),
     ],
     priority: Annotated[
         Literal["low", "normal", "high", "urgent"],
@@ -127,7 +135,10 @@ def create_support_ticket(
 @mcp.tool(annotations=MUTATING)
 def update_ticket_status(
     ticket_id: Annotated[
-        str, Field(description="Identifier of the ticket to update.", pattern=r"^tkt_[a-z0-9]+$")
+        str, Field(
+            description="Identifier of the ticket to update, e.g. 'tkt_4c8d'.",
+            pattern=r"^tkt_[a-z0-9]+$",
+        )
     ],
     status: Annotated[
         Literal["open", "pending", "solved", "closed"],
@@ -155,7 +166,10 @@ def list_ticket_comments(
         str | None,
         Field(
             default=None,
-            description="Only return comments posted on or after this date, as ISO-8601 (2026-01-31).",
+            description=(
+                "Only return comments posted on or after this date, as ISO-8601, "
+                "e.g. '2026-01-31'."
+            ),
             json_schema_extra={"format": "date"},
         ),
     ] = None,
@@ -172,7 +186,10 @@ def list_ticket_comments(
 @mcp.tool(annotations=DESTRUCTIVE)
 def archive_ticket(
     ticket_id: Annotated[
-        str, Field(description="Identifier of the ticket to archive.", pattern=r"^tkt_[a-z0-9]+$")
+        str, Field(
+            description="Identifier of the ticket to archive, e.g. 'tkt_4c8d'.",
+            pattern=r"^tkt_[a-z0-9]+$",
+        )
     ],
     reason: Annotated[
         str, Field(min_length=1, description="Why the ticket is being archived, for the audit log.")
@@ -191,14 +208,17 @@ def archive_ticket(
 def export_directory_csv(
     organization_id: Annotated[
         str,
-        Field(description="Organization whose members should be exported.", pattern=r"^org_[a-z0-9]+$"),
+        Field(
+            description="Organization whose members should be exported, e.g. 'org_9f2b'.",
+            pattern=r"^org_[a-z0-9]+$",
+        ),
     ],
     fields: Annotated[
         list[Literal["name", "email", "title", "manager", "start_date"]] | None,
         Field(default=None, description="Columns to include. Defaults to name, email, and title."),
     ] = None,
 ) -> str:
-    """Export one organization's member list as a CSV document and return it as text.
+    """Export one organization's slice of the staff directory as a CSV document, as text.
 
     Use this when the user wants the whole membership as a file or table rather than a
     handful of matches; for looking up specific people, `search_users` is cheaper.

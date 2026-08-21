@@ -72,9 +72,21 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen
 
-      # The headline command from the README. If this breaks, the front page is a lie.
+      # The headline commands from the README. If these break, the front page is a lie.
       - name: inspect the fixture servers
         run: |
           uv run mcp-doctor inspect tests/fixtures/badserver
           uv run mcp-doctor inspect tests/fixtures/goodserver
           uv run mcp-doctor inspect tests/fixtures/goodserver --json > /dev/null
+
+      # goodserver must be clean and badserver must not be. Asserted on every push, so a
+      # rule that quietly stops firing cannot slip through green.
+      - name: lint the fixture servers
+        run: |
+          uv run mcp-doctor lint tests/fixtures/goodserver -v
+          if uv run mcp-doctor lint tests/fixtures/badserver; then
+            echo "::error::badserver produced no findings at or above --fail-on"
+            exit 1
+          fi
+          uv run mcp-doctor lint tests/fixtures/badserver --sarif --fail-on off > /dev/null
+          uv run mcp-doctor lint tests/fixtures/badserver --json --fail-on off > /dev/null
