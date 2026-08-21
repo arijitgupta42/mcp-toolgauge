@@ -93,7 +93,7 @@
             "type": "integer"
           },
           "query": {
-            "description": "Full or partial organization name or email domain to match on.",
+            "description": "Full or partial organization name or email domain to match on, e.g. 'Acme' or 'acme.test'.",
             "title": "Query",
             "type": "string"
           }
@@ -179,7 +179,7 @@
             "type": "string"
           },
           "requester_id": {
-            "description": "User ID of the person reporting the problem.",
+            "description": "User ID of the person reporting the problem, e.g. 'usr_1a2b'.",
             "pattern": "^usr_[a-z0-9]+$",
             "title": "Requester Id",
             "type": "string"
@@ -241,7 +241,7 @@
             "type": "string"
           },
           "ticket_id": {
-            "description": "Identifier of the ticket to update.",
+            "description": "Identifier of the ticket to update, e.g. 'tkt_4c8d'.",
             "pattern": "^tkt_[a-z0-9]+$",
             "title": "Ticket Id",
             "type": "string"
@@ -280,7 +280,7 @@
               }
             ],
             "default": null,
-            "description": "Only return comments posted on or after this date, as ISO-8601 (2026-01-31).",
+            "description": "Only return comments posted on or after this date, as ISO-8601, e.g. '2026-01-31'.",
             "format": "date",
             "title": "Since"
           },
@@ -332,7 +332,7 @@
             "type": "string"
           },
           "ticket_id": {
-            "description": "Identifier of the ticket to archive.",
+            "description": "Identifier of the ticket to archive, e.g. 'tkt_4c8d'.",
             "pattern": "^tkt_[a-z0-9]+$",
             "title": "Ticket Id",
             "type": "string"
@@ -358,7 +358,7 @@
         "idempotent_hint": true,
         "read_only_hint": true
       },
-      "description": "Export one organization's member list as a CSV document and return it as text.\n\nUse this when the user wants the whole membership as a file or table rather than a\nhandful of matches; for looking up specific people, `search_users` is cheaper.",
+      "description": "Export one organization's slice of the staff directory as a CSV document, as text.\n\nUse this when the user wants the whole membership as a file or table rather than a\nhandful of matches; for looking up specific people, `search_users` is cheaper.",
       "input_schema": {
         "properties": {
           "fields": {
@@ -385,7 +385,7 @@
             "title": "Fields"
           },
           "organization_id": {
-            "description": "Organization whose members should be exported.",
+            "description": "Organization whose members should be exported, e.g. 'org_9f2b'.",
             "pattern": "^org_[a-z0-9]+$",
             "title": "Organization Id",
             "type": "string"
