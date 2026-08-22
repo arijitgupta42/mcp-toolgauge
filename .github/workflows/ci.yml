@@ -90,3 +90,18 @@ jobs:
           fi
           uv run mcp-doctor lint tests/fixtures/badserver --sarif --fail-on off > /dev/null
           uv run mcp-doctor lint tests/fixtures/badserver --json --fail-on off > /dev/null
+
+      # Replays the recorded caches: no API key, no network, no cost. Deliberately run on
+      # the base install rather than the `eval` extra, which is what proves --offline works
+      # without a model backend present.
+      #
+      # One bar, both directions. goodserver has to clear it and badserver has to miss it,
+      # so a change that quietly closes the gap fails here rather than shipping.
+      - name: replay the recorded evals
+        run: |
+          uv run mcp-doctor eval tests/fixtures/goodserver --offline --min-accuracy 75
+          if uv run mcp-doctor eval tests/fixtures/badserver --offline --min-accuracy 75; then
+            echo "::error::badserver scored at or above 75%; the fixture gap has closed"
+            exit 1
+          fi
+          uv run mcp-doctor eval tests/fixtures/goodserver --offline --json > /dev/null

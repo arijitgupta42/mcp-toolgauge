@@ -1,0 +1,42 @@
+acme-directory 0.4.2
+python server.py
+openrouter/example/tiny:free   16 cases   16 from cache   free
+
+Selection accuracy     43%   6/14
+  positives            50%   5/10
+  siblings             25%    1/4
+Abstention             50%    1/2
+Argument validity      79%  11/14
+
+tool           hit       went instead to
+search_orgs    17%  1/6  search_users 83%
+doStuff        50%  1/2  (nothing) 50%
+search_users   67%  4/6  search_orgs 33%
+
+search_users captures 83% of the prompts meant for search_orgs.
+search_orgs captures 33% of the prompts meant for search_users.
+
+failures
+  search_users-p4  wanted search_users, got search_orgs
+    "A user utterance for search_users-p4."
+  search_orgs-p2  wanted search_orgs, got search_users
+    "A user utterance for search_orgs-p2."
+  search_orgs-p3  wanted search_orgs, got search_users
+    "A user utterance for search_orgs-p3."
+  search_orgs-p4  wanted search_orgs, got search_users
+    "A user utterance for search_orgs-p4."
+  doStuff-p2  wanted doStuff, got (nothing)
+    "A user utterance for doStuff-p2."
+  search_users-vs-search_orgs-s2  wanted search_users, got search_orgs
+    "A user utterance for search_users-vs-search_orgs-s2."
+  search_orgs-vs-search_users-s1  wanted search_orgs, got search_users
+    "A user utterance for search_orgs-vs-search_users-s1."
+  search_orgs-vs-search_users-s2  wanted search_orgs, got search_users
+    "A user utterance for search_orgs-vs-search_users-s2."
+  abstain-2  wanted (nothing), got search_users
+    "A user utterance for abstain-2."
+
+argument problems
+  search_users was called without required parameter query
+  search_users was called with the wrong type for parameter query
+  search_users was called with undeclared parameter limit

@@ -6,12 +6,9 @@ happens. The second is that errors carry their suggestion inline while warnings 
 there are few errors and they have to be acted on, and printing sixty suggestions would
 bury the three that matter.
 
-Layout is done by hand rather than with a Rich table. A table pads every cell out to the
-column width, which puts trailing whitespace on every wrapped line and a full-width blank
-line between groups; `Text.wrap` gives the same wrapping with styles intact and nothing
-after the last visible character. Output is ASCII throughout, for the same reason
-`inspect`'s renderer is: this gets piped into CI logs and Windows consoles, where a
-decorative glyph comes back as a replacement character.
+Layout comes from `report/style.py`, which both terminal renderers share. Output is ASCII
+throughout, for the same reason `inspect`'s renderer is: this gets piped into CI logs and
+Windows consoles, where a decorative glyph comes back as a replacement character.
 """
 
 from __future__ import annotations
@@ -23,6 +20,7 @@ from rich.console import Console
 from rich.text import Text
 
 from mcp_doctor.model import Finding, LintResult, Severity, at_least, canonical_json
+from mcp_doctor.report.style import print_wrapped, styled
 
 _SEVERITY_STYLE: dict[Severity, str] = {
     Severity.ERROR: "bold red",
@@ -57,23 +55,6 @@ def render_lint_json(result: LintResult) -> str:
     return canonical_json(result)
 
 
-def _styled(text: str) -> Text:
-    """Render `backticked` spans in colour, and drop the backticks.
-
-    Rule messages are written with backticks around identifiers so they read correctly in a
-    plain pipe, in JSON, and in a SARIF viewer. In a terminal we can do better than
-    punctuation. An odd number of backticks means the text is not ours to reformat, so it
-    falls through unchanged rather than eating the rest of the line.
-    """
-    parts = text.split("`")
-    if len(parts) % 2 == 0:
-        return Text(text)
-    rendered = Text()
-    for index, part in enumerate(parts):
-        rendered.append(part, style="cyan" if index % 2 else "")
-    return rendered
-
-
 def _groups(findings: Iterable[Finding]) -> Iterator[tuple[str, list[Finding]]]:
     """Consecutive findings sharing a tool. Relies on the engine's ordering."""
     current: str | None = None
@@ -93,22 +74,6 @@ def _message_width(console: Console) -> int:
     return max(_MIN_MESSAGE_WIDTH, console.width - _PREFIX_WIDTH)
 
 
-def _print_wrapped(console: Console, body: Text, *, first: Text | None, width: int) -> None:
-    """Print `body` wrapped to `width`, with `first` in front of line one.
-
-    Continuation lines are indented to the same column as the first, so a wrapped message
-    stays visually attached to its rule ID.
-    """
-    continuation = " " * _PREFIX_WIDTH
-    for index, line in enumerate(body.wrap(console, width)):
-        row = first.copy() if index == 0 and first is not None else Text(continuation)
-        row.append_text(line)
-        # Wrapping keeps the space the line broke on. Trailing whitespace is noise in a
-        # CI log and a diff, so it does not survive to the terminal.
-        row.rstrip()
-        console.print(row)
-
-
 def _print_finding(console: Console, finding: Finding, *, verbose: bool, width: int) -> None:
     prefix = Text(" " * _INDENT)
     prefix.append(finding.rule.ljust(_RULE_WIDTH), style="dim")
@@ -118,14 +83,16 @@ def _print_finding(console: Console, finding: Finding, *, verbose: bool, width: 
         style=_SEVERITY_STYLE.get(finding.severity, ""),
     )
     prefix.append(" " * _GUTTER)
-    _print_wrapped(console, _styled(finding.message), first=prefix, width=width)
+    print_wrapped(
+        console, styled(finding.message), first=prefix, width=width, indent=_PREFIX_WIDTH
+    )
 
     # The fix travels with the finding when it is an error, or when asked for. Anything you
     # must act on should not need a second command to find out how.
     if verbose or finding.severity is Severity.ERROR:
-        suggestion = _styled(finding.suggestion)
+        suggestion = styled(finding.suggestion)
         suggestion.stylize("dim")
-        _print_wrapped(console, suggestion, first=None, width=width)
+        print_wrapped(console, suggestion, first=None, width=width, indent=_PREFIX_WIDTH)
 
 
 def _footer(result: LintResult, *, shown: int, verbose: bool) -> Text:

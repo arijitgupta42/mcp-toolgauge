@@ -3,9 +3,9 @@
 Exit codes are part of the contract, because this is meant to run in CI:
 
     0  all good
-    1  findings at or above --fail-on (and, later, a `ci` threshold failure)
-    2  usage error -- we could not work out what to inspect, or the config is wrong
-    3  connection failure -- we knew what to inspect but could not reach it
+    1  a threshold was missed -- lint's --fail-on, eval's --min-accuracy or --max-cost
+    2  usage error -- we could not work out what to inspect, or the config or cases are wrong
+    3  connection failure -- we knew what to inspect but could not reach it or the model
 """
 
 from __future__ import annotations
@@ -25,10 +25,42 @@ from mcp_doctor.connect import (
     inspect_server_sync,
     resolve_target,
 )
+from mcp_doctor.eval import (
+    DEFAULT_CASES_PER_TOOL,
+    DEFAULT_MODEL,
+    BackendError,
+    BackendUnavailable,
+    BudgetExceeded,
+    CacheMiss,
+    CaseFileError,
+    ResponseCache,
+    RunStats,
+    SynthesisFailed,
+    cache_path,
+    cached_text_completer,
+    credentials_present,
+    default_cases_path,
+    digest_warning,
+    draft_cases,
+    load_suite,
+    looks_usable,
+    run_suite,
+    score,
+    validate_against,
+    write_suite,
+)
 from mcp_doctor.lint import ConfigError, load_config
 from mcp_doctor.lint import lint as run_lint
-from mcp_doctor.model import InspectResult, Severity
+from mcp_doctor.model import (
+    CaseSuite,
+    EvalResult,
+    InspectResult,
+    Severity,
+    tool_digest,
+)
 from mcp_doctor.report import (
+    render_eval_json,
+    render_eval_table,
     render_inspect_json,
     render_inspect_table,
     render_lint_json,
@@ -229,4 +261,234 @@ def lint(
 
     floor = fail_on if fail_on is not None else settings.fail_on
     if report.at_or_above(floor):
+        raise typer.Exit(EXIT_THRESHOLD)
+
+
+# --------------------------------------------------------------------------------------
+# eval
+# --------------------------------------------------------------------------------------
+
+ModelOption = Annotated[
+    str, typer.Option("--model", help="Which model to ask. Any string LiteLLM understands.")
+]
+CasesOption = Annotated[
+    Path | None,
+    typer.Option("--cases", help="Case file to use, instead of the one beside the target."),
+]
+PaceOption = Annotated[
+    float,
+    typer.Option(
+        "--pace",
+        help="Seconds to wait between model calls. Raise it if a free tier rate-limits you.",
+    ),
+]
+
+
+def _warn(console: Console, message: str) -> None:
+    console.print(Text(f"warning: {message}", style="yellow"), soft_wrap=True)
+
+
+def _init_cases(
+    result: InspectResult,
+    *,
+    path: Path,
+    model: str,
+    digest: str,
+    per_tool: int,
+    pace: float,
+    force: bool,
+) -> None:
+    """Generate a first-draft suite and write it, once.
+
+    Deliberately loud about what happens next. A generated suite nobody reads is a
+    benchmark of the generator's imagination, so the closing message asks for the edit
+    rather than congratulating anyone on the file.
+    """
+    console = out()
+    if not result.tools:
+        err().print("[red]error:[/red] That server advertises no tools; there is nothing to test.")
+        raise typer.Exit(EXIT_USAGE)
+
+    cache = ResponseCache.load(cache_path(path))
+    stats = RunStats()
+    complete = cached_text_completer(
+        model=model,
+        cache=cache,
+        tool_digest=digest,
+        pace=pace,
+        stats=stats,
+        on_retry=lambda note: _warn(console, note),
+        accept=looks_usable,
+    )
+
+    console.print(Text(f"Drafting cases with {model}...", style="dim"), soft_wrap=True)
+    try:
+        draft = draft_cases(
+            result.tools,
+            complete,
+            per_tool=per_tool,
+            on_step=lambda label: console.print(Text(f"  {label}", style="dim"), soft_wrap=True),
+        )
+    except (BackendUnavailable, BackendError, SynthesisFailed) as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_USAGE) from exc
+
+    suite = CaseSuite(
+        target=result.target, tool_digest=digest, generated_with=model, cases=draft.cases
+    )
+    try:
+        write_suite(path, suite, force=force)
+    except CaseFileError as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_USAGE) from exc
+
+    for label in draft.skipped:
+        _warn(
+            console,
+            f"The model's reply for '{label}' could not be read, so those cases are "
+            "missing. Write them by hand, or run --init --force again to retry.",
+        )
+
+    tally = ", ".join(f"{count} {kind}" for kind, count in suite.counts.items() if count)
+    spend = f"${draft.cost_usd:.4f}" if draft.cost_usd else "free"
+    console.print()
+    console.print(Text(f"Wrote {len(suite.cases)} cases to {path}", style="bold"), soft_wrap=True)
+    console.print(Text(f"  {tally}   {spend}", style="dim"))
+    console.print()
+    console.print(
+        Text(
+            "Read them before you trust the score. Delete the prompts that do not sound "
+            "like your users, rewrite the ones that gave the answer away, then commit the "
+            "file.",
+            style="dim",
+        )
+    )
+
+
+@app.command()
+def eval(
+    target: TargetArgument,
+    command: CommandOption = None,
+    server: ServerOption = None,
+    init: Annotated[
+        bool, typer.Option("--init", help="Generate a first-draft case file and stop.")
+    ] = False,
+    force: Annotated[
+        bool, typer.Option("--force", help="With --init, overwrite an existing case file.")
+    ] = False,
+    cases_per_tool: Annotated[
+        int, typer.Option("--cases-per-tool", help="With --init, prompts to draft per tool.")
+    ] = DEFAULT_CASES_PER_TOOL,
+    model: ModelOption = DEFAULT_MODEL,
+    cases: CasesOption = None,
+    offline: Annotated[
+        bool, typer.Option("--offline", help="Answer only from the cache; never call a model.")
+    ] = False,
+    max_cost: Annotated[
+        float | None,
+        typer.Option("--max-cost", help="Stop once the run has cost this many dollars."),
+    ] = None,
+    min_accuracy: Annotated[
+        float | None,
+        typer.Option(
+            "--min-accuracy",
+            help="Exit 1 when selection accuracy falls below this, as a percentage.",
+        ),
+    ] = None,
+    pace: PaceOption = 0.0,
+    json_output: Annotated[
+        bool, typer.Option("--json", help="Emit JSON instead of a table.")
+    ] = False,
+    timeout: TimeoutOption = DEFAULT_TIMEOUT_SECONDS,
+    verbose: Annotated[
+        bool, typer.Option("--verbose", "-v", help="Show every failing case and its prompt.")
+    ] = False,
+) -> None:
+    """Measure whether a model actually picks the right tool.
+
+    Puts the server's real tool definitions in front of a model at temperature 0 and counts
+    where the traffic goes. Answers are cached, so a second run over an unchanged suite is
+    free.
+
+    Like inspect and lint, this never invokes one of your tools. It calls a model, reads
+    your tool list, and leaves the server alone.
+    """
+    result = _fetch(target, command=command, server=server, timeout=timeout)
+    digest = tool_digest(result.tools)
+    path = cases if cases is not None else default_cases_path(_config_start(target))
+
+    if init:
+        _init_cases(
+            result,
+            path=path,
+            model=model,
+            digest=digest,
+            per_tool=cases_per_tool,
+            pace=pace,
+            force=force,
+        )
+        return
+
+    console = out()
+    try:
+        suite = load_suite(path)
+        warnings = validate_against(suite, result.tools, path=path)
+    except CaseFileError as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_USAGE) from exc
+
+    if not json_output:
+        drift = digest_warning(suite, digest, path=path)
+        for note in ((drift,) if drift else ()) + warnings:
+            _warn(console, note)
+        if not offline and not credentials_present(model):
+            provider = model.split("/", 1)[0]
+            _warn(
+                console,
+                f"No API key found in the environment for {provider}. If the run fails to "
+                "authenticate, that is why.",
+            )
+
+    cache = ResponseCache.load(cache_path(path))
+    try:
+        run = run_suite(
+            suite,
+            result.tools,
+            model=model,
+            tool_digest=digest,
+            cache=cache,
+            server=result.server,
+            offline=offline,
+            max_cost=max_cost,
+            pace=pace,
+            on_retry=lambda note: _warn(console, note),
+        )
+    except (CacheMiss, BackendUnavailable) as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_USAGE) from exc
+    except BudgetExceeded as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_THRESHOLD) from exc
+    except BackendError as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_CONNECTION) from exc
+
+    report = EvalResult(
+        target=result.target,
+        server=result.server,
+        model=model,
+        tool_digest=digest,
+        scores=score(run.outcomes),
+        outcomes=run.outcomes,
+        cached_count=run.stats.cached,
+        called_count=run.stats.called,
+        cost_usd=run.stats.cost_usd,
+    )
+
+    if json_output:
+        print(render_eval_json(report))
+    else:
+        render_eval_table(report, console, verbose=verbose)
+
+    if min_accuracy is not None and report.scores.selection.fraction * 100 < min_accuracy:
         raise typer.Exit(EXIT_THRESHOLD)

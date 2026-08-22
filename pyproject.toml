@@ -22,7 +22,17 @@ dependencies = [
     "typer>=0.15.0",
     "rich>=13.0.0",
     "pydantic>=2.0.0",
+    # Reading and writing the eval case file. In the base install rather than the `eval`
+    # extra so that `eval --offline` -- replaying a committed cache, which calls no model
+    # at all -- works without pulling in a model backend.
+    "pyyaml>=6.0",
 ]
+
+[project.optional-dependencies]
+# Only `eval` without --offline needs a model backend, and LiteLLM is a large install.
+# Keeping it out of the base package is what keeps `uvx mcp-doctor lint` fast, and lint is
+# the command that runs on every pull request.
+eval = ["litellm>=1.60.0"]
 
 [project.urls]
 Homepage = "https://github.com/arijitgupta42/mcp-doctor"
@@ -70,7 +80,7 @@ warn_unused_configs = true
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-# Strict on the shared vocabulary and, later, on eval/score.py -- the models everything
-# crosses and the maths everything is judged by are worth the extra rigour.
-module = ["mcp_doctor.model.*"]
+# Strict on the shared vocabulary and on the scoring maths -- the models everything crosses
+# and the numbers everything is judged by are worth the extra rigour.
+module = ["mcp_doctor.model.*", "mcp_doctor.eval.score", "mcp_doctor.eval.arguments"]
 strict = true
