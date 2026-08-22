@@ -49,6 +49,10 @@ NAME_SIMILARITY = 0.5
 # cases. The worst pairs are the ones worth paying for.
 MAX_PAIRS = 6
 
+# The keys a reply may carry prompts under: "prompts" for a positive or abstain request,
+# "a" and "b" for the two halves of a sibling pair.
+_PROMPT_KEYS = ("prompts", "a", "b")
+
 # Searched for in this order rather than as one alternation. A single pattern would scan
 # left to right and, on a reply like `[note] {"prompts": [...]}`, latch onto the bracket
 # first and swallow the object. Objects are what we asked for, so objects are looked for
@@ -338,9 +342,15 @@ def draft_cases(
             skipped.append(label)
             totals[1] += 1
             return
-        cases.extend(drafted)
         totals[0] += completion.cost_usd
         totals[1] += 1
+        if not drafted:
+            # Readable JSON with nothing usable in it -- the right keys missing, or every
+            # prompt too short to keep. Silence here once cost badserver its abstain cases
+            # with nothing in the output to say so, which is worse than the loud failure.
+            skipped.append(label)
+            return
+        cases.extend(drafted)
 
     for tool in tools:
         attempt(
@@ -373,18 +383,24 @@ def draft_cases(
     )
 
 
-def looks_parseable(text: str) -> bool:
-    """Whether a reply can be read at all.
+def looks_usable(text: str) -> bool:
+    """Whether a reply can be read *and* has prompts in it.
 
     Handed to the cache so a recorded but unusable reply is not served back forever. Without
-    it, one malformed answer is pinned in the cache and the affected tool is skipped on
-    every subsequent run -- the cache would be remembering a failure rather than a result.
+    it, a bad answer is pinned and its step is skipped on every subsequent run -- the cache
+    would be remembering a failure rather than a result.
+
+    Parseability alone is not enough. A model that returns tidy JSON under the wrong key
+    passes `_extract_json` and yields nothing, so re-running would keep replaying the same
+    empty answer and never retry it.
     """
     try:
-        _extract_json(text)
+        payload = _extract_json(text)
     except SynthesisFailed:
         return False
-    return True
+    return any(
+        isinstance(payload.get(key), list) and payload[key] for key in _PROMPT_KEYS
+    )
 
 
 def tool_order(tools: Iterable[ToolSpec]) -> dict[str, int]:

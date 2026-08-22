@@ -69,7 +69,7 @@ from mcp_doctor.eval.synth import (
     SynthesisFailed,
     confusable_pairs,
     draft_cases,
-    looks_parseable,
+    looks_usable,
 )
 
 __all__ = [
@@ -106,7 +106,7 @@ __all__ = [
     "digest_warning",
     "draft_cases",
     "load_suite",
-    "looks_parseable",
+    "looks_usable",
     "notable_confusions",
     "per_tool_scores",
     "run_suite",

@@ -43,7 +43,7 @@ from mcp_doctor.eval import (
     digest_warning,
     draft_cases,
     load_suite,
-    looks_parseable,
+    looks_usable,
     run_suite,
     score,
     validate_against,
@@ -318,7 +318,7 @@ def _init_cases(
         pace=pace,
         stats=stats,
         on_retry=lambda note: _warn(console, note),
-        accept=looks_parseable,
+        accept=looks_usable,
     )
 
     console.print(Text(f"Drafting cases with {model}...", style="dim"), soft_wrap=True)

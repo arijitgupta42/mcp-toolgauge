@@ -21,7 +21,7 @@ from mcp_doctor.eval.synth import (
     _extract_json,
     confusable_pairs,
     draft_cases,
-    looks_parseable,
+    looks_usable,
 )
 from mcp_doctor.lint.rules.description import CONFUSABLE_SIMILARITY
 from mcp_doctor.model import CaseKind, ToolSpec
@@ -299,7 +299,7 @@ class TestSloppyModels:
 
     def test_an_unterminated_string_is_still_a_failure(self) -> None:
         """Tolerance stops short of guessing. Broken is broken."""
-        assert not looks_parseable('{"prompts": ["never closed}')
+        assert not looks_usable('{"prompts": ["never closed}')
 
 
 class TestPartialFailure:
@@ -341,6 +341,31 @@ class TestPartialFailure:
         assert len(draft.skipped) == 2
         assert draft.cases  # search_users survived
 
+    def test_a_readable_reply_with_no_prompts_counts_as_skipped(self) -> None:
+        """Silence here once cost badserver its abstain cases: the reply parsed, produced
+        nothing, and reported success, so the suite shipped without them."""
+
+        def wrong_key_for_abstains(
+            messages: list[dict[str, str]],
+        ) -> tuple[str, Completion]:
+            asking_for_abstains = "none of these tools can satisfy" in messages[-1]["content"]
+            body = {"questions": ["wrong key"]} if asking_for_abstains else FOUR
+            return json.dumps(body), Completion(call=ToolCall())
+
+        draft = draft_cases(TWINS[:1], wrong_key_for_abstains, per_tool=2, abstain=2)
+
+        assert draft.cases  # the positives survived
+        assert not [case for case in draft.cases if case.kind is CaseKind.ABSTAIN]
+        assert any("nothing should answer" in label for label in draft.skipped)
+
+    def test_a_reply_under_the_wrong_key_is_not_reusable_from_cache(self) -> None:
+        """Parseable is not the same as usable. A tidy JSON object under the wrong key
+        would otherwise be replayed forever and its step never retried."""
+        assert not looks_usable('{"questions": ["wrong key"]}')
+        assert not looks_usable('{"prompts": []}')
+        assert looks_usable('{"prompts": ["a real prompt here"]}')
+        assert looks_usable('{"a": ["one side"], "b": ["the other"]}')
+
     def test_everything_failing_is_still_an_error(self) -> None:
         with pytest.raises(SynthesisFailed, match="no usable cases"):
             draft_cases(TWINS, Script("not json at all"), per_tool=2, abstain=0)
@@ -380,11 +405,11 @@ class TestCacheRejectsUnusableReplies:
         backend_module.complete_text = fresh  # type: ignore[assignment]
         try:
             complete = cached_text_completer(
-                model="m", cache=cache, tool_digest="d", accept=looks_parseable
+                model="m", cache=cache, tool_digest="d", accept=looks_usable
             )
             text, _ = complete(messages)
         finally:
             backend_module.complete_text = original  # type: ignore[assignment]
 
         assert calls["n"] == 1
-        assert looks_parseable(text)
+        assert looks_usable(text)
