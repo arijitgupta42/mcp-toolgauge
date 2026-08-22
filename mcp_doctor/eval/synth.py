@@ -69,11 +69,18 @@ class SynthesisFailed(Exception):
 
 @dataclass(frozen=True)
 class Draft:
-    """A generated suite, plus what it cost to generate."""
+    """A generated suite, plus what it cost to generate.
+
+    `skipped` names the steps whose reply could not be used. Small models occasionally
+    return JSON with an unterminated string, and losing an entire eleven-call `--init`
+    to one of them would be a poor trade -- so the step is dropped, named, and the rest
+    of the suite is written.
+    """
 
     cases: tuple[EvalCase, ...]
     cost_usd: float = 0.0
     calls: int = 0
+    skipped: tuple[str, ...] = ()
 
 
 def _parameter_lines(tool: ToolSpec, names: Iterable[str]) -> list[str]:
@@ -161,7 +168,10 @@ def _extract_json(text: str) -> dict[str, object]:
     if match is None:
         raise SynthesisFailed(f"The model replied with no JSON object:\n{text[:400]}")
     try:
-        parsed = json.loads(match.group())
+        # strict=False allows raw newlines and tabs inside string values, which small
+        # models emit constantly and which are unambiguous to read. It does not rescue
+        # genuinely broken JSON -- an unterminated string still fails, and should.
+        parsed = json.loads(match.group(), strict=False)
     except ValueError as exc:
         raise SynthesisFailed(f"The model's JSON did not parse: {exc}\n{text[:400]}") from exc
     if not isinstance(parsed, dict):
@@ -308,40 +318,73 @@ def draft_cases(
     failure costs one tool's cases instead of the suite.
     """
     cases: list[EvalCase] = []
-    cost = 0.0
-    calls = 0
+    skipped: list[str] = []
+    totals = [0.0, 0]  # cost, calls
 
-    def step(label: str) -> None:
+    def attempt(
+        label: str, produce: Callable[[], tuple[tuple[EvalCase, ...], Completion]]
+    ) -> None:
+        """Run one generation step, and let it fail without taking the run with it.
+
+        Only `SynthesisFailed` is caught. A rate limit or a bad API key is not something to
+        paper over -- those come back as `BackendError` and stop the run, because
+        continuing would produce a suite full of holes for a reason the user can fix.
+        """
         if on_step is not None:
             on_step(label)
+        try:
+            drafted, completion = produce()
+        except SynthesisFailed:
+            skipped.append(label)
+            totals[1] += 1
+            return
+        cases.extend(drafted)
+        totals[0] += completion.cost_usd
+        totals[1] += 1
 
     for tool in tools:
-        step(f"prompts for {tool.name}")
-        drafted, completion = _positive_cases(tool, tools, per_tool, complete)
-        cases.extend(drafted)
-        cost += completion.cost_usd
-        calls += 1
+        attempt(
+            f"prompts for {tool.name}",
+            lambda tool=tool: _positive_cases(tool, tools, per_tool, complete),  # type: ignore[misc]
+        )
 
     for left, right in confusable_pairs(tools):
-        step(f"hard cases for {left.name} vs {right.name}")
-        drafted, completion = _sibling_cases(left, right, per_pair, complete)
-        cases.extend(drafted)
-        cost += completion.cost_usd
-        calls += 1
+        attempt(
+            f"hard cases for {left.name} vs {right.name}",
+            lambda left=left, right=right: _sibling_cases(left, right, per_pair, complete),  # type: ignore[misc]
+        )
 
     if abstain > 0 and tools:
-        step("prompts nothing should answer")
-        drafted, completion = _abstain_cases(tools, abstain, complete)
-        cases.extend(drafted)
-        cost += completion.cost_usd
-        calls += 1
+        attempt(
+            "prompts nothing should answer",
+            lambda: _abstain_cases(tools, abstain, complete),
+        )
 
     if not cases:
         raise SynthesisFailed(
             "The model produced no usable cases. Try a different --model, or write "
             "a few cases by hand -- the file format is documented in its own header."
         )
-    return Draft(cases=tuple(cases), cost_usd=cost, calls=calls)
+    return Draft(
+        cases=tuple(cases),
+        cost_usd=totals[0],
+        calls=int(totals[1]),
+        skipped=tuple(skipped),
+    )
+
+
+def looks_parseable(text: str) -> bool:
+    """Whether a reply can be read at all.
+
+    Handed to the cache so a recorded but unusable reply is not served back forever. Without
+    it, one malformed answer is pinned in the cache and the affected tool is skipped on
+    every subsequent run -- the cache would be remembering a failure rather than a result.
+    """
+    try:
+        _extract_json(text)
+    except SynthesisFailed:
+        return False
+    return True
 
 
 def tool_order(tools: Iterable[ToolSpec]) -> dict[str, int]:

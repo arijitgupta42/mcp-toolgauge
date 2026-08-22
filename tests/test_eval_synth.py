@@ -15,11 +15,13 @@ import json
 
 import pytest
 
-from mcp_doctor.eval.backend import Completion, ToolCall
+from mcp_doctor.eval.backend import BackendError, Completion, ToolCall
 from mcp_doctor.eval.synth import (
     SynthesisFailed,
+    _extract_json,
     confusable_pairs,
     draft_cases,
+    looks_parseable,
 )
 from mcp_doctor.lint.rules.description import CONFUSABLE_SIMILARITY
 from mcp_doctor.model import CaseKind, ToolSpec
@@ -265,17 +267,19 @@ class TestSloppyModels:
 
         assert len(draft.cases) == 2
 
-    def test_a_reply_with_no_json_is_an_error_that_shows_what_came_back(self) -> None:
+    def test_a_reply_with_no_json_says_what_came_back(self) -> None:
         with pytest.raises(SynthesisFailed, match="no JSON"):
-            draft_cases(TWINS[:1], Script("I would rather not."), per_tool=1, abstain=0)
+            _extract_json("I would rather not.")
 
-    def test_unparseable_json_is_an_error(self) -> None:
+    def test_unparseable_json_says_so(self) -> None:
         with pytest.raises(SynthesisFailed, match="did not parse"):
-            draft_cases(TWINS[:1], Script('{"prompts": [oops}'), per_tool=1, abstain=0)
+            _extract_json('{"prompts": [oops}')
 
-    def test_json_that_is_not_an_object_is_an_error(self) -> None:
+    def test_json_that_is_not_an_object_says_so(self) -> None:
+        """A bare array is looked for only after an object, so this reports the precise
+        complaint rather than "no JSON at all"."""
         with pytest.raises(SynthesisFailed, match="not an object"):
-            draft_cases(TWINS[:1], Script('["a", "b"]'), per_tool=1, abstain=0)
+            _extract_json('["a", "b"]')
 
     def test_a_wrong_shaped_object_yields_no_cases_rather_than_bad_ones(self) -> None:
         with pytest.raises(SynthesisFailed, match="no usable cases"):
@@ -284,3 +288,103 @@ class TestSloppyModels:
     def test_no_tools_means_no_suite(self) -> None:
         with pytest.raises(SynthesisFailed):
             draft_cases((), Script(FOUR))
+
+    def test_raw_newlines_inside_strings_are_tolerated(self) -> None:
+        """Small models emit these constantly and they are unambiguous to read."""
+        payload = '{"prompts": ["Who owns\nthis account here?"]}'
+
+        draft = draft_cases(TWINS[:1], Script(payload), per_tool=1, abstain=0)
+
+        assert len(draft.cases) == 1
+
+    def test_an_unterminated_string_is_still_a_failure(self) -> None:
+        """Tolerance stops short of guessing. Broken is broken."""
+        assert not looks_parseable('{"prompts": ["never closed}')
+
+
+class TestPartialFailure:
+    """One unusable reply must not cost an eleven-call --init."""
+
+    class Flaky:
+        """Answers usably except for the tool named in `breaks`."""
+
+        def __init__(self, breaks: str) -> None:
+            self.breaks = breaks
+
+        def __call__(self, messages: list[dict[str, str]]) -> tuple[str, Completion]:
+            # Matched against the `name:` line _describe emits for the tool under
+            # generation, not against the whole prompt -- the catalogue lists every tool,
+            # so a bare name match would break every step rather than one.
+            described = f"name: {self.breaks}" in messages[-1]["content"]
+            body = "not json at all" if described else json.dumps(FOUR)
+            return body, Completion(call=ToolCall(), cost_usd=0.001)
+
+    def test_the_other_tools_still_get_cases(self) -> None:
+        draft = draft_cases(TWINS, self.Flaky("search_orgs"), per_tool=2, abstain=0)
+
+        assert {case.expected for case in draft.cases} == {"search_users"}
+
+    def test_what_was_lost_is_named(self) -> None:
+        draft = draft_cases(TWINS, self.Flaky("search_orgs"), per_tool=2, abstain=0)
+
+        assert any("search_orgs" in label for label in draft.skipped)
+
+    def test_a_skipped_step_still_counts_as_a_call(self) -> None:
+        """It was paid for whether or not it was usable, so the count must include it.
+
+        Three steps here: one positive request per tool, plus the pair. Two of them fail --
+        search_orgs' own, and the pair, whose prompt describes both tools.
+        """
+        draft = draft_cases(TWINS, self.Flaky("search_orgs"), per_tool=1, abstain=0)
+
+        assert draft.calls == 3
+        assert len(draft.skipped) == 2
+        assert draft.cases  # search_users survived
+
+    def test_everything_failing_is_still_an_error(self) -> None:
+        with pytest.raises(SynthesisFailed, match="no usable cases"):
+            draft_cases(TWINS, Script("not json at all"), per_tool=2, abstain=0)
+
+    def test_a_backend_failure_is_not_swallowed(self) -> None:
+        """A rate limit or a bad key is something the user can fix, so it stops the run
+        rather than producing a suite full of holes."""
+
+        def broken(messages: list[dict[str, str]]) -> tuple[str, Completion]:
+            raise BackendError("Rate limited", retryable=True)
+
+        with pytest.raises(BackendError):
+            draft_cases(TWINS, broken, per_tool=1, abstain=0)
+
+
+class TestCacheRejectsUnusableReplies:
+    def test_a_recorded_but_unreadable_reply_is_not_served_back(self, tmp_path) -> None:
+        """Otherwise one malformed answer is pinned forever and the affected tool is
+        skipped on every future run, with no way to retry short of deleting the file."""
+        from mcp_doctor.eval.cache import CachedCall, ResponseCache, cache_key
+        from mcp_doctor.eval.runner import cached_text_completer
+
+        cache = ResponseCache.load(tmp_path / "c.jsonl")
+        messages = [{"role": "user", "content": "go"}]
+        key = cache_key(model="m", messages=messages, tool_digest="d")
+        cache.put(key, CachedCall(tool=None, arguments={"text": "not json"}), model="m")
+
+        calls = {"n": 0}
+
+        def fresh(**kwargs: object) -> tuple[str, Completion]:
+            calls["n"] += 1
+            return json.dumps(FOUR), Completion(call=ToolCall())
+
+        import mcp_doctor.eval.backend as backend_module
+
+        original = backend_module.complete_text
+        backend_module.complete_text = fresh  # type: ignore[assignment]
+        try:
+            complete = cached_text_completer(
+                model="m", cache=cache, tool_digest="d", accept=looks_parseable
+            )
+            text, _ = complete(messages)
+        finally:
+            backend_module.complete_text = original  # type: ignore[assignment]
+
+        assert calls["n"] == 1
+        assert looks_parseable(text)

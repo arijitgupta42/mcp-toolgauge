@@ -166,7 +166,11 @@ Worth saying plainly, because a number invites more confidence than it earns.
   substantially. Run more than one if the answer matters.
 - **Your generated cases are only as good as your edits.** A drafted suite is a first
   draft. If the prompts do not sound like your users, the number is about somebody else's
-  users.
+  users. **Read the abstain cases first** -- they are the ones a generator gets wrong most
+  often, because writing a request that sounds in-domain and is genuinely unanswerable is
+  harder than it looks. A drafted "abstain" that one of your tools can actually answer is a
+  positive case wearing the wrong label, and it will cost you a point every run for a
+  server that did nothing wrong.
 - **Small sample sizes are noisy.** Four cases per tool means one flipped answer moves a
   tool's rate by 25 points. Treat the confusion *pattern* as the signal and the second
   decimal place as noise.

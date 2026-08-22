@@ -43,6 +43,7 @@ from mcp_doctor.eval import (
     digest_warning,
     draft_cases,
     load_suite,
+    looks_parseable,
     run_suite,
     score,
     validate_against,
@@ -317,6 +318,7 @@ def _init_cases(
         pace=pace,
         stats=stats,
         on_retry=lambda note: _warn(console, note),
+        accept=looks_parseable,
     )
 
     console.print(Text(f"Drafting cases with {model}...", style="dim"), soft_wrap=True)
@@ -339,6 +341,13 @@ def _init_cases(
     except CaseFileError as exc:
         err().print(f"[red]error:[/red] {exc}")
         raise typer.Exit(EXIT_USAGE) from exc
+
+    for label in draft.skipped:
+        _warn(
+            console,
+            f"The model's reply for '{label}' could not be read, so those cases are "
+            "missing. Write them by hand, or run --init --force again to retry.",
+        )
 
     tally = ", ".join(f"{count} {kind}" for kind, count in suite.counts.items() if count)
     spend = f"${draft.cost_usd:.4f}" if draft.cost_usd else "free"

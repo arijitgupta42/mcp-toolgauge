@@ -186,6 +186,7 @@ def cached_text_completer(
     sleep: Callable[[float], None] = time.sleep,
     on_retry: Callable[[str], None] | None = None,
     stats: RunStats | None = None,
+    accept: Callable[[str], bool] | None = None,
 ) -> Callable[[list[dict[str, str]]], tuple[str, Completion]]:
     """A text completer for case synthesis, wrapped in the same cache and retry policy.
 
@@ -203,10 +204,14 @@ def cached_text_completer(
     def complete(messages: list[dict[str, str]]) -> tuple[str, Completion]:
         key = cache_key(model=model, messages=messages, tool_digest=tool_digest)
         recorded = cache.get(key)
+        # A recorded reply the caller cannot use is not a cache hit. Serving one back would
+        # pin a malformed answer forever, so the same tool would be skipped on every run
+        # with no way to retry short of deleting the file by hand.
         if recorded is not None:
-            tally.cached += 1
-            text = recorded.arguments.get("text", "")
-            return str(text), Completion(call=ToolCall())
+            text = str(recorded.arguments.get("text", ""))
+            if accept is None or accept(text):
+                tally.cached += 1
+                return text, Completion(call=ToolCall())
 
         if pace > 0 and tally.called:
             sleep(pace)
