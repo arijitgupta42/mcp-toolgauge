@@ -177,6 +177,69 @@ class TestOfflineReplayAgainstARealServer:
         assert "No recorded answer" in unrecorded.stderr
 
 
+class TestRecordedFixtures:
+    """The committed suites and caches, replayed the way CI replays them.
+
+    These are the numbers the README quotes and the demo rests on, so they get asserted
+    rather than trusted. A change that closes the gap -- a fixture edited, a prompt
+    reworded, a rule that alters how the tool digest is built -- fails here.
+
+    Nothing is called: both runs are served entirely from the recorded caches.
+    """
+
+    BADSERVER = Path(__file__).parent / "fixtures" / "badserver"
+
+    def replay(self, directory: Path, *extra: str):
+        return runner.invoke(app, ["eval", str(directory), "--offline", *extra])
+
+    def test_goodserver_replays_from_cache_alone(self) -> None:
+        result = self.replay(GOODSERVER, "--json")
+
+        assert result.exit_code == 0, result.stdout + result.stderr
+        payload = json.loads(result.stdout)
+        assert payload["called_count"] == 0
+        assert payload["cached_count"] == payload["scores"]["selection_total"] + 3
+
+    def test_badserver_replays_from_cache_alone(self) -> None:
+        result = self.replay(self.BADSERVER, "--json")
+
+        assert result.exit_code == 0, result.stdout + result.stderr
+        assert json.loads(result.stdout)["called_count"] == 0
+
+    def test_the_gap_is_large(self) -> None:
+        """The milestone's whole claim, in one assertion."""
+        good = json.loads(self.replay(GOODSERVER, "--json").stdout)["scores"]
+        bad = json.loads(self.replay(self.BADSERVER, "--json").stdout)["scores"]
+
+        good_rate = good["selection_correct"] / good["selection_total"]
+        bad_rate = bad["selection_correct"] / bad["selection_total"]
+
+        assert good_rate - bad_rate > 0.25, f"{good_rate:.0%} vs {bad_rate:.0%}"
+
+    def test_the_gap_is_widest_on_the_hard_cases(self) -> None:
+        """Siblings are the pairs the linter flags. A well-written server should pull away
+        from a careless one there most of all, and if it ever stops doing so the sibling
+        cases have stopped testing anything."""
+        good = json.loads(self.replay(GOODSERVER, "--json").stdout)["scores"]
+        bad = json.loads(self.replay(self.BADSERVER, "--json").stdout)["scores"]
+
+        good_siblings = good["sibling_correct"] / good["sibling_total"]
+        bad_siblings = bad["sibling_correct"] / bad["sibling_total"]
+
+        assert good_siblings > bad_siblings
+
+    def test_the_threshold_ci_uses_separates_them(self) -> None:
+        assert self.replay(GOODSERVER, "--min-accuracy", "75").exit_code == 0
+        assert self.replay(self.BADSERVER, "--min-accuracy", "75").exit_code == 1
+
+    def test_badserver_produces_a_confusion_sentence(self) -> None:
+        """The output the command exists for, from the committed data."""
+        collapsed = " ".join(self.replay(self.BADSERVER).stdout.split())
+
+        assert "captures" in collapsed
+        assert "of the prompts meant for" in collapsed
+
+
 class TestReadOnly:
     def test_no_fixture_tool_body_ever_runs(
         self, tmp_path: Path, goodserver: InspectResult
