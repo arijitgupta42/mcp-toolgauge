@@ -34,7 +34,7 @@ from mcp_doctor.eval.backend import Completion
 # the linter warns about is a pair the eval writes hard cases for.
 from mcp_doctor.lint.rules.description import CONFUSABLE_SIMILARITY
 from mcp_doctor.lint.text import content_bag, jaccard, meaningful_name_tokens
-from mcp_doctor.model import CaseKind, EvalCase, ServerInfo, ToolSpec
+from mcp_doctor.model import CaseKind, EvalCase, ToolSpec
 
 DEFAULT_CASES_PER_TOOL = 4
 DEFAULT_SIBLING_CASES = 2
@@ -253,7 +253,6 @@ def draft_cases(
     tools: Sequence[ToolSpec],
     complete: TextCompleter,
     *,
-    server: ServerInfo | None = None,
     per_tool: int = DEFAULT_CASES_PER_TOOL,
     per_pair: int = DEFAULT_SIBLING_CASES,
     abstain: int = DEFAULT_ABSTAIN_CASES,
@@ -266,8 +265,6 @@ def draft_cases(
     models write markedly better prompts when they are looking at one tool at a time, and a
     failure costs one tool's cases instead of the suite.
     """
-    del server  # accepted for symmetry with the runner; synthesis reads only the tools
-
     cases: list[EvalCase] = []
     cost = 0.0
     calls = 0

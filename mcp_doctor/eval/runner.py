@@ -119,7 +119,6 @@ def _call_with_retries(
 def run_case(
     case: EvalCase,
     *,
-    tools: Sequence[ToolSpec],
     tool_definitions: list[dict[str, Any]],
     by_name: dict[str, ToolSpec],
     server: ServerInfo | None,
@@ -134,7 +133,6 @@ def run_case(
     on_retry: Callable[[str], None] | None,
 ) -> CaseOutcome:
     """One case: cache lookup, then a model call if it has to."""
-    del tools  # `by_name` is the lookup; the sequence is only needed to build definitions
     messages = backend.build_messages(case.prompt, server)
     key = cache_key(model=model, messages=messages, tool_digest=tool_digest)
 
@@ -289,7 +287,6 @@ def run_suite(
             raise BudgetExceeded(stats.cost_usd, max_cost, len(outcomes), total)
         outcome = run_case(
             case,
-            tools=tools,
             tool_definitions=definitions,
             by_name=by_name,
             server=server,
