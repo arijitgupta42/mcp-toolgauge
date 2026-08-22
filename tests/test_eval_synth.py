@@ -40,6 +40,23 @@ UNRELATED = ToolSpec(
     description="Permanently archive a support ticket, removing it from the active queue.",
 )
 
+WITH_REQUIRED = ToolSpec(
+    name="update_ticket_status",
+    description="Move an existing support ticket to a new status.",
+    input_schema={
+        "type": "object",
+        "properties": {
+            "ticket_id": {
+                "type": "string",
+                "description": "Identifier of the ticket, e.g. 'tkt_4c8d'.",
+            },
+            "status": {"type": "string", "enum": ["open", "closed"]},
+            "comment": {"type": "string", "description": "Optional note."},
+        },
+        "required": ["ticket_id", "status"],
+    },
+)
+
 
 class Script:
     """Answers every request with the same payload, and remembers what it was asked."""
@@ -151,6 +168,34 @@ class TestDrafting:
         draft_cases(TWINS, script, per_tool=1, abstain=0)
 
         assert any("Paraphrase" in prompt for prompt in script.prompts)
+
+    def test_the_generator_is_told_to_supply_required_values(self) -> None:
+        """Without this, a generator writes fluent requests that omit the identifier the
+        tool needs -- "mark my ticket as resolved" for a tool requiring a ticket id. The
+        model then declines, correctly, and the case records a miss that has nothing to do
+        with the description under test."""
+        script = Script(FOUR)
+        draft_cases((WITH_REQUIRED,), script, per_tool=1, abstain=0)
+
+        assert "required" in script.prompts[0]
+
+    def test_required_parameters_are_shown_with_their_documentation(self) -> None:
+        """A parameter description carrying `e.g. 'tkt_4c8d'` is the single most useful
+        thing the generator can see -- it is how a prompt ends up quoting an identifier in
+        a shape the tool actually accepts."""
+        script = Script(FOUR)
+        draft_cases((WITH_REQUIRED,), script, per_tool=1, abstain=0)
+
+        assert "ticket_id -- Identifier of the ticket, e.g. 'tkt_4c8d'." in script.prompts[0]
+        assert "optional parameters" in script.prompts[0]
+
+    def test_abstain_prompts_are_not_told_to_supply_arguments(self) -> None:
+        """An abstain case is supposed to be unanswerable, so the rule that makes positives
+        answerable would be working against it."""
+        script = Script(FOUR)
+        draft_cases((WITH_REQUIRED,), script, per_tool=0, abstain=2)
+
+        assert "cannot be answered by that tool" not in script.prompts[-1]
 
     def test_the_generator_sees_the_other_tools(self) -> None:
         """A prompt that only one tool can answer cannot be written without knowing what

@@ -76,12 +76,39 @@ class Draft:
     calls: int = 0
 
 
+def _parameter_lines(tool: ToolSpec, names: Iterable[str]) -> list[str]:
+    """Each parameter with its own documentation, which is where formats live.
+
+    A well-written schema says `e.g. 'usr_1a2b'` in the parameter description, and that is
+    the single most useful thing the generator can be shown -- it is how a prompt ends up
+    quoting an identifier in the shape the tool actually accepts.
+    """
+    rendered = []
+    for name in names:
+        schema = tool.parameters.get(name)
+        detail = schema.get("description") if isinstance(schema, dict) else None
+        documented = f" -- {detail}" if isinstance(detail, str) and detail else ""
+        rendered.append(f"  {name}{documented}")
+    return rendered
+
+
 def _describe(tool: ToolSpec) -> str:
-    """One tool, as the generator sees it."""
+    """One tool, as the generator sees it.
+
+    Required and optional parameters are split apart, because the distinction changes what
+    a usable prompt looks like. A request that never mentions a required identifier cannot
+    be answered by the tool it names -- a model that declines it is behaving correctly, and
+    the case measures nothing.
+    """
     lines = [f"name: {tool.name}", f"description: {tool.description or '(none)'}"]
-    if tool.parameters:
-        listed = ", ".join(sorted(tool.parameters))
-        lines.append(f"parameters: {listed}")
+    required = tool.required_parameters
+    optional = tuple(name for name in sorted(tool.parameters) if name not in required)
+    if required:
+        lines.append("required parameters (a request must supply these):")
+        lines.extend(_parameter_lines(tool, required))
+    if optional:
+        lines.append("optional parameters:")
+        lines.extend(_parameter_lines(tool, optional))
     return "\n".join(lines)
 
 
@@ -97,6 +124,21 @@ _RULES = (
     "understanding.\n"
     "- Keep each one to a single sentence.\n"
     "- Vary the phrasing between them: different verbs, different level of formality.\n"
+)
+
+# Added to the positive and sibling instructions, and deliberately not to the abstain one:
+# an abstain prompt is *supposed* to be unanswerable.
+#
+# Without this, a generator writes fluent, natural-sounding requests that quietly omit the
+# identifiers the tool requires -- "can you mark my ticket as resolved?" for a tool that
+# needs a ticket id. A model then declines, correctly, and the case records a miss that is
+# nothing to do with the description under test. Measured on the goodserver fixture: three
+# tools scored 0% purely because their prompts never named the thing to act on.
+_SUPPLY_ARGUMENTS = (
+    "- If the tool has required parameters, the request must contain the information they "
+    "need, written the way the parameter documentation shows it -- quote an identifier in "
+    "the documented format rather than inventing a different one. A request that omits a "
+    "required identifier cannot be answered by that tool at all, so it tests nothing.\n"
 )
 
 
@@ -153,7 +195,7 @@ def _positive_cases(
         f"An assistant has access to these tools:\n{_catalogue(others)}\n\n"
         f"Write {wanted} things a user might ask that should be answered by this one, and "
         f"only this one:\n\n{_describe(tool)}\n\n"
-        f"{_RULES}"
+        f"{_RULES}{_SUPPLY_ARGUMENTS}"
         "- Each request must be answerable by this tool and by none of the others listed.\n\n"
         'Reply with JSON: {"prompts": ["...", "..."]}'
     )
@@ -180,7 +222,7 @@ def _sibling_cases(
         f"Write {wanted} requests that belong to A and {wanted} that belong to B. Each one "
         "should be tempting to route to the other tool, but have exactly one correct "
         "answer -- the difficulty should come from the situation, not from ambiguity.\n\n"
-        f"{_RULES}\n"
+        f"{_RULES}{_SUPPLY_ARGUMENTS}\n"
         'Reply with JSON: {"a": ["...", "..."], "b": ["...", "..."]}'
     )
     text, completion = complete(_messages(instruction))
