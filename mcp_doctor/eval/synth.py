@@ -140,16 +140,28 @@ _RULES = (
 # Added to the positive and sibling instructions, and deliberately not to the abstain one:
 # an abstain prompt is *supposed* to be unanswerable.
 #
-# Without this, a generator writes fluent, natural-sounding requests that quietly omit the
-# identifiers the tool requires -- "can you mark my ticket as resolved?" for a tool that
-# needs a ticket id. A model then declines, correctly, and the case records a miss that is
-# nothing to do with the description under test. Measured on the goodserver fixture: three
-# tools scored 0% purely because their prompts never named the thing to act on.
+# The first half exists because a generator otherwise writes fluent requests that quietly
+# omit the identifiers the tool requires -- "can you mark my ticket as resolved?" for a tool
+# that needs a ticket id. A model then declines, correctly, and the case records a miss that
+# is nothing to do with the description under test. Measured on goodserver: three tools
+# scored 0% purely because their prompts never named the thing to act on.
+#
+# The second half exists because the first one, alone, made things worse. Told to supply
+# required values and shown the parameter documentation, the generator started naming the
+# parameters -- "user 'dave' priority high" for `ticket`, "user 'ops_team' urgency critical"
+# for `ticket2`. Those two tools have near-identical descriptions and differ only in that
+# one parameter, so the prompts handed over the entire discriminator. Measured on badserver:
+# both scored 8/8, a pair the linter flags as near-duplicates, because the model could match
+# a parameter name without reading a description at all.
 _SUPPLY_ARGUMENTS = (
     "- If the tool has required parameters, the request must contain the information they "
     "need, written the way the parameter documentation shows it -- quote an identifier in "
     "the documented format rather than inventing a different one. A request that omits a "
     "required identifier cannot be answered by that tool at all, so it tests nothing.\n"
+    "- Supply that information the way a person would say it, and never name the parameter "
+    "itself. Write \"mark it as urgent\" or \"this one is critical\", never \"urgency: "
+    "high\" or \"priority=high\". A prompt that names a parameter hands the model the "
+    "answer: it can match the parameter and never read a single description.\n"
 )
 
 

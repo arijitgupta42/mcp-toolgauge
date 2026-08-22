@@ -191,6 +191,19 @@ class TestDrafting:
         assert "ticket_id -- Identifier of the ticket, e.g. 'tkt_4c8d'." in script.prompts[0]
         assert "optional parameters" in script.prompts[0]
 
+    def test_the_generator_is_told_not_to_name_the_parameters(self) -> None:
+        """The other half of the argument rule, and the half that stops it backfiring.
+
+        Told only to supply required values, and shown the parameter documentation, a
+        generator starts writing "urgency critical" and "priority high" -- which is the
+        whole discriminator between two tools whose descriptions are near-identical. The
+        model can then match a parameter name and never read a description at all.
+        """
+        script = Script(FOUR)
+        draft_cases((WITH_REQUIRED,), script, per_tool=1, abstain=0)
+
+        assert "never name the parameter" in script.prompts[0]
+
     def test_abstain_prompts_are_not_told_to_supply_arguments(self) -> None:
         """An abstain case is supposed to be unanswerable, so the rule that makes positives
         answerable would be working against it."""
