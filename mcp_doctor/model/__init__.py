@@ -1,5 +1,18 @@
 """Pydantic models shared across every mcp-doctor module."""
 
+from mcp_doctor.model.eval import (
+    SELECTION_KINDS,
+    ArgumentCheck,
+    CaseKind,
+    CaseOutcome,
+    CaseSuite,
+    ConfusionCell,
+    EvalCase,
+    EvalResult,
+    EvalScores,
+    Rate,
+    ToolScore,
+)
 from mcp_doctor.model.finding import (
     SEVERITY_ORDER,
     Finding,
@@ -15,19 +28,32 @@ from mcp_doctor.model.tool import (
     ToolAnnotations,
     ToolSpec,
     canonical_json,
+    tool_digest,
 )
 
 __all__ = [
+    "SELECTION_KINDS",
     "SEVERITY_ORDER",
+    "ArgumentCheck",
+    "CaseKind",
+    "CaseOutcome",
+    "CaseSuite",
+    "ConfusionCell",
+    "EvalCase",
+    "EvalResult",
+    "EvalScores",
     "Finding",
     "InspectResult",
     "LintResult",
     "Problem",
+    "Rate",
     "ServerInfo",
     "Severity",
     "ToolAnnotations",
+    "ToolScore",
     "ToolSpec",
     "at_least",
     "canonical_json",
     "severity_rank",
+    "tool_digest",
 ]

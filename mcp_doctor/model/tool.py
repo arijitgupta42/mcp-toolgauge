@@ -8,7 +8,9 @@ in the codebase to a third-party model would turn each SDK release into a breaki
 
 from __future__ import annotations
 
+import hashlib
 import json
+from collections.abc import Iterable
 from inspect import cleandoc
 from typing import Any
 
@@ -120,3 +122,26 @@ def canonical_json(model: BaseModel, *, indent: int | None = 2) -> str:
     payload = model.model_dump(mode="json", exclude_none=True)
     separators = (",", ": ") if indent is not None else (",", ":")
     return json.dumps(payload, sort_keys=True, indent=indent, separators=separators)
+
+
+# Long enough that a collision is not a thing that happens, short enough to read in a diff
+# and to paste into an issue.
+DIGEST_LENGTH = 16
+
+
+def tool_digest(tools: Iterable[ToolSpec]) -> str:
+    """A stable fingerprint of a server's whole tool surface.
+
+    Two things depend on this. Eval cases record the digest they were written against, so a
+    run can say "these cases predate your current tools, the scores are not comparable".
+    And it is part of the eval cache key, so editing a description invalidates exactly the
+    cached answers that description could have changed -- which is what you want, because
+    that edit is the thing you are trying to measure.
+
+    Order-insensitive by construction: the digest answers "is this the same tool surface?",
+    and a server that registers the same tools in a different order has the same surface.
+    Registration order is an implementation detail of the server's source file, and making
+    a reshuffle silently discard a paid-for cache would be a bad trade.
+    """
+    payload = "\n".join(sorted(canonical_json(tool, indent=None) for tool in tools))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:DIGEST_LENGTH]
