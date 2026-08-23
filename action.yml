@@ -97,15 +97,16 @@ runs:
         md="$RUNNER_TEMP/mcp-doctor.md"
         # The gate is enforced in a later step, after the comment is posted, so a failing
         # score still leaves a comment explaining why. Capture the exit code rather than
-        # letting it fail the step here.
+        # letting it fail the step here. `--json` prints the report to stdout (it is a flag,
+        # not a path), so it is redirected to the score file the next run diffs against.
         set +e
         uvx --from "$PACKAGE_SPEC" mcp-doctor ci "$TARGET" \
           --min-score "$MIN_SCORE" \
           "${model[@]}" "${cases[@]}" \
           --badge "$BADGE_PATH" \
-          --json mcp-doctor-score.json \
           --markdown "$md" \
-          "${baseline[@]}"
+          "${baseline[@]}" \
+          --json > mcp-doctor-score.json
         code=$?
         set -e
 
