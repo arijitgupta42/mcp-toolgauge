@@ -1,0 +1,1027 @@
+{
+  "eval": {
+    "cached_count": 43,
+    "called_count": 0,
+    "cost_usd": 0.0,
+    "model": "openrouter/nvidia/nemotron-3.5-lightning:free",
+    "outcomes": [
+      {
+        "arguments": {
+          "query": "Jane Doe"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-p1",
+          "kind": "positive",
+          "prompt": "Look up Jane Doe's email and job title."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "query": "E123456"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-p2",
+          "kind": "positive",
+          "prompt": "I need the contact info for employee ID E123456."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "query": "marketing@company.com"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-p3",
+          "kind": "positive",
+          "prompt": "What's the direct line for marketing@company.com?"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "query": "John Smith"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-p4",
+          "kind": "positive",
+          "prompt": "Could you retrieve the manager details for John Smith?"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "query": "Acme Corporation"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_organizations",
+          "id": "search_organizations-p1",
+          "kind": "positive",
+          "prompt": "I'm looking for Acme Corporation in the system."
+        },
+        "selected": "search_organizations"
+      },
+      {
+        "arguments": {
+          "query": "Engineering"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_organizations",
+          "id": "search_organizations-p2",
+          "kind": "positive",
+          "prompt": "Can you look up the engineering team for me?"
+        },
+        "selected": "search_organizations"
+      },
+      {
+        "arguments": {
+          "query": "acme.test"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_organizations",
+          "id": "search_organizations-p3",
+          "kind": "positive",
+          "prompt": "Which company is associated with acme.test?"
+        },
+        "selected": "search_organizations"
+      },
+      {
+        "arguments": {
+          "query": "sales"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_organizations",
+          "id": "search_organizations-p4",
+          "kind": "positive",
+          "prompt": "I need the details for the sales group."
+        },
+        "selected": "search_organizations"
+      },
+      {
+        "arguments": {
+          "user_id": "usr_1a2b"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_user_profile",
+          "id": "get_user_profile-p1",
+          "kind": "positive",
+          "prompt": "Could you look up the details for usr_1a2b, including their manager and contact info?"
+        },
+        "selected": "get_user_profile"
+      },
+      {
+        "arguments": {
+          "user_id": "usr_2b3c"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_user_profile",
+          "id": "get_user_profile-p2",
+          "kind": "positive",
+          "prompt": "I need the full details for usr_2b3c, specifically their supervisor and how to reach them."
+        },
+        "selected": "get_user_profile"
+      },
+      {
+        "arguments": {
+          "user_id": "usr_3c4d"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_user_profile",
+          "id": "get_user_profile-p3",
+          "kind": "positive",
+          "prompt": "What\u2019s the manager and contact information for usr_3c4d?"
+        },
+        "selected": "get_user_profile"
+      },
+      {
+        "arguments": {
+          "user_id": "usr_4d5e"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_user_profile",
+          "id": "get_user_profile-p4",
+          "kind": "positive",
+          "prompt": "Please retrieve the profile for usr_4d5e, including who they report to and their reachable details."
+        },
+        "selected": "get_user_profile"
+      },
+      {
+        "arguments": {
+          "body": "User usr_1a2b reports that the payment portal freezes and displays the error 'timeout exceeded' whenever they attempt to checkout. This prevents completing purchases.",
+          "priority": "normal",
+          "requester_id": "usr_1a2b",
+          "subject": "Payment portal freezes with 'timeout exceeded' error on checkout"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "create_support_ticket",
+          "id": "create_support_ticket-p1",
+          "kind": "positive",
+          "prompt": "usr_1a2b reports the payment portal freezes with error 'timeout exceeded' whenever they attempt to checkout."
+        },
+        "selected": "create_support_ticket"
+      },
+      {
+        "arguments": {
+          "body": "User usr_2b3c reports that the system keeps rejecting their password reset token, preventing access to their inbox. Please investigate and assist with resetting the password or restoring access.",
+          "priority": "normal",
+          "requester_id": "usr_2b3c",
+          "subject": "Password reset token rejected, cannot access inbox"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "create_support_ticket",
+          "id": "create_support_ticket-p2",
+          "kind": "positive",
+          "prompt": "usr_2b3c can't access their inbox because the system keeps rejecting their password reset token."
+        },
+        "selected": "create_support_ticket"
+      },
+      {
+        "arguments": {
+          "user_id": "usr_3c4d"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "create_support_ticket",
+          "id": "create_support_ticket-p3",
+          "kind": "positive",
+          "prompt": "The API call from usr_3c4d fails with 403 forbidden, please investigate the permission settings."
+        },
+        "selected": "get_user_profile"
+      },
+      {
+        "arguments": {
+          "user_id": "usr_4e5f"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "create_support_ticket",
+          "id": "create_support_ticket-p4",
+          "kind": "positive",
+          "prompt": "usr_4e5f's account is locked after multiple failed login attempts, action needed to restore access."
+        },
+        "selected": "get_user_profile"
+      },
+      {
+        "arguments": {
+          "status": "closed",
+          "ticket_id": "tkt_4c8d"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "update_ticket_status",
+          "id": "update_ticket_status-p1",
+          "kind": "positive",
+          "prompt": "Can you set ticket tkt_4c8d to closed?"
+        },
+        "selected": "update_ticket_status"
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "expected": "update_ticket_status",
+          "id": "update_ticket_status-p2",
+          "kind": "positive",
+          "prompt": "I need to mark tkt_7x1a as in_progress."
+        }
+      },
+      {
+        "arguments": {
+          "status": "solved",
+          "ticket_id": "tkt_3b9f"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "update_ticket_status",
+          "id": "update_ticket_status-p3",
+          "kind": "positive",
+          "prompt": "Please resolve tkt_3b9f for me."
+        },
+        "selected": "update_ticket_status"
+      },
+      {
+        "arguments": {
+          "status": "pending",
+          "ticket_id": "tkt_8d2c"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "update_ticket_status",
+          "id": "update_ticket_status-p4",
+          "kind": "positive",
+          "prompt": "Can we put tkt_8d2c on hold?"
+        },
+        "selected": "update_ticket_status"
+      },
+      {
+        "arguments": {
+          "ticket_id": "tkt_4567aa"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "list_ticket_comments",
+          "id": "list_ticket_comments-p1",
+          "kind": "positive",
+          "note": "Identifier corrected by hand, from TICKET-4567 to the tkt_ form the schema requires. This is the one ticket_id on the server whose description carries no example value, so the generator had the pattern but nothing to copy and invented a plausible-looking format instead. Worth remembering as an argument for a per-parameter version of MCP025 -- the tool as a whole passes today because its `since` parameter does show an example.",
+          "prompt": "Can you fetch the comment history for ticket tkt_4567aa, starting with the oldest entries?"
+        },
+        "selected": "list_ticket_comments"
+      },
+      {
+        "arguments": {
+          "ticket_id": "tkt_9921bd"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "list_ticket_comments",
+          "id": "list_ticket_comments-p2",
+          "kind": "positive",
+          "prompt": "I'd like to see the full comment log for ticket tkt_9921bd, from the beginning."
+        },
+        "selected": "list_ticket_comments"
+      },
+      {
+        "arguments": {
+          "ticket_id": "tkt_1123ce"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "list_ticket_comments",
+          "id": "list_ticket_comments-p3",
+          "kind": "positive",
+          "prompt": "What\u2019s the comment history on ticket tkt_1123ce? I need to review the discussion from the start."
+        },
+        "selected": "list_ticket_comments"
+      },
+      {
+        "arguments": {
+          "ticket_id": "tkt_7745df"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "list_ticket_comments",
+          "id": "list_ticket_comments-p4",
+          "kind": "positive",
+          "prompt": "Could you pull up the comments for ticket tkt_7745df, from the earliest entries."
+        },
+        "selected": "list_ticket_comments"
+      },
+      {
+        "arguments": {
+          "reason": "Problem resolved",
+          "ticket_id": "tkt_9x3a"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "archive_ticket",
+          "id": "archive_ticket-p1",
+          "kind": "positive",
+          "prompt": "Please archive ticket tkt_9x3a since the problem is resolved."
+        },
+        "selected": "archive_ticket"
+      },
+      {
+        "arguments": {
+          "reason": "user confirmed the issue is fixed",
+          "ticket_id": "tkt_4c8d"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "archive_ticket",
+          "id": "archive_ticket-p2",
+          "kind": "positive",
+          "prompt": "I need ticket tkt_4c8d archived because the user confirmed the issue is fixed."
+        },
+        "selected": "archive_ticket"
+      },
+      {
+        "arguments": {
+          "reason": "Duplicate ticket",
+          "ticket_id": "tkt_7b2c"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "archive_ticket",
+          "id": "archive_ticket-p3",
+          "kind": "positive",
+          "prompt": "Remove ticket tkt_7b2c from the system as it's a duplicate."
+        },
+        "selected": "archive_ticket"
+      },
+      {
+        "arguments": {
+          "reason": "the matter has been settled",
+          "ticket_id": "tkt_1d5f"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "archive_ticket",
+          "id": "archive_ticket-p4",
+          "kind": "positive",
+          "prompt": "Kindly archive ticket tkt_1d5f as the matter has been settled."
+        },
+        "selected": "archive_ticket"
+      },
+      {
+        "arguments": {
+          "organization_id": "org_9f2b"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "export_directory_csv",
+          "id": "export_directory_csv-p1",
+          "kind": "positive",
+          "prompt": "Could you pull a CSV of all staff in org_9f2b?"
+        },
+        "selected": "export_directory_csv"
+      },
+      {
+        "arguments": {
+          "organization_id": "org_9f2b"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "export_directory_csv",
+          "id": "export_directory_csv-p2",
+          "kind": "positive",
+          "prompt": "I'd like to download the member list for org_9f2b as a CSV file."
+        },
+        "selected": "export_directory_csv"
+      },
+      {
+        "arguments": {
+          "organization_id": "org_9f2b"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "export_directory_csv",
+          "id": "export_directory_csv-p3",
+          "kind": "positive",
+          "prompt": "Please generate a CSV export of the directory for org_9f2b."
+        },
+        "selected": "export_directory_csv"
+      },
+      {
+        "arguments": {
+          "organization_id": "org_9f2b"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "export_directory_csv",
+          "id": "export_directory_csv-p4",
+          "kind": "positive",
+          "prompt": "I need a file with everyone from org_9f2b in spreadsheet format."
+        },
+        "selected": "export_directory_csv"
+      },
+      {
+        "arguments": {
+          "query": "jane.doe@acme.org"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-vs-search_organizations-s1",
+          "kind": "sibling",
+          "prompt": "Who's the contact at jane.doe@acme.org?",
+          "rival": "search_organizations"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "query": "E78901"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-vs-search_organizations-s2",
+          "kind": "sibling",
+          "prompt": "Can you retrieve E78901?",
+          "rival": "search_organizations"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "query": "Acme"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_organizations",
+          "id": "search_organizations-vs-search_users-s1",
+          "kind": "sibling",
+          "prompt": "I'm looking up Acme.",
+          "rival": "search_users"
+        },
+        "selected": "search_organizations"
+      },
+      {
+        "arguments": {
+          "include_inactive": false,
+          "limit": 5,
+          "query": "acme.test"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_organizations",
+          "id": "search_organizations-vs-search_users-s2",
+          "kind": "sibling",
+          "prompt": "Who's in charge of acme.test?",
+          "rival": "search_users"
+        },
+        "selected": "search_organizations"
+      },
+      {
+        "arguments": {
+          "query": "sarah.connor@company.com"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-vs-get_user_profile-s1",
+          "kind": "sibling",
+          "prompt": "Can you look up sarah.connor@company.com for me?",
+          "rival": "get_user_profile"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "query": "Jane Smith"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-vs-get_user_profile-s2",
+          "kind": "sibling",
+          "prompt": "Could you fetch the contact info for Jane Smith?",
+          "rival": "get_user_profile"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "user_id": "usr_5f3a2b"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_user_profile",
+          "id": "get_user_profile-vs-search_users-s1",
+          "kind": "sibling",
+          "prompt": "Can you pull up the details for usr_5f3a2b?",
+          "rival": "search_users"
+        },
+        "selected": "get_user_profile"
+      },
+      {
+        "arguments": {
+          "user_id": "usr_9b8c1d"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_user_profile",
+          "id": "get_user_profile-vs-search_users-s2",
+          "kind": "sibling",
+          "prompt": "I need the summary for usr_9b8c1d, please.",
+          "rival": "search_users"
+        },
+        "selected": "get_user_profile"
+      },
+      {
+        "arguments": {
+          "query": "Ada Lovelace"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "id": "abstain-1",
+          "kind": "abstain",
+          "note": "Written by hand. Every drafted abstain was answerable -- this one replaced a request for the sales team's numbers and titles, which export_directory_csv covers. Nothing on this server mutates organization membership, so this one genuinely has no answer.",
+          "prompt": "Move Ada Lovelace off the platform team and onto infrastructure."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "comment": "we are still investigating",
+          "status": "pending",
+          "ticket_id": "tkt_4c8d"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "id": "abstain-2",
+          "kind": "abstain",
+          "note": "Written by hand, replacing a request to find who manages a named person -- search_users then get_user_profile. This is the sharpest abstain on the server, because list_ticket_comments reads the thread and nothing writes to it, so a model that reaches for it has misread a read tool as a write tool.",
+          "prompt": "Post a reply on ticket tkt_4c8d saying we are still investigating."
+        },
+        "selected": "update_ticket_status"
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "id": "abstain-3",
+          "kind": "abstain",
+          "note": "Written by hand, replacing a request to reach a named group, which search_organizations answers. There is no aggregation or reporting tool anywhere on this server, so counting anything is out of reach.",
+          "prompt": "How many tickets did the support team close last quarter?"
+        }
+      }
+    ],
+    "scores": {
+      "abstention_correct": 1,
+      "abstention_total": 3,
+      "argument_correct": 41,
+      "argument_total": 41,
+      "confusion": [
+        {
+          "count": 4,
+          "expected": "archive_ticket",
+          "selected": "archive_ticket",
+          "share": 1.0
+        },
+        {
+          "count": 2,
+          "expected": "create_support_ticket",
+          "selected": "create_support_ticket",
+          "share": 0.5
+        },
+        {
+          "count": 2,
+          "expected": "create_support_ticket",
+          "selected": "get_user_profile",
+          "share": 0.5
+        },
+        {
+          "count": 4,
+          "expected": "export_directory_csv",
+          "selected": "export_directory_csv",
+          "share": 1.0
+        },
+        {
+          "count": 6,
+          "expected": "get_user_profile",
+          "selected": "get_user_profile",
+          "share": 1.0
+        },
+        {
+          "count": 4,
+          "expected": "list_ticket_comments",
+          "selected": "list_ticket_comments",
+          "share": 1.0
+        },
+        {
+          "count": 6,
+          "expected": "search_organizations",
+          "selected": "search_organizations",
+          "share": 1.0
+        },
+        {
+          "count": 8,
+          "expected": "search_users",
+          "selected": "search_users",
+          "share": 1.0
+        },
+        {
+          "count": 3,
+          "expected": "update_ticket_status",
+          "selected": "update_ticket_status",
+          "share": 0.75
+        },
+        {
+          "count": 1,
+          "expected": "update_ticket_status",
+          "share": 0.25
+        }
+      ],
+      "per_tool": [
+        {
+          "correct": 2,
+          "tool": "create_support_ticket",
+          "total": 4
+        },
+        {
+          "correct": 3,
+          "tool": "update_ticket_status",
+          "total": 4
+        },
+        {
+          "correct": 4,
+          "tool": "archive_ticket",
+          "total": 4
+        },
+        {
+          "correct": 4,
+          "tool": "export_directory_csv",
+          "total": 4
+        },
+        {
+          "correct": 6,
+          "tool": "get_user_profile",
+          "total": 6
+        },
+        {
+          "correct": 4,
+          "tool": "list_ticket_comments",
+          "total": 4
+        },
+        {
+          "correct": 6,
+          "tool": "search_organizations",
+          "total": 6
+        },
+        {
+          "correct": 8,
+          "tool": "search_users",
+          "total": 8
+        }
+      ],
+      "positive_correct": 29,
+      "positive_total": 32,
+      "selection_correct": 37,
+      "selection_total": 40,
+      "sibling_correct": 8,
+      "sibling_total": 8
+    },
+    "server": {
+      "instructions": "Look up people and organizations in the Acme staff directory, and manage the support tickets attached to them. Search tools are read-only; ticket tools mutate state.",
+      "name": "acme-directory",
+      "protocol_version": "2026-07-28",
+      "version": "1.0.0"
+    },
+    "target": "python server.py",
+    "tool_digest": "960b4893b333ac81"
+  },
+  "health": {
+    "errors": 0,
+    "eval_score": 92,
+    "lint_score": 100,
+    "overall": 96,
+    "warnings": 0
+  },
+  "history": [
+    {
+      "health": {
+        "errors": 0,
+        "lint_score": 97,
+        "overall": 97,
+        "warnings": 1
+      },
+      "label": "connect",
+      "recorded_at": "2026-08-20T21:57:31+01:00"
+    },
+    {
+      "health": {
+        "errors": 0,
+        "lint_score": 100,
+        "overall": 100,
+        "warnings": 0
+      },
+      "label": "lint",
+      "recorded_at": "2026-08-21T16:48:42+01:00"
+    },
+    {
+      "health": {
+        "errors": 0,
+        "eval_score": 92,
+        "lint_score": 100,
+        "overall": 96,
+        "warnings": 0
+      },
+      "label": "eval",
+      "recorded_at": "2026-08-22T16:03:44+01:00"
+    },
+    {
+      "health": {
+        "errors": 0,
+        "eval_score": 92,
+        "lint_score": 100,
+        "overall": 96,
+        "warnings": 0
+      },
+      "label": "ci",
+      "recorded_at": "2026-08-23T11:43:07+01:00"
+    }
+  ],
+  "lint": {
+    "findings": [],
+    "server": {
+      "instructions": "Look up people and organizations in the Acme staff directory, and manage the support tickets attached to them. Search tools are read-only; ticket tools mutate state.",
+      "name": "acme-directory",
+      "protocol_version": "2026-07-28",
+      "version": "1.0.0"
+    },
+    "target": "python server.py",
+    "tool_count": 8
+  },
+  "server": {
+    "instructions": "Look up people and organizations in the Acme staff directory, and manage the support tickets attached to them. Search tools are read-only; ticket tools mutate state.",
+    "name": "acme-directory",
+    "protocol_version": "2026-07-28",
+    "version": "1.0.0"
+  },
+  "target": "python server.py"
+}

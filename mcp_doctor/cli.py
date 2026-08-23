@@ -51,12 +51,15 @@ from mcp_doctor.eval import (
     write_suite,
 )
 from mcp_doctor.health import health_score
+from mcp_doctor.history import HistoryError
+from mcp_doctor.history import record as record_history
 from mcp_doctor.lint import ConfigError, load_config
 from mcp_doctor.lint import lint as run_lint
 from mcp_doctor.model import (
     CaseSuite,
     CiReport,
     EvalResult,
+    HealthPoint,
     InspectResult,
     Severity,
     tool_digest,
@@ -546,6 +549,20 @@ def ci(
         Path | None,
         typer.Option("--baseline", help="A prior 'ci --json' file to show deltas against."),
     ] = None,
+    history: Annotated[
+        Path | None,
+        typer.Option(
+            "--history",
+            help="Append this score to a history file (created if absent) for the dashboard.",
+        ),
+    ] = None,
+    history_label: Annotated[
+        str | None,
+        typer.Option(
+            "--history-label",
+            help="Name this history point -- a commit sha or tag. With --history.",
+        ),
+    ] = None,
     json_output: Annotated[
         bool, typer.Option("--json", help="Emit JSON instead of the scorecard.")
     ] = False,
@@ -592,12 +609,31 @@ def ci(
 
     scores = evaluation.scores if evaluation is not None else None
     health = health_score(lint_report, scores)
+
+    # Record before the gate, never after: a history that quietly skips the runs that failed
+    # the threshold is not a history of the score, it is a history of the passing score, and
+    # the whole point of the chart is to show the drop. A malformed existing file is a usage
+    # error with a human fix, so it stops here rather than being appended over.
+    series: tuple[HealthPoint, ...] | None = None
+    if history is not None:
+        try:
+            updated, mismatch = record_history(
+                history, target=result.target, health=health, label=history_label
+            )
+        except HistoryError as exc:
+            err().print(f"[red]error:[/red] {exc}")
+            raise typer.Exit(EXIT_USAGE) from exc
+        series = updated.points
+        if mismatch is not None and not json_output:
+            _warn(console, mismatch)
+
     report = CiReport(
         target=result.target,
         server=result.server,
         health=health,
         lint=lint_report,
         eval=evaluation,
+        history=series,
     )
 
     if json_output:

@@ -1,0 +1,73 @@
+name: Deploy dashboard to Pages
+
+# Publishes the dashboard (dashboard/) to GitHub Pages.
+#
+# Manual-only for now, on purpose. The repository is private until launch, and GitHub Pages
+# will not serve a private repo without a paid plan -- so a push-triggered deploy would fail
+# on every merge to main and, per the project's rule, main must stay green. Once the repo is
+# public and Pages is enabled (Settings -> Pages -> Source: GitHub Actions), add the push
+# trigger below and every merge republishes:
+#
+#   on:
+#     push:
+#       branches: [main]
+#     workflow_dispatch:
+on:
+  workflow_dispatch:
+
+# Pages needs these; nothing else in the repo does, so they are scoped to this workflow.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One live deployment at a time. Do not cancel a running deploy -- a half-published site is
+# worse than a slightly stale one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Pages serves from a repo subpath (https://<user>.github.io/mcp-doctor/), so the build
+      # is told that prefix or every asset URL 404s. A site served from a domain root sets
+      # VITE_BASE=/ instead -- which is what the self-hosted deployment does.
+      - name: Build
+        run: npm run build
+        env:
+          VITE_BASE: /mcp-doctor/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dashboard/dist
+
+  deploy:
+    name: deploy
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
