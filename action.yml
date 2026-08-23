@@ -1,0 +1,174 @@
+name: mcp-doctor
+description: Audit an MCP server, gate on its health score, write a badge, and comment the scorecard on the pull request.
+branding:
+  icon: activity
+  color: green
+
+# This is the composite Action we ship to MCP server authors. It is not the repository's own
+# CI (.github/workflows/ci.yml) -- that tests mcp-doctor itself. This wraps `mcp-doctor ci`
+# so a server author gets a health gate, a badge, and a PR comment with the delta against
+# their base branch, in one step.
+#
+# Note: it installs mcp-doctor with `uvx`, which resolves `package-spec` (the published
+# package by default). Until mcp-doctor is on PyPI (Session 6), pin `package-spec` to a git
+# ref, e.g. `git+https://github.com/arijitgupta42/mcp-doctor`.
+
+inputs:
+  target:
+    description: Directory, script, manifest, or URL of the server to audit.
+    default: "."
+  min-score:
+    description: Fail the job when the health score is below this (0-100).
+    default: "70"
+  model:
+    description: Model to replay the committed eval cache against. Empty uses mcp-doctor's default.
+    default: ""
+  cases:
+    description: Path to the eval case file, if it is not beside the target.
+    default: ""
+  badge-path:
+    description: Where to write the shields.io endpoint JSON. Publish it to show a badge.
+    default: mcp-doctor-badge.json
+  comment:
+    description: Post the scorecard as a sticky comment on the pull request.
+    default: "true"
+  track-score:
+    description: Cache the score so a pull request can show the delta against its base branch.
+    default: "true"
+  package-spec:
+    description: What to install mcp-doctor from. The published package by default; a path or git URL pins it.
+    default: mcp-doctor
+  python-version:
+    description: Python version used to run mcp-doctor.
+    default: "3.12"
+
+outputs:
+  score:
+    description: The 0-100 health score.
+    value: ${{ steps.audit.outputs.score }}
+  color:
+    description: The shields.io colour for the score.
+    value: ${{ steps.audit.outputs.color }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+
+    # On a pull request, pull back the score the base branch last recorded, so the comment
+    # can show the delta. Best-effort: a base branch that has never run this leaves no cache,
+    # and the run below treats a missing baseline as "no delta" rather than an error.
+    - name: Restore the base branch's score
+      if: ${{ inputs.track-score == 'true' && github.event_name == 'pull_request' }}
+      uses: actions/cache/restore@v4
+      with:
+        path: mcp-doctor-score.json
+        key: mcp-doctor-score-${{ github.base_ref }}-
+        restore-keys: |
+          mcp-doctor-score-${{ github.base_ref }}-
+
+    - name: Audit the server
+      id: audit
+      shell: bash
+      env:
+        TARGET: ${{ inputs.target }}
+        MIN_SCORE: ${{ inputs.min-score }}
+        MODEL: ${{ inputs.model }}
+        CASES: ${{ inputs.cases }}
+        BADGE_PATH: ${{ inputs.badge-path }}
+        PACKAGE_SPEC: ${{ inputs.package-spec }}
+        UV_PYTHON: ${{ inputs.python-version }}
+      run: |
+        # A restored score is the base branch's. Move it aside so this run's --json does not
+        # overwrite the very thing we are diffing against.
+        baseline=()
+        if [ -f mcp-doctor-score.json ]; then
+          mv mcp-doctor-score.json mcp-doctor-baseline.json
+          baseline=(--baseline mcp-doctor-baseline.json)
+        fi
+        model=()
+        if [ -n "$MODEL" ]; then model=(--model "$MODEL"); fi
+        cases=()
+        if [ -n "$CASES" ]; then cases=(--cases "$CASES"); fi
+
+        md="$RUNNER_TEMP/mcp-doctor.md"
+        # The gate is enforced in a later step, after the comment is posted, so a failing
+        # score still leaves a comment explaining why. Capture the exit code rather than
+        # letting it fail the step here.
+        set +e
+        uvx --from "$PACKAGE_SPEC" mcp-doctor ci "$TARGET" \
+          --min-score "$MIN_SCORE" \
+          "${model[@]}" "${cases[@]}" \
+          --badge "$BADGE_PATH" \
+          --json mcp-doctor-score.json \
+          --markdown "$md" \
+          "${baseline[@]}"
+        code=$?
+        set -e
+
+        score=""
+        color=""
+        if [ -f "$BADGE_PATH" ]; then
+          score=$(jq -r .message "$BADGE_PATH")
+          color=$(jq -r .color "$BADGE_PATH")
+        fi
+        {
+          echo "score=$score"
+          echo "color=$color"
+          echo "markdown=$md"
+          echo "exit-code=$code"
+        } >> "$GITHUB_OUTPUT"
+
+        if [ -f "$md" ]; then cat "$md" >> "$GITHUB_STEP_SUMMARY"; fi
+
+    - name: Comment the scorecard on the pull request
+      if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
+      uses: actions/github-script@v7
+      env:
+        MARKDOWN_FILE: ${{ steps.audit.outputs.markdown }}
+      with:
+        script: |
+          const fs = require('fs');
+          if (!process.env.MARKDOWN_FILE || !fs.existsSync(process.env.MARKDOWN_FILE)) {
+            core.info('No scorecard was produced, so there is nothing to comment.');
+            return;
+          }
+          // A hidden marker makes the comment sticky: find our own last comment and update it
+          // in place rather than adding a new one on every push.
+          const marker = '<!-- mcp-doctor -->';
+          const body = marker + '\n' + fs.readFileSync(process.env.MARKDOWN_FILE, 'utf8');
+          const { owner, repo } = context.repo;
+          const issue_number = context.issue.number;
+          const comments = await github.paginate(github.rest.issues.listComments, {
+            owner, repo, issue_number,
+          });
+          const mine = comments.find((c) => c.body && c.body.includes(marker));
+          if (mine) {
+            await github.rest.issues.updateComment({ owner, repo, comment_id: mine.id, body });
+          } else {
+            await github.rest.issues.createComment({ owner, repo, issue_number, body });
+          }
+
+    # Record this run's score on a push, so future pull requests targeting this branch can
+    # diff against it. Immutable keys are sha-suffixed; the restore above prefix-matches the
+    # most recent.
+    - name: Save this score for later comparison
+      if: ${{ inputs.track-score == 'true' && github.event_name == 'push' && steps.audit.outputs.exit-code == '0' }}
+      uses: actions/cache/save@v4
+      with:
+        path: mcp-doctor-score.json
+        key: mcp-doctor-score-${{ github.ref_name }}-${{ github.sha }}
+
+    - name: Enforce the health gate
+      shell: bash
+      env:
+        CODE: ${{ steps.audit.outputs.exit-code }}
+        MIN_SCORE: ${{ inputs.min-score }}
+      run: |
+        if [ "$CODE" != "0" ]; then
+          echo "::error::mcp-doctor exited $CODE (health below --min-score $MIN_SCORE, or a usage/connection error)."
+          exit "$CODE"
+        fi

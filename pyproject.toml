@@ -82,5 +82,10 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 # Strict on the shared vocabulary and on the scoring maths -- the models everything crosses
 # and the numbers everything is judged by are worth the extra rigour.
-module = ["mcp_doctor.model.*", "mcp_doctor.eval.score", "mcp_doctor.eval.arguments"]
+module = [
+    "mcp_doctor.model.*",
+    "mcp_doctor.health",
+    "mcp_doctor.eval.score",
+    "mcp_doctor.eval.arguments",
+]
 strict = true

@@ -105,3 +105,18 @@ jobs:
             exit 1
           fi
           uv run mcp-doctor eval tests/fixtures/goodserver --offline --json > /dev/null
+
+      # The health gate, both directions, from the same offline replay -- no key, no network,
+      # no cost. goodserver has to clear --min-score and badserver has to miss it, so a change
+      # that quietly breaks the score fails here rather than shipping. Also exercises the
+      # badge and comment renderers so a broken one cannot slip through green.
+      - name: score the fixture servers
+        run: |
+          uv run mcp-doctor ci tests/fixtures/goodserver --min-score 70
+          if uv run mcp-doctor ci tests/fixtures/badserver --min-score 70; then
+            echo "::error::badserver cleared --min-score 70; the health gate has stopped working"
+            exit 1
+          fi
+          uv run mcp-doctor ci tests/fixtures/goodserver --json > /dev/null
+          uv run mcp-doctor ci tests/fixtures/goodserver --badge "$RUNNER_TEMP/badge.json"
+          uv run mcp-doctor ci tests/fixtures/goodserver --markdown "$RUNNER_TEMP/comment.md"
