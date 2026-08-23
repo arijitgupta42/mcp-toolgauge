@@ -85,6 +85,7 @@ ignore_missing_imports = true
 module = [
     "mcp_doctor.model.*",
     "mcp_doctor.health",
+    "mcp_doctor.history",
     "mcp_doctor.eval.score",
     "mcp_doctor.eval.arguments",
 ]

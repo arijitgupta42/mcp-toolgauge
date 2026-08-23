@@ -204,6 +204,59 @@ class TestComment:
         assert "vs base" not in result.stdout
 
 
+class TestHistory:
+    def test_it_creates_the_file_on_the_first_run(self, project: Path, tmp_path: Path) -> None:
+        out = tmp_path / "history.json"
+        result = run(str(project), "--history", str(out))
+
+        assert result.exit_code == 0
+        payload = json.loads(out.read_text(encoding="utf-8"))
+        assert len(payload["points"]) == 1
+        assert 0 <= payload["points"][0]["health"]["overall"] <= 100
+
+    def test_a_second_run_appends_rather_than_replaces(
+        self, project: Path, tmp_path: Path
+    ) -> None:
+        out = tmp_path / "history.json"
+        run(str(project), "--history", str(out), "--history-label", "one")
+        run(str(project), "--history", str(out), "--history-label", "two")
+
+        payload = json.loads(out.read_text(encoding="utf-8"))
+        assert [p["label"] for p in payload["points"]] == ["one", "two"]
+
+    def test_the_series_is_embedded_in_json(self, project: Path, tmp_path: Path) -> None:
+        out = tmp_path / "history.json"
+        payload = json.loads(run(str(project), "--history", str(out), "--json").stdout)
+
+        assert len(payload["history"]) == 1
+        assert payload["history"][0]["health"]["overall"] == payload["health"]["overall"]
+
+    def test_no_history_flag_omits_the_key(self, project: Path) -> None:
+        """A run without --history is byte-identical in shape to before the field existed."""
+        payload = json.loads(run(str(project), "--json").stdout)
+
+        assert "history" not in payload
+
+    def test_it_records_even_when_the_gate_fails(self, project: Path, tmp_path: Path) -> None:
+        """The point of a chart is to show the drop, so a failing run must still be recorded."""
+        out = tmp_path / "history.json"
+        result = run(str(project), "--history", str(out), "--min-score", "101")
+
+        assert result.exit_code == 1
+        assert len(json.loads(out.read_text(encoding="utf-8"))["points"]) == 1
+
+    def test_a_malformed_history_file_is_a_usage_error(
+        self, project: Path, tmp_path: Path
+    ) -> None:
+        out = tmp_path / "history.json"
+        out.write_text("not a history{", encoding="utf-8")
+
+        result = run(str(project), "--history", str(out))
+
+        assert result.exit_code == 2
+        assert "history" in result.stderr.lower()
+
+
 class TestErrors:
     def test_an_explicit_missing_case_file_is_a_usage_error(
         self, bare: Path, tmp_path: Path
