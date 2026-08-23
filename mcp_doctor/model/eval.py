@@ -205,7 +205,11 @@ class ConfusionCell(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     expected: str
-    selected: str | None
+    # Defaults to None so the cell round-trips through `canonical_json`, which drops null
+    # keys: a "called nothing" cell serialises without `selected`, and must read back as the
+    # same None rather than failing validation on a missing field. Every producer passes it
+    # explicitly, so the default only ever matters on the way back in.
+    selected: str | None = None
     count: int
     share: float
 

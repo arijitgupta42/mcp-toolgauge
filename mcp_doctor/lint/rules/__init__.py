@@ -9,6 +9,6 @@ loaded every rule.
 rather than as four unused imports.
 """
 
-from mcp_doctor.lint.rules import annotations, description, naming, parameters
+from mcp_doctor.lint.rules import annotations, budget, description, naming, parameters
 
-__all__ = ["annotations", "description", "naming", "parameters"]
+__all__ = ["annotations", "budget", "description", "naming", "parameters"]

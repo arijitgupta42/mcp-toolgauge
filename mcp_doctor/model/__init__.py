@@ -22,6 +22,7 @@ from mcp_doctor.model.finding import (
     at_least,
     severity_rank,
 )
+from mcp_doctor.model.health import CiReport, HealthScore
 from mcp_doctor.model.tool import (
     InspectResult,
     ServerInfo,
@@ -38,11 +39,13 @@ __all__ = [
     "CaseKind",
     "CaseOutcome",
     "CaseSuite",
+    "CiReport",
     "ConfusionCell",
     "EvalCase",
     "EvalResult",
     "EvalScores",
     "Finding",
+    "HealthScore",
     "InspectResult",
     "LintResult",
     "Problem",

@@ -673,6 +673,48 @@
               "shortDescription": {
                 "text": "A tool that changes state declares no idempotentHint."
               }
+            },
+            {
+              "defaultConfiguration": {
+                "level": "note"
+              },
+              "help": {
+                "text": "A single tool's definition is large enough to crowd out its neighbours. See https://github.com/arijitgupta42/mcp-doctor/blob/main/docs/rules/MCP050.md for why this matters."
+              },
+              "helpUri": "https://github.com/arijitgupta42/mcp-doctor/blob/main/docs/rules/MCP050.md",
+              "id": "MCP050",
+              "name": "SingleToolDefinitionTooLarge",
+              "shortDescription": {
+                "text": "A single tool's definition is large enough to crowd out its neighbours."
+              }
+            },
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "The server's tool definitions add up to a large context cost. See https://github.com/arijitgupta42/mcp-doctor/blob/main/docs/rules/MCP051.md for why this matters."
+              },
+              "helpUri": "https://github.com/arijitgupta42/mcp-doctor/blob/main/docs/rules/MCP051.md",
+              "id": "MCP051",
+              "name": "ServerToolBudgetExceeded",
+              "shortDescription": {
+                "text": "The server's tool definitions add up to a large context cost."
+              }
+            },
+            {
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "help": {
+                "text": "The server has enough tools that selection accuracy suffers. See https://github.com/arijitgupta42/mcp-doctor/blob/main/docs/rules/MCP052.md for why this matters."
+              },
+              "helpUri": "https://github.com/arijitgupta42/mcp-doctor/blob/main/docs/rules/MCP052.md",
+              "id": "MCP052",
+              "name": "TooManyTools",
+              "shortDescription": {
+                "text": "The server has enough tools that selection accuracy suffers."
+              }
             }
           ],
           "version": "0.1.0"

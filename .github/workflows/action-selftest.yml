@@ -1,0 +1,85 @@
+name: action self-test
+
+# Exercises the composite Action we ship (../../action.yml) end to end against the two
+# fixture servers -- green on goodserver, red on badserver -- which is Session 4's
+# done-criterion. This is separate from ci.yml so the repository's own pipeline stays
+# untouched in shape.
+#
+# The Action installs mcp-doctor with `uvx --from .` (this checkout, so it runs the PR's
+# code). mcp-doctor then spawns each fixture with `python server.py`, so the project venv is
+# put on PATH first to give that `python` the `mcp` package.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  green-on-goodserver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Put the project venv on PATH for the spawned servers
+        run: |
+          uv sync --frozen
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+
+      - name: Run the Action on goodserver
+        id: audit
+        uses: ./
+        with:
+          target: tests/fixtures/goodserver
+          min-score: "70"
+          package-spec: "."
+          comment: "false"
+          track-score: "false"
+          badge-path: good-badge.json
+
+      - name: It passes and reports a healthy score
+        run: |
+          echo "score=${{ steps.audit.outputs.score }} color=${{ steps.audit.outputs.color }}"
+          test "${{ steps.audit.outputs.score }}" -ge 70
+          test -f good-badge.json
+
+  red-on-badserver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: Put the project venv on PATH for the spawned servers
+        run: |
+          uv sync --frozen
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+
+      - name: Run the Action on badserver, expecting the gate to fail
+        id: audit
+        continue-on-error: true
+        uses: ./
+        with:
+          target: tests/fixtures/badserver
+          min-score: "70"
+          package-spec: "."
+          comment: "false"
+          track-score: "false"
+          badge-path: bad-badge.json
+
+      - name: The gate failed, and a red scorecard was still produced
+        run: |
+          if [ "${{ steps.audit.outcome }}" != "failure" ]; then
+            echo "::error::badserver cleared --min-score 70; the Action should have failed."
+            exit 1
+          fi
+          test -f bad-badge.json
+          test "$(jq -r .message bad-badge.json)" -lt 70

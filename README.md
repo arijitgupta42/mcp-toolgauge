@@ -6,9 +6,10 @@
 and schemas; a dynamic evaluator that measures whether a model actually picks the right
 tool; and a CI gate with a score badge.
 
-> **Status: early.** Milestones 1–3 of 6 are done — you can inspect a server, lint it
-> against 19 rules, and measure whether a model actually picks the right tool. `ci` and the
-> dashboard are not built yet. This README describes only what works today.
+> **Status: early.** Milestones 1–4 of 6 are done — you can inspect a server, lint it
+> against 22 rules, measure whether a model actually picks the right tool, and gate a single
+> health score in CI with a badge and a GitHub Action. The dashboard and PyPI publishing are
+> not built yet. This README describes only what works today.
 
 ## Lint
 
@@ -60,7 +61,7 @@ and nothing is charged — which is what makes this runnable on every pull reque
 
 ### What it checks
 
-19 rules in four families. Each has [a page](docs/rules/README.md) explaining *why it matters*, with
+22 rules in five families. Each has [a page](docs/rules/README.md) explaining *why it matters*, with
 a before and after.
 
 | | |
@@ -69,6 +70,7 @@ a before and after.
 | **[Descriptions](docs/rules/README.md#description)** | Missing, fragmentary, restating the name, near-identical to a sibling's, overlapping with no guidance on which to prefer, placeholder text |
 | **[Parameters](docs/rules/README.md#parameters)** | Undocumented, restating their own name, free strings that should be enums, dates and emails with no format, untyped objects, no example values |
 | **[Annotations](docs/rules/README.md#annotations)** | Destructive tools with no `destructiveHint`, reads with no `readOnlyHint`, writes with no `idempotentHint` |
+| **[Budget](docs/rules/README.md#budget)** | A single tool definition too large, a tool surface too big in aggregate, more tools than a model selects among reliably |
 
 ### Options
 
@@ -220,6 +222,72 @@ The default model is a free one on OpenRouter, so a first run costs nothing beyo
 `OPENROUTER_API_KEY`. Free models are slow and heavily rate-limited — use `--pace`, or point
 `--model` at something you pay for.
 
+## CI, health score, and badge
+
+Lint says what is wrong; eval says what it costs. `ci` rolls both into one 0–100 number you
+can gate a build on and put on a badge.
+
+```bash
+uv run mcp-doctor ci ./path/to/your/server --min-score 80
+```
+
+```
+acme-directory 1.0.0
+python server.py
+
+Health        96 / 100
+  lint       100   0 errors, 0 warnings
+  selection  92%   37 of 40 prompts
+```
+
+The number is `lint_score` and `eval_score` weighted equally, and it never appears without
+both halves beside it:
+
+```
+lint_score  = clamp(100 − 10·errors − 3·warnings, 0, 100)   # info is advisory
+eval_score  = round(selection_accuracy × 100)               # positives + siblings only
+overall     = round(0.5·lint_score + 0.5·eval_score)
+```
+
+The eval half is **selection accuracy alone** — abstention and argument validity are reported
+but never folded in, so a server cannot raise its badge by editing its own test suite. A
+server with no eval suite is scored on lint alone, so the badge works on day one. The full
+reasoning, and what the number does *not* tell you, is in [docs/ci.md](docs/ci.md).
+
+The eval half is replayed from the committed cache, so `ci` calls no model — it is
+reproducible and free. Exit codes: `0` at or above `--min-score`, `1` below it, `2` usage
+error, `3` could not reach the server.
+
+### Badge
+
+```bash
+uv run mcp-doctor ci . --badge badge.json
+```
+
+Writes a [shields.io endpoint](https://shields.io/badges/endpoint-badge) document. Publish it
+— a raw GitHub URL is enough — and point a badge at it:
+
+```markdown
+![mcp-doctor](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/OWNER/REPO/main/badge.json)
+```
+
+### GitHub Action
+
+The composite Action scores your server, fails the build under a threshold, writes the badge,
+and posts a sticky pull-request comment showing the delta against your base branch.
+
+```yaml
+- uses: actions/checkout@v4
+# install your server's own dependencies here, so mcp-doctor can start it
+- uses: arijitgupta42/mcp-doctor@v1
+  with:
+    target: .
+    min-score: "80"
+```
+
+Until mcp-doctor is on PyPI (that ships at launch), pin `package-spec` to a git ref so the
+Action has something to install — see [docs/ci.md](docs/ci.md) for the full input list.
+
 ## Inspect
 
 ```bash
@@ -276,11 +344,15 @@ uv run mcp-doctor lint tests/fixtures/badserver
 
 uv run mcp-doctor eval tests/fixtures/goodserver --offline
 uv run mcp-doctor eval tests/fixtures/badserver --offline
+
+uv run mcp-doctor ci tests/fixtures/goodserver
+uv run mcp-doctor ci tests/fixtures/badserver
 ```
 
 The first lints clean; the second produces 74 findings. The eval runs need no API key —
-they replay recorded answers — and score 92% against 55%. The difference between those two
-servers is the entire point of this project.
+they replay recorded answers — and score 92% against 55%. Rolled together, the two servers
+score **96** and **28** out of 100. The difference between those two servers is the entire
+point of this project.
 
 ## Development
 
@@ -302,8 +374,8 @@ calls a model: the eval suite stubs the backend or replays the recorded caches.
 | Connection and `inspect` | done |
 | `lint` — static rules for names, descriptions, schemas, annotations | done |
 | `eval` — tool-selection accuracy and a confusion matrix | done |
-| `ci` — health score, threshold gate, badge, GitHub Action | next |
-| Dashboard | planned |
+| `ci` — health score, threshold gate, badge, GitHub Action | done |
+| Dashboard | next |
 | Ship to PyPI so `uvx mcp-doctor` needs no install | planned |
 
 ## Licence

@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
+from pydantic import ValidationError
 from rich.console import Console
 from rich.text import Text
 
@@ -49,16 +50,22 @@ from mcp_doctor.eval import (
     validate_against,
     write_suite,
 )
+from mcp_doctor.health import health_score
 from mcp_doctor.lint import ConfigError, load_config
 from mcp_doctor.lint import lint as run_lint
 from mcp_doctor.model import (
     CaseSuite,
+    CiReport,
     EvalResult,
     InspectResult,
     Severity,
     tool_digest,
 )
 from mcp_doctor.report import (
+    render_badge,
+    render_ci_json,
+    render_ci_markdown,
+    render_ci_table,
     render_eval_json,
     render_eval_table,
     render_inspect_json,
@@ -492,3 +499,182 @@ def eval(
 
     if min_accuracy is not None and report.scores.selection.fraction * 100 < min_accuracy:
         raise typer.Exit(EXIT_THRESHOLD)
+
+
+# --------------------------------------------------------------------------------------
+# ci
+# --------------------------------------------------------------------------------------
+
+
+def _try_load_baseline(path: Path, console: Console) -> CiReport | None:
+    """Read a prior `ci --json` file, for the vs-base deltas. Best-effort.
+
+    A base branch that has never had a `ci` run yet has no baseline, and that must still
+    produce a comment -- just without the delta column -- rather than failing the build. A
+    file that is present but unreadable is treated the same way, with a louder warning.
+    """
+    if not path.is_file():
+        _warn(console, f"No baseline at {path}; the comment will show no deltas.")
+        return None
+    try:
+        return CiReport.model_validate_json(path.read_text(encoding="utf-8"))
+    except (OSError, ValidationError) as exc:
+        _warn(console, f"Could not read the baseline at {path}, so no deltas: {exc}")
+        return None
+
+
+@app.command()
+def ci(
+    target: TargetArgument,
+    command: CommandOption = None,
+    server: ServerOption = None,
+    model: ModelOption = DEFAULT_MODEL,
+    cases: CasesOption = None,
+    min_score: Annotated[
+        float | None,
+        typer.Option("--min-score", help="Exit 1 when the health score is below this."),
+    ] = None,
+    badge: Annotated[
+        Path | None,
+        typer.Option("--badge", help="Write a shields.io endpoint JSON to this path."),
+    ] = None,
+    markdown: Annotated[
+        Path | None,
+        typer.Option("--markdown", help="Write the PR-comment markdown here, or '-' for stdout."),
+    ] = None,
+    baseline: Annotated[
+        Path | None,
+        typer.Option("--baseline", help="A prior 'ci --json' file to show deltas against."),
+    ] = None,
+    json_output: Annotated[
+        bool, typer.Option("--json", help="Emit JSON instead of the scorecard.")
+    ] = False,
+    timeout: TimeoutOption = DEFAULT_TIMEOUT_SECONDS,
+    verbose: Annotated[
+        bool, typer.Option("--verbose", "-v", help="Show the findings behind the lint score.")
+    ] = False,
+    config: Annotated[
+        Path | None, typer.Option("--config", help="Use this config file instead of searching.")
+    ] = None,
+    no_config: Annotated[
+        bool, typer.Option("--no-config", help="Ignore any mcp-doctor.toml on disk.")
+    ] = False,
+) -> None:
+    """Score a server's health, gate it, and produce a badge and a PR comment.
+
+    Combines lint and eval into one 0-100 number: `lint_score` from the findings, `eval_score`
+    from selection accuracy, weighted equally. Eval is replayed from the committed cache and
+    never calls a model, so a `ci` run is reproducible and free; a server with no eval suite
+    is scored on lint alone.
+
+    Like every other command, this is read-only: it lists your tools and leaves them alone.
+    """
+    start = _config_start(target)
+    try:
+        settings = load_config(explicit=config, start=start, enabled=not no_config)
+    except ConfigError as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_USAGE) from exc
+
+    result = _fetch(target, command=command, server=server, timeout=timeout)
+    lint_report = run_lint(result, severities=settings.severities)
+
+    console = out()
+    cases_path = cases if cases is not None else default_cases_path(start)
+    # An explicit --cases means "use this file", so a missing one is an error, not a reason
+    # to fall back to lint-only. The default path merely being absent is the common case, and
+    # degrades quietly.
+    evaluation = (
+        _replay_eval(result, cases_path, model=model, json_output=json_output, console=console)
+        if cases is not None or cases_path.is_file()
+        else None
+    )
+
+    scores = evaluation.scores if evaluation is not None else None
+    health = health_score(lint_report, scores)
+    report = CiReport(
+        target=result.target,
+        server=result.server,
+        health=health,
+        lint=lint_report,
+        eval=evaluation,
+    )
+
+    if json_output:
+        print(render_ci_json(report))
+    else:
+        render_ci_table(report, console, verbose=verbose)
+
+    if badge is not None:
+        badge.write_text(render_badge(health) + "\n", encoding="utf-8")
+
+    if markdown is not None:
+        base = _try_load_baseline(baseline, console) if baseline is not None else None
+        text = render_ci_markdown(report, baseline=base)
+        if str(markdown) == "-":
+            # typer.echo, not print: the comment carries a status emoji, and a bare print
+            # crashes on a legacy Windows console's cp1252. echo writes it safely.
+            typer.echo(text)
+        else:
+            markdown.write_text(text + "\n", encoding="utf-8")
+
+    if min_score is not None and health.overall < min_score:
+        raise typer.Exit(EXIT_THRESHOLD)
+
+
+def _replay_eval(
+    result: InspectResult,
+    path: Path,
+    *,
+    model: str,
+    json_output: bool,
+    console: Console,
+) -> EvalResult:
+    """Replay a committed eval suite from its cache, offline. Never calls a model.
+
+    Shares the eval command's failure mapping: a missing or mismatched case file is a usage
+    error, and a cache with no answer for a case is the same -- in CI it means the committed
+    cache and the checked-in cases have drifted apart.
+    """
+    digest = tool_digest(result.tools)
+    try:
+        suite = load_suite(path)
+        warnings = validate_against(suite, result.tools, path=path)
+    except CaseFileError as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_USAGE) from exc
+
+    if not json_output:
+        drift = digest_warning(suite, digest, path=path)
+        for note in ((drift,) if drift else ()) + warnings:
+            _warn(console, note)
+
+    cache = ResponseCache.load(cache_path(path))
+    try:
+        run = run_suite(
+            suite,
+            result.tools,
+            model=model,
+            tool_digest=digest,
+            cache=cache,
+            server=result.server,
+            offline=True,
+        )
+    except (CacheMiss, BackendUnavailable) as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_USAGE) from exc
+    except BackendError as exc:
+        err().print(f"[red]error:[/red] {exc}")
+        raise typer.Exit(EXIT_CONNECTION) from exc
+
+    return EvalResult(
+        target=result.target,
+        server=result.server,
+        model=model,
+        tool_digest=digest,
+        scores=score(run.outcomes),
+        outcomes=run.outcomes,
+        cached_count=run.stats.cached,
+        called_count=run.stats.called,
+        cost_usd=run.stats.cost_usd,
+    )

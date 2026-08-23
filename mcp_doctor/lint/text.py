@@ -231,6 +231,28 @@ def is_subset_of_name(text: str | None, name: str) -> bool:
 
 
 # --------------------------------------------------------------------------------------
+# Sizing
+# --------------------------------------------------------------------------------------
+
+# Characters per token, the rule of thumb for English prose and JSON under byte-pair
+# encodings. Crude on purpose: a budget rule asks "is this too big to select reliably?",
+# which does not need an exact count, and an exact count would mean a tokeniser dependency
+# that downloads a model -- which lint must never have, because it runs on every pull
+# request and has to work through install-free `uvx mcp-doctor`.
+_CHARS_PER_TOKEN = 4
+
+
+def estimate_tokens(text: str) -> int:
+    """Approximate how many tokens `text` costs a model, as characters over four.
+
+    Rounds up, so any non-empty string costs at least one token. This is an estimate a
+    budget is measured against, never presented as an exact figure -- the docs and the
+    rule messages both say "about".
+    """
+    return -(-len(text) // _CHARS_PER_TOKEN)
+
+
+# --------------------------------------------------------------------------------------
 # Prose signals
 # --------------------------------------------------------------------------------------
 

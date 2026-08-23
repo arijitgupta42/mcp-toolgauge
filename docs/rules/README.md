@@ -56,6 +56,16 @@ What the tool does to the world, and who is allowed to skip asking.
 | [MCP041](MCP041.md) | warning | A tool that looks read-only declares no readOnlyHint. |
 | [MCP042](MCP042.md) | info | A tool that changes state declares no idempotentHint. |
 
+## Budget
+
+What every request pays before it reads the user.
+
+| Rule | Severity | Checks |
+|---|---|---|
+| [MCP050](MCP050.md) | info | A single tool's definition is large enough to crowd out its neighbours. |
+| [MCP051](MCP051.md) | warning | The server's tool definitions add up to a large context cost. |
+| [MCP052](MCP052.md) | warning | The server has enough tools that selection accuracy suffers. |
+
 ## Severities
 
 | Severity | Means |
