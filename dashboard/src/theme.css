@@ -1,0 +1,188 @@
+/*
+ * The dashboard's design system. One file of tokens and primitives; components carry almost
+ * no CSS of their own.
+ *
+ * The look is lifted from spade.com, read off the live page rather than guessed: a near-black
+ * ink with a green cast on warm paper, a single lime accent, a grotesque display face, and --
+ * the motif that carries the whole thing -- mono uppercase eyebrow labels with wide tracking.
+ * It suits a tool whose other face is a terminal.
+ *
+ * Colours are defined as tokens on :root and swapped under prefers-color-scheme, so light and
+ * dark are one palette seen two ways. The six score bands mirror mcp_doctor/health.py exactly
+ * (90 / 75 / 60 / 45 / 30) so the dashboard, the badge, and the terminal never disagree about
+ * what a number is worth.
+ */
+
+:root {
+  --paper: #fbfbf9;
+  --surface: #ffffff;
+  --surface-2: #f3f3ee;
+  --ink: #090f05;
+  --muted: rgba(9, 15, 5, 0.6);
+  --faint: rgba(9, 15, 5, 0.4);
+  --line: rgba(9, 15, 5, 0.12);
+  --line-strong: rgba(9, 15, 5, 0.22);
+
+  --accent: #b2eb76;
+  --accent-strong: #8fd04a;
+  --on-accent: #090f05;
+
+  /* Score bands. Perceptually spaced red -> green; used for the numeral, chips, and bars. */
+  --band-brightgreen: #2ea043;
+  --band-green: #5a9e2f;
+  --band-yellowgreen: #94a626;
+  --band-yellow: #d0a824;
+  --band-orange: #e0843a;
+  --band-red: #db4c43;
+
+  /* Severity, for the findings view. */
+  --sev-error: #db4c43;
+  --sev-warning: #d0a824;
+  --sev-info: #5b93d6;
+
+  /* Heatmap ink: the hue stolen traffic is painted in. Alpha is the cell's share. */
+  --steal: 219, 76, 67;
+  --nothing: 120, 128, 116;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(9, 15, 5, 0.06), 0 8px 24px -16px rgba(9, 15, 5, 0.24);
+
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas,
+    monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, system-ui,
+    sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0a0e07;
+    --surface: #12160f;
+    --surface-2: #191e14;
+    --ink: #eef1e8;
+    --muted: rgba(238, 241, 232, 0.62);
+    --faint: rgba(238, 241, 232, 0.42);
+    --line: rgba(238, 241, 232, 0.14);
+    --line-strong: rgba(238, 241, 232, 0.26);
+
+    --band-brightgreen: #46c265;
+    --band-green: #77c33f;
+    --band-yellowgreen: #b6cf3a;
+    --band-yellow: #e8c53d;
+    --band-orange: #ef9a4e;
+    --band-red: #ef5f55;
+
+    --sev-error: #ef5f55;
+    --sev-warning: #e8c53d;
+    --sev-info: #79aef0;
+
+    --steal: 239, 95, 85;
+    --nothing: 150, 158, 144;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -16px rgba(0, 0, 0, 0.7);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ---- Type primitives -------------------------------------------------------------- */
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.display {
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+/* ---- Layout ----------------------------------------------------------------------- */
+
+.shell {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 24px 96px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.section-label {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 40px 0 16px;
+}
+
+.section-label h2 {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+/* ---- Chips ------------------------------------------------------------------------ */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  white-space: nowrap;
+}
+
+.chip .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}

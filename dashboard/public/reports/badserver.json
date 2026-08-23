@@ -1,0 +1,2020 @@
+{
+  "eval": {
+    "cached_count": 59,
+    "called_count": 0,
+    "cost_usd": 0.0,
+    "model": "openrouter/nvidia/nemotron-3.5-lightning:free",
+    "outcomes": [
+      {
+        "arguments": {
+          "q": "recent service interruption",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search",
+          "id": "search-p1",
+          "kind": "positive",
+          "prompt": "I need to find information about the recent service interruption."
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {
+          "q": "upcoming project milestone",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search",
+          "id": "search-p2",
+          "kind": "positive",
+          "prompt": "Could you look up the details for the upcoming project milestone?"
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {
+          "q": "client feedback last month",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search",
+          "id": "search-p3",
+          "kind": "positive",
+          "prompt": "Do you have any information regarding the client's feedback from last month?"
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {
+          "q": "data retention guidelines",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search",
+          "id": "search-p4",
+          "kind": "positive",
+          "prompt": "I'm trying to locate the guidelines for data retention."
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "Avery Patel"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-p1",
+          "kind": "positive",
+          "prompt": "Find the profile for Avery Patel."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "Dakota Hughes"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-p2",
+          "kind": "positive",
+          "prompt": "Locate the account belonging to Dakota Hughes."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "Morgan Lee"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-p3",
+          "kind": "positive",
+          "prompt": "Retrieve the profile for Morgan Lee."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "Casey Reed"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-p4",
+          "kind": "positive",
+          "prompt": "Can you locate the account for Casey Reed."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "renewable energy"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_orgs",
+          "id": "search_orgs-p1",
+          "kind": "positive",
+          "prompt": "Find companies that specialize in renewable energy."
+        },
+        "selected": "search_orgs"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "biotechnology"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_orgs",
+          "id": "search_orgs-p2",
+          "kind": "positive",
+          "prompt": "I need a list of firms in the biotechnology sector."
+        },
+        "selected": "search_orgs"
+      },
+      {
+        "arguments": {
+          "q": "downtown consulting businesses"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_orgs",
+          "id": "search_orgs-p3",
+          "kind": "positive",
+          "prompt": "Look up businesses downtown that offer consulting services."
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {
+          "q": "aerospace company",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_orgs",
+          "id": "search_orgs-p4",
+          "kind": "positive",
+          "prompt": "I'm trying to recall the name of that aerospace company we discussed."
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {
+          "id": "A2B3"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_data",
+          "id": "get_data-p1",
+          "kind": "positive",
+          "prompt": "Can you pull the file for A2B3?"
+        },
+        "selected": "get_data"
+      },
+      {
+        "arguments": {
+          "id": "B3C4"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_data",
+          "id": "get_data-p2",
+          "kind": "positive",
+          "prompt": "Kindly retrieve the record for B3C4."
+        },
+        "selected": "get_data"
+      },
+      {
+        "arguments": {
+          "id": "C5D6"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_data",
+          "id": "get_data-p3",
+          "kind": "positive",
+          "prompt": "I need the details for C5D6, this one is critical."
+        },
+        "selected": "get_data"
+      },
+      {
+        "arguments": {
+          "id": "D7E8",
+          "opts": "none"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": [
+            "opts"
+          ]
+        },
+        "cached": true,
+        "case": {
+          "expected": "get_data",
+          "id": "get_data-p4",
+          "kind": "positive",
+          "prompt": "Mark it as urgent, please fetch the particulars for D7E8."
+        },
+        "selected": "get_data"
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "expected": "run",
+          "id": "run-p1",
+          "kind": "positive",
+          "prompt": "I need you to process this data set for the analysis."
+        }
+      },
+      {
+        "arguments": {
+          "q": "recent activity",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "run",
+          "id": "run-p2",
+          "kind": "positive",
+          "prompt": "Can you perform a quick audit of the recent activity?"
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {
+          "q": "configuration changes",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "run",
+          "id": "run-p3",
+          "kind": "positive",
+          "prompt": "Please handle the configuration changes and generate the summary."
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "expected": "run",
+          "id": "run-p4",
+          "kind": "positive",
+          "prompt": "Sort through the attached file and return the key points."
+        }
+      },
+      {
+        "arguments": {
+          "body": "User alex_m reports a login error that occurs every morning, blocking access to the system. Please investigate and resolve the issue.",
+          "priority": "normal",
+          "subject": "Login error for user alex_m blocking morning access",
+          "user": "alex_m"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket",
+          "id": "ticket-p1",
+          "kind": "positive",
+          "prompt": "I need to report a login error for user alex_m, it blocks access every morning."
+        },
+        "selected": "ticket"
+      },
+      {
+        "arguments": {
+          "limit": 5,
+          "query": "jamie_22"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket",
+          "id": "ticket-p2",
+          "kind": "positive",
+          "prompt": "Please look into the sync failure for account holder jamie_22, the data won't update."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "body": "User riley_k reports being locked out of the portal.",
+          "priority": "critical",
+          "subject": "Access issue for user riley_k",
+          "user": "riley_k"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket",
+          "id": "ticket-p3",
+          "kind": "positive",
+          "prompt": "Mark this access issue as critical for user riley_k, I've been locked out of the portal."
+        },
+        "selected": "ticket"
+      },
+      {
+        "arguments": {
+          "body": "Document the missing feature request for user casey_m, which is needed for the upcoming release.",
+          "subject": "Missing feature request for user casey_m",
+          "user": "casey_m"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket",
+          "id": "ticket-p4",
+          "kind": "positive",
+          "prompt": "I'd like to document the missing feature request for user casey_m, it's needed for the upcoming release."
+        },
+        "selected": "ticket"
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "expected": "doStuff",
+          "id": "doStuff-p1",
+          "kind": "positive",
+          "prompt": "Could you mark this as urgent please?"
+        }
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "expected": "doStuff",
+          "id": "doStuff-p2",
+          "kind": "positive",
+          "prompt": "Handle this critical issue right now."
+        }
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "expected": "doStuff",
+          "id": "doStuff-p3",
+          "kind": "positive",
+          "prompt": "Take care of this important thing for me."
+        }
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "expected": "doStuff",
+          "id": "doStuff-p4",
+          "kind": "positive",
+          "prompt": "Process this critical request immediately."
+        }
+      },
+      {
+        "arguments": {
+          "status": "urgent",
+          "ticket_id": "402"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "update",
+          "id": "update-p1",
+          "kind": "positive",
+          "prompt": "Mark ticket 402 as urgent, please."
+        },
+        "selected": "update"
+      },
+      {
+        "arguments": {
+          "status": "critical",
+          "ticket_id": "777"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "update",
+          "id": "update-p2",
+          "kind": "positive",
+          "prompt": "Set ticket 777 critical right away."
+        },
+        "selected": "update"
+      },
+      {
+        "arguments": {
+          "status": "urgent",
+          "ticket_id": "101"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "update",
+          "id": "update-p3",
+          "kind": "positive",
+          "prompt": "Could you change ticket 101 to urgent please?"
+        },
+        "selected": "update"
+      },
+      {
+        "arguments": {
+          "status": "critical",
+          "ticket_id": "555",
+          "when": "now"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "update",
+          "id": "update-p4",
+          "kind": "positive",
+          "prompt": "Make ticket 555 critical now."
+        },
+        "selected": "update"
+      },
+      {
+        "arguments": {
+          "confirm": true,
+          "org": "Acme"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "delete_all_tickets",
+          "id": "delete_all_tickets-p1",
+          "kind": "positive",
+          "prompt": "Can you wipe all the tickets for Acme?"
+        },
+        "selected": "delete_all_tickets"
+      },
+      {
+        "arguments": {
+          "confirm": true,
+          "org": "Gamma"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "delete_all_tickets",
+          "id": "delete_all_tickets-p2",
+          "kind": "positive",
+          "prompt": "I need every support ticket belonging to Gamma removed permanently."
+        },
+        "selected": "delete_all_tickets"
+      },
+      {
+        "arguments": {
+          "confirm": true,
+          "org": "Delta"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "delete_all_tickets",
+          "id": "delete_all_tickets-p3",
+          "kind": "positive",
+          "prompt": "Permanently delete all tickets for the Delta organization, please."
+        },
+        "selected": "delete_all_tickets"
+      },
+      {
+        "arguments": {
+          "limit": 5,
+          "query": "Epsilon"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "delete_all_tickets",
+          "id": "delete_all_tickets-p4",
+          "kind": "positive",
+          "prompt": "Clear out every ticket in the Epsilon company, no archive."
+        },
+        "selected": "search_orgs"
+      },
+      {
+        "arguments": {
+          "body": "Alice reports that the payment screen spins for ages and she loses the cart. This issue is occurring across the entire team, not just individually. Please investigate the root cause and provide a fix.",
+          "subject": "Payment screen spinning indefinitely, cart lost - team-wide issue",
+          "urgency": "normal",
+          "user": "alice"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket",
+          "id": "ticket-vs-delete_all_tickets-s1",
+          "kind": "sibling",
+          "prompt": "alice is stuck on the payment screen, it just spins for ages and she loses the cart, she begs me to file a report so her boss can see what's going on, and apparently this is happening to the whole team",
+          "rival": "delete_all_tickets"
+        },
+        "selected": "ticket2"
+      },
+      {
+        "arguments": {
+          "body": "User bob reports that the sync keeps failing whenever the network drops. The error message indicates timeout after ten seconds. This issue has been reported across the whole department and needs to be recorded for audit purposes.",
+          "priority": "normal",
+          "subject": "Sync failure due to network drops - timeout after ten seconds",
+          "user": "bob"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket",
+          "id": "ticket-vs-delete_all_tickets-s2",
+          "kind": "sibling",
+          "prompt": "bob tells me the sync keeps failing whenever the network drops, he needs it recorded for his audit, the error message says timeout after ten seconds, and it's been reported across the whole department",
+          "rival": "delete_all_tickets"
+        },
+        "selected": "ticket"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "nyc"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "delete_all_tickets",
+          "id": "delete_all_tickets-vs-ticket-s1",
+          "kind": "sibling",
+          "prompt": "clear all user complaints from the nyc branch as part of the rebrand, we want a fresh start",
+          "rival": "ticket"
+        },
+        "selected": "search_orgs"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "Los Angeles"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "delete_all_tickets",
+          "id": "delete_all_tickets-vs-ticket-s2",
+          "kind": "sibling",
+          "prompt": "the los angeles team is blowing up my inbox with checkout error screenshots, i need to clear the old grievances before the big launch, fresh start for the new quarter",
+          "rival": "ticket"
+        },
+        "selected": "search_orgs"
+      },
+      {
+        "arguments": {
+          "limit": 5,
+          "query": "alice"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket2",
+          "id": "ticket2-vs-delete_all_tickets-s1",
+          "kind": "sibling",
+          "prompt": "File a ticket for user alice about the repeated login failures, with the error logs attached, and mark it as urgent.",
+          "rival": "delete_all_tickets"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "limit": 5,
+          "query": "bob"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket2",
+          "id": "ticket2-vs-delete_all_tickets-s2",
+          "kind": "sibling",
+          "prompt": "Open a help desk case for bob regarding the server downtime, here's the crash report, and flag this one as critical.",
+          "rival": "delete_all_tickets"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "confirm": true,
+          "org": "engineering"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "delete_all_tickets",
+          "id": "delete_all_tickets-vs-ticket2-s1",
+          "kind": "sibling",
+          "prompt": "Clear out all tickets under the engineering team, I don't need them anymore.",
+          "rival": "ticket2"
+        },
+        "selected": "delete_all_tickets"
+      },
+      {
+        "arguments": {
+          "confirm": true,
+          "org": "sales"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "delete_all_tickets",
+          "id": "delete_all_tickets-vs-ticket2-s2",
+          "kind": "sibling",
+          "prompt": "Remove every ticket from the sales org, confirm please.",
+          "rival": "ticket2"
+        },
+        "selected": "delete_all_tickets"
+      },
+      {
+        "arguments": {
+          "q": "contractor NDA new project",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-vs-search_orgs-s1",
+          "kind": "sibling",
+          "prompt": "I need to look up the contractor who signed the NDA for the new project.",
+          "rival": "search_orgs"
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {
+          "q": "critical bug",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_users",
+          "id": "search_users-vs-search_orgs-s2",
+          "kind": "sibling",
+          "prompt": "Locate the team member who resolved the critical bug.",
+          "rival": "search_orgs"
+        },
+        "selected": "search"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "Acme Dynamics"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_orgs",
+          "id": "search_orgs-vs-search_users-s1",
+          "kind": "sibling",
+          "prompt": "I need to verify the vendor Acme Dynamics for the procurement form.",
+          "rival": "search_users"
+        },
+        "selected": "search_orgs"
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "Open Hands"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "search_orgs",
+          "id": "search_orgs-vs-search_users-s2",
+          "kind": "sibling",
+          "prompt": "Do we have the nonprofit Open Hands on file for the grant cycle.",
+          "rival": "search_users"
+        },
+        "selected": "search_orgs"
+      },
+      {
+        "arguments": {
+          "limit": 5,
+          "query": "carol"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket2",
+          "id": "ticket2-p1",
+          "kind": "positive",
+          "note": "Written by hand, with the three below it. The generator's reply for this group could not be read, and re-drafting costs a call per attempt on a rate-limited free tier. Phrased the same way the drafted ticket prompts are, and naming no parameter.",
+          "prompt": "Something is wrong with the billing page for carol, it is showing duplicate charges."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "limit": 5,
+          "query": "Dave"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket2",
+          "id": "ticket2-p2",
+          "kind": "positive",
+          "prompt": "Raise this for dave, the dashboard only loads half of its widgets."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "limit": 5,
+          "query": "eve"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket2",
+          "id": "ticket2-p3",
+          "kind": "positive",
+          "prompt": "eve is locked out and needs an admin to restore her access, can you file that?"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "limit": 5,
+          "query": "frank"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket2",
+          "id": "ticket2-p4",
+          "kind": "positive",
+          "prompt": "Report that the export button does nothing for frank, it just spins forever."
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "expected": "ticket",
+          "id": "ticket-vs-ticket2-s1",
+          "kind": "sibling",
+          "note": "Written by hand, with the three below it, and the labels are arbitrary on purpose. This is the pair MCP001 and MCP013 both flag: `ticket` and `ticket2` take the same subject, body and user, differ only in whether the fourth parameter is called priority or urgency, and are described as \"Creates a ticket in the support system with the supplied subject and body.\" and \"Creates a ticket.\"\nNo user request can distinguish them, so no correct answer exists and a coin flip is the honest expected result. That is the finding rather than a flaw in the case: the linter says delete one of these, and this is what keeping both costs. The earlier draft scored 8/8 here only because its prompts said \"priority high\" and \"urgency critical\" outright, which let the model match a parameter instead of reading a description.",
+          "prompt": "Open a ticket for alice, remote login keeps failing with an auth error and it is holding up her whole day.",
+          "rival": "ticket2"
+        }
+      },
+      {
+        "arguments": {
+          "body": "The application freezes on startup and does not recover. This issue is fairly serious as it prevents normal use.",
+          "priority": "high",
+          "subject": "App freezes on startup and will not recover",
+          "user": "bob"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket",
+          "id": "ticket-vs-ticket2-s2",
+          "kind": "sibling",
+          "prompt": "Please file this for bob, the app freezes on startup and will not recover, it is fairly serious.",
+          "rival": "ticket2"
+        },
+        "selected": "ticket"
+      },
+      {
+        "arguments": {
+          "limit": 5,
+          "query": "ops_team"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket2",
+          "id": "ticket2-vs-ticket-s1",
+          "kind": "sibling",
+          "prompt": "Everything is down for the ops team and nothing responds, log it for ops_team and put it at the top of the queue.",
+          "rival": "ticket"
+        },
+        "selected": "search_users"
+      },
+      {
+        "arguments": {
+          "body": "The marketing inbox is receiving an overwhelming amount of spam, and the situation is deteriorating rapidly. Immediate attention needed to filter and reduce incoming spam.",
+          "subject": "Marketing inbox drowning in spam",
+          "urgency": "high",
+          "user": "marketing_admin"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "expected": "ticket2",
+          "id": "ticket2-vs-ticket-s2",
+          "kind": "sibling",
+          "prompt": "The marketing inbox is drowning in spam, raise it for marketing and it is getting worse by the hour.",
+          "rival": "ticket"
+        },
+        "selected": "ticket2"
+      },
+      {
+        "arguments": {},
+        "cached": true,
+        "case": {
+          "id": "abstain-1",
+          "kind": "abstain",
+          "note": "Written by hand. The generator failed to produce usable abstain cases on every attempt across both fixtures, which is why docs/eval.md says to check these first. This one is blunt on purpose: it is the sharpest possible test of `search`, whose entire description is the word \"Search.\" -- a model with no idea what that tool searches has every reason to try it here.",
+          "prompt": "What is the weather in Paris tomorrow?"
+        }
+      },
+      {
+        "arguments": {
+          "limit": 10,
+          "query": "engineering"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "id": "abstain-2",
+          "kind": "abstain",
+          "note": "Written by hand. In the domain and genuinely unsupported: this server files tickets and searches a directory, and sends nothing to anybody.",
+          "prompt": "Email the whole engineering team about Friday's outage."
+        },
+        "selected": "search_orgs"
+      },
+      {
+        "arguments": {
+          "q": "tickets closed last quarter",
+          "type": "user"
+        },
+        "arguments_check": {
+          "bad_enum": [],
+          "missing_required": [],
+          "unknown": [],
+          "wrong_type": []
+        },
+        "cached": true,
+        "case": {
+          "id": "abstain-3",
+          "kind": "abstain",
+          "note": "Written by hand, and deliberately the same prompt goodserver's suite uses, so the two runs share at least one identical case. Neither server has any aggregation or reporting tool.",
+          "prompt": "How many tickets did the support team close last quarter?"
+        },
+        "selected": "search"
+      }
+    ],
+    "scores": {
+      "abstention_correct": 1,
+      "abstention_total": 3,
+      "argument_correct": 50,
+      "argument_total": 51,
+      "confusion": [
+        {
+          "count": 5,
+          "expected": "delete_all_tickets",
+          "selected": "delete_all_tickets",
+          "share": 0.625
+        },
+        {
+          "count": 3,
+          "expected": "delete_all_tickets",
+          "selected": "search_orgs",
+          "share": 0.375
+        },
+        {
+          "count": 4,
+          "expected": "doStuff",
+          "share": 1.0
+        },
+        {
+          "count": 4,
+          "expected": "get_data",
+          "selected": "get_data",
+          "share": 1.0
+        },
+        {
+          "count": 2,
+          "expected": "run",
+          "selected": "search",
+          "share": 0.5
+        },
+        {
+          "count": 2,
+          "expected": "run",
+          "share": 0.5
+        },
+        {
+          "count": 4,
+          "expected": "search",
+          "selected": "search",
+          "share": 1.0
+        },
+        {
+          "count": 4,
+          "expected": "search_orgs",
+          "selected": "search_orgs",
+          "share": 0.6666666666666666
+        },
+        {
+          "count": 2,
+          "expected": "search_orgs",
+          "selected": "search",
+          "share": 0.3333333333333333
+        },
+        {
+          "count": 4,
+          "expected": "search_users",
+          "selected": "search_users",
+          "share": 0.6666666666666666
+        },
+        {
+          "count": 2,
+          "expected": "search_users",
+          "selected": "search",
+          "share": 0.3333333333333333
+        },
+        {
+          "count": 5,
+          "expected": "ticket",
+          "selected": "ticket",
+          "share": 0.625
+        },
+        {
+          "count": 1,
+          "expected": "ticket",
+          "selected": "search_users",
+          "share": 0.125
+        },
+        {
+          "count": 1,
+          "expected": "ticket",
+          "selected": "ticket2",
+          "share": 0.125
+        },
+        {
+          "count": 1,
+          "expected": "ticket",
+          "share": 0.125
+        },
+        {
+          "count": 7,
+          "expected": "ticket2",
+          "selected": "search_users",
+          "share": 0.875
+        },
+        {
+          "count": 1,
+          "expected": "ticket2",
+          "selected": "ticket2",
+          "share": 0.125
+        },
+        {
+          "count": 4,
+          "expected": "update",
+          "selected": "update",
+          "share": 1.0
+        }
+      ],
+      "per_tool": [
+        {
+          "correct": 0,
+          "tool": "doStuff",
+          "total": 4
+        },
+        {
+          "correct": 0,
+          "tool": "run",
+          "total": 4
+        },
+        {
+          "correct": 1,
+          "tool": "ticket2",
+          "total": 8
+        },
+        {
+          "correct": 5,
+          "tool": "delete_all_tickets",
+          "total": 8
+        },
+        {
+          "correct": 5,
+          "tool": "ticket",
+          "total": 8
+        },
+        {
+          "correct": 4,
+          "tool": "search_orgs",
+          "total": 6
+        },
+        {
+          "correct": 4,
+          "tool": "search_users",
+          "total": 6
+        },
+        {
+          "correct": 4,
+          "tool": "get_data",
+          "total": 4
+        },
+        {
+          "correct": 4,
+          "tool": "search",
+          "total": 4
+        },
+        {
+          "correct": 4,
+          "tool": "update",
+          "total": 4
+        }
+      ],
+      "positive_correct": 24,
+      "positive_total": 40,
+      "selection_correct": 31,
+      "selection_total": 56,
+      "sibling_correct": 7,
+      "sibling_total": 16
+    },
+    "server": {
+      "name": "acme-directory",
+      "protocol_version": "2026-07-28",
+      "version": "0.4.2"
+    },
+    "target": "python server.py",
+    "tool_digest": "4732d007fb9ffba8"
+  },
+  "health": {
+    "errors": 5,
+    "eval_score": 55,
+    "lint_score": 0,
+    "overall": 28,
+    "warnings": 53
+  },
+  "history": [
+    {
+      "health": {
+        "errors": 5,
+        "lint_score": 0,
+        "overall": 0,
+        "warnings": 53
+      },
+      "label": "connect",
+      "recorded_at": "2026-08-20T21:57:31+01:00"
+    },
+    {
+      "health": {
+        "errors": 5,
+        "lint_score": 0,
+        "overall": 0,
+        "warnings": 53
+      },
+      "label": "lint",
+      "recorded_at": "2026-08-21T16:48:42+01:00"
+    },
+    {
+      "health": {
+        "errors": 5,
+        "eval_score": 55,
+        "lint_score": 0,
+        "overall": 28,
+        "warnings": 53
+      },
+      "label": "eval",
+      "recorded_at": "2026-08-22T16:03:44+01:00"
+    },
+    {
+      "health": {
+        "errors": 5,
+        "eval_score": 55,
+        "lint_score": 0,
+        "overall": 28,
+        "warnings": 53
+      },
+      "label": "ci",
+      "recorded_at": "2026-08-23T11:43:07+01:00"
+    }
+  ],
+  "lint": {
+    "findings": [
+      {
+        "message": "Tool names mix conventions: 4 snake_case, 1 camelCase. The odd ones out are `doStuff`.",
+        "related": [
+          "doStuff"
+        ],
+        "rule": "MCP004",
+        "severity": "warning",
+        "suggestion": "Rename `doStuff` to snake_case so the whole server reads as one API. Mixed conventions make a tool list look assembled rather than designed, and give a model one more axis of variation that carries no meaning."
+      },
+      {
+        "message": "Every word in `search` is generic, so the name says nothing about what the tool operates on.",
+        "related": [],
+        "rule": "MCP002",
+        "severity": "warning",
+        "suggestion": "Rename `search` to verb-plus-object form that names the subject -- `search_users`, `create_support_ticket`, `archive_ticket`. A model ranks tools by name before it reads a single description, and a name that would fit on any server in the world gives it nothing to match against.",
+        "tool": "search"
+      },
+      {
+        "message": "`search`'s description is 1 word long.",
+        "related": [],
+        "rule": "MCP011",
+        "severity": "warning",
+        "suggestion": "Write at least one full sentence saying what the tool does and when to use it, then a second saying what it returns. A fragment gives retrieval almost nothing to match a user's phrasing against.",
+        "tool": "search"
+      },
+      {
+        "message": "`search`'s description ('Search.') only restates its name.",
+        "related": [],
+        "rule": "MCP012",
+        "severity": "warning",
+        "suggestion": "Say something the name cannot: which of several similar tools this is, what it returns, what it costs, when not to use it. A description that repeats the name doubles the weight of the name and adds no new signal.",
+        "tool": "search"
+      },
+      {
+        "message": "`search.q` has no description.",
+        "parameter": "q",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `q` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "search"
+      },
+      {
+        "message": "`search.type` has no description.",
+        "parameter": "type",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `type` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "search"
+      },
+      {
+        "message": "`search.type` is a free-form string, but `type` almost always has a fixed set of valid values.",
+        "parameter": "type",
+        "related": [],
+        "rule": "MCP022",
+        "severity": "warning",
+        "suggestion": "Declare the allowed values as an `enum` on `type` -- in Python, type the argument as `Literal[\"open\", \"closed\"]` and the schema follows. A model given an open string will invent a plausible value and the call fails at validation, which reads to the user as the tool being broken.",
+        "tool": "search"
+      },
+      {
+        "message": "Nothing in `search`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "search"
+      },
+      {
+        "message": "`search` reads as read-only but declares no `readOnlyHint`.",
+        "related": [],
+        "rule": "MCP041",
+        "severity": "warning",
+        "suggestion": "Set `readOnlyHint: true` on `search`. This is the annotation that *earns* you calls rather than costing them: clients use it to run safe tools without interrupting the user, and an unmarked read gets the same confirmation prompt as a delete.",
+        "tool": "search"
+      },
+      {
+        "message": "`search_users` promises `user` in its name, but the description never mentions it.",
+        "related": [],
+        "rule": "MCP003",
+        "severity": "warning",
+        "suggestion": "Say what `user` means here in the first sentence of `search_users`'s description. Retrieval matches a user's phrasing against the description as much as the name, so a description that never names its own subject loses to any sibling whose description does.",
+        "tool": "search_users"
+      },
+      {
+        "message": "`search_users` and `search_orgs` share 78% of their meaningful words -- their descriptions are near-identical.",
+        "related": [
+          "search_orgs"
+        ],
+        "rule": "MCP013",
+        "severity": "error",
+        "suggestion": "Rewrite one of them around what makes it different. If `search_users` and `search_orgs` really do the same thing, delete one; if they do not, the first sentence of each should name the thing only that one handles. Two descriptions this close are a coin flip at selection time, and the model has no way to know it guessed wrong.",
+        "tool": "search_users"
+      },
+      {
+        "message": "`search_users` overlaps with `search_orgs`, and its description never says which to prefer.",
+        "related": [
+          "search_orgs"
+        ],
+        "rule": "MCP014",
+        "severity": "warning",
+        "suggestion": "Add a sentence to `search_users` of the form \"Use this when X. If you need Y, use `search_orgs` instead.\" Overlap between sibling tools is normal and usually unavoidable; what separates a server whose tools get picked correctly from one whose tools do not is whether the descriptions say how to choose.",
+        "tool": "search_users"
+      },
+      {
+        "message": "`search_users.limit` has no description.",
+        "parameter": "limit",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `limit` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "search_users"
+      },
+      {
+        "message": "`search_users.query` has no description.",
+        "parameter": "query",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `query` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "search_users"
+      },
+      {
+        "message": "Nothing in `search_users`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "search_users"
+      },
+      {
+        "message": "`search_users` reads as read-only but declares no `readOnlyHint`.",
+        "related": [],
+        "rule": "MCP041",
+        "severity": "warning",
+        "suggestion": "Set `readOnlyHint: true` on `search_users`. This is the annotation that *earns* you calls rather than costing them: clients use it to run safe tools without interrupting the user, and an unmarked read gets the same confirmation prompt as a delete.",
+        "tool": "search_users"
+      },
+      {
+        "message": "`search_orgs` promises `org` in its name, but the description never mentions it.",
+        "related": [],
+        "rule": "MCP003",
+        "severity": "warning",
+        "suggestion": "Say what `org` means here in the first sentence of `search_orgs`'s description. Retrieval matches a user's phrasing against the description as much as the name, so a description that never names its own subject loses to any sibling whose description does.",
+        "tool": "search_orgs"
+      },
+      {
+        "message": "`search_orgs` overlaps with `search_users`, and its description never says which to prefer.",
+        "related": [
+          "search_users"
+        ],
+        "rule": "MCP014",
+        "severity": "warning",
+        "suggestion": "Add a sentence to `search_orgs` of the form \"Use this when X. If you need Y, use `search_users` instead.\" Overlap between sibling tools is normal and usually unavoidable; what separates a server whose tools get picked correctly from one whose tools do not is whether the descriptions say how to choose.",
+        "tool": "search_orgs"
+      },
+      {
+        "message": "`search_orgs.limit` has no description.",
+        "parameter": "limit",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `limit` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "search_orgs"
+      },
+      {
+        "message": "`search_orgs.query` has no description.",
+        "parameter": "query",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `query` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "search_orgs"
+      },
+      {
+        "message": "Nothing in `search_orgs`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "search_orgs"
+      },
+      {
+        "message": "`search_orgs` reads as read-only but declares no `readOnlyHint`.",
+        "related": [],
+        "rule": "MCP041",
+        "severity": "warning",
+        "suggestion": "Set `readOnlyHint: true` on `search_orgs`. This is the annotation that *earns* you calls rather than costing them: clients use it to run safe tools without interrupting the user, and an unmarked read gets the same confirmation prompt as a delete.",
+        "tool": "search_orgs"
+      },
+      {
+        "message": "Every word in `get_data` is generic, so the name says nothing about what the tool operates on.",
+        "related": [],
+        "rule": "MCP002",
+        "severity": "warning",
+        "suggestion": "Rename `get_data` to verb-plus-object form that names the subject -- `search_users`, `create_support_ticket`, `archive_ticket`. A model ranks tools by name before it reads a single description, and a name that would fit on any server in the world gives it nothing to match against.",
+        "tool": "get_data"
+      },
+      {
+        "message": "`get_data`'s description is 2 words long.",
+        "related": [],
+        "rule": "MCP011",
+        "severity": "warning",
+        "suggestion": "Write at least one full sentence saying what the tool does and when to use it, then a second saying what it returns. A fragment gives retrieval almost nothing to match a user's phrasing against.",
+        "tool": "get_data"
+      },
+      {
+        "message": "`get_data`'s description ('Get data.') only restates its name.",
+        "related": [],
+        "rule": "MCP012",
+        "severity": "warning",
+        "suggestion": "Say something the name cannot: which of several similar tools this is, what it returns, what it costs, when not to use it. A description that repeats the name doubles the weight of the name and adds no new signal.",
+        "tool": "get_data"
+      },
+      {
+        "message": "`get_data.id` has no description.",
+        "parameter": "id",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `id` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "get_data"
+      },
+      {
+        "message": "`get_data.opts` has no description.",
+        "parameter": "opts",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `opts` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "get_data"
+      },
+      {
+        "message": "`get_data.opts` is an object with no declared properties, so its shape is anyone's guess.",
+        "parameter": "opts",
+        "related": [],
+        "rule": "MCP024",
+        "severity": "warning",
+        "suggestion": "Give `opts` a concrete schema -- name its fields, or replace the free-form object with the two or three arguments it actually carries. An opaque bag is the one parameter shape a model cannot fill in correctly by reading the schema, so it guesses from the description instead, if there is one.",
+        "tool": "get_data"
+      },
+      {
+        "message": "Nothing in `get_data`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "get_data"
+      },
+      {
+        "message": "`get_data` reads as read-only but declares no `readOnlyHint`.",
+        "related": [],
+        "rule": "MCP041",
+        "severity": "warning",
+        "suggestion": "Set `readOnlyHint: true` on `get_data`. This is the annotation that *earns* you calls rather than costing them: clients use it to run safe tools without interrupting the user, and an unmarked read gets the same confirmation prompt as a delete.",
+        "tool": "get_data"
+      },
+      {
+        "message": "Every word in `run` is generic, so the name says nothing about what the tool operates on.",
+        "related": [],
+        "rule": "MCP002",
+        "severity": "warning",
+        "suggestion": "Rename `run` to verb-plus-object form that names the subject -- `search_users`, `create_support_ticket`, `archive_ticket`. A model ranks tools by name before it reads a single description, and a name that would fit on any server in the world gives it nothing to match against.",
+        "tool": "run"
+      },
+      {
+        "message": "`run` has no description.",
+        "related": [],
+        "rule": "MCP010",
+        "severity": "error",
+        "suggestion": "Give `run` a description that says what it does, when to reach for it, and what it returns. Without one, a model has only the name and the parameter list to go on, and will skip the tool in favour of any sibling that explains itself.",
+        "tool": "run"
+      },
+      {
+        "message": "`run.payload` has no description.",
+        "parameter": "payload",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `payload` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "run"
+      },
+      {
+        "message": "`run.payload` is an object with no declared properties, so its shape is anyone's guess.",
+        "parameter": "payload",
+        "related": [],
+        "rule": "MCP024",
+        "severity": "warning",
+        "suggestion": "Give `payload` a concrete schema -- name its fields, or replace the free-form object with the two or three arguments it actually carries. An opaque bag is the one parameter shape a model cannot fill in correctly by reading the schema, so it guesses from the description instead, if there is one.",
+        "tool": "run"
+      },
+      {
+        "message": "Nothing in `run`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "run"
+      },
+      {
+        "message": "`run` changes state but declares no `idempotentHint`.",
+        "related": [],
+        "rule": "MCP042",
+        "severity": "info",
+        "suggestion": "Say whether calling `run` twice with the same arguments is the same as calling it once. Clients use this to decide whether a timed-out call can be retried; without it the safe assumption is no, and the user is asked to sort out a call that may or may not have happened.",
+        "tool": "run"
+      },
+      {
+        "message": "`ticket` and `ticket2` reduce to the same words, so only the descriptions tell them apart.",
+        "related": [
+          "ticket2"
+        ],
+        "rule": "MCP001",
+        "severity": "error",
+        "suggestion": "Rename at least one of them so the name itself carries the difference -- `create_support_ticket` versus `create_incident_ticket`, not `ticket` versus `ticket2`. A trailing digit is not a distinguishing feature, and a model that cannot tell two tools apart by name has to fall back on descriptions that are usually just as similar.",
+        "tool": "ticket"
+      },
+      {
+        "message": "`ticket.body` has no description.",
+        "parameter": "body",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `body` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "ticket"
+      },
+      {
+        "message": "`ticket.priority` has no description.",
+        "parameter": "priority",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `priority` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "ticket"
+      },
+      {
+        "message": "`ticket.subject` has no description.",
+        "parameter": "subject",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `subject` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "ticket"
+      },
+      {
+        "message": "`ticket.user` has no description.",
+        "parameter": "user",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `user` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "ticket"
+      },
+      {
+        "message": "`ticket.priority` is a free-form string, but `priority` almost always has a fixed set of valid values.",
+        "parameter": "priority",
+        "related": [],
+        "rule": "MCP022",
+        "severity": "warning",
+        "suggestion": "Declare the allowed values as an `enum` on `priority` -- in Python, type the argument as `Literal[\"open\", \"closed\"]` and the schema follows. A model given an open string will invent a plausible value and the call fails at validation, which reads to the user as the tool being broken.",
+        "tool": "ticket"
+      },
+      {
+        "message": "Nothing in `ticket`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "ticket"
+      },
+      {
+        "message": "`ticket` changes state but declares no `idempotentHint`.",
+        "related": [],
+        "rule": "MCP042",
+        "severity": "info",
+        "suggestion": "Say whether calling `ticket` twice with the same arguments is the same as calling it once. Clients use this to decide whether a timed-out call can be retried; without it the safe assumption is no, and the user is asked to sort out a call that may or may not have happened.",
+        "tool": "ticket"
+      },
+      {
+        "message": "`ticket2`'s description is 3 words long.",
+        "related": [],
+        "rule": "MCP011",
+        "severity": "warning",
+        "suggestion": "Write at least one full sentence saying what the tool does and when to use it, then a second saying what it returns. A fragment gives retrieval almost nothing to match a user's phrasing against.",
+        "tool": "ticket2"
+      },
+      {
+        "message": "`ticket2.body` has no description.",
+        "parameter": "body",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `body` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "ticket2"
+      },
+      {
+        "message": "`ticket2.subject` has no description.",
+        "parameter": "subject",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `subject` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "ticket2"
+      },
+      {
+        "message": "`ticket2.urgency` has no description.",
+        "parameter": "urgency",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `urgency` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "ticket2"
+      },
+      {
+        "message": "`ticket2.user` has no description.",
+        "parameter": "user",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `user` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "ticket2"
+      },
+      {
+        "message": "`ticket2.urgency` is a free-form string, but `urgency` almost always has a fixed set of valid values.",
+        "parameter": "urgency",
+        "related": [],
+        "rule": "MCP022",
+        "severity": "warning",
+        "suggestion": "Declare the allowed values as an `enum` on `urgency` -- in Python, type the argument as `Literal[\"open\", \"closed\"]` and the schema follows. A model given an open string will invent a plausible value and the call fails at validation, which reads to the user as the tool being broken.",
+        "tool": "ticket2"
+      },
+      {
+        "message": "Nothing in `ticket2`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "ticket2"
+      },
+      {
+        "message": "`ticket2` changes state but declares no `idempotentHint`.",
+        "related": [],
+        "rule": "MCP042",
+        "severity": "info",
+        "suggestion": "Say whether calling `ticket2` twice with the same arguments is the same as calling it once. Clients use this to decide whether a timed-out call can be retried; without it the safe assumption is no, and the user is asked to sort out a call that may or may not have happened.",
+        "tool": "ticket2"
+      },
+      {
+        "message": "Every word in `doStuff` is generic, so the name says nothing about what the tool operates on.",
+        "related": [],
+        "rule": "MCP002",
+        "severity": "warning",
+        "suggestion": "Rename `doStuff` to verb-plus-object form that names the subject -- `search_users`, `create_support_ticket`, `archive_ticket`. A model ranks tools by name before it reads a single description, and a name that would fit on any server in the world gives it nothing to match against.",
+        "tool": "doStuff"
+      },
+      {
+        "message": "`doStuff`'s description is 4 words long.",
+        "related": [],
+        "rule": "MCP011",
+        "severity": "warning",
+        "suggestion": "Write at least one full sentence saying what the tool does and when to use it, then a second saying what it returns. A fragment gives retrieval almost nothing to match a user's phrasing against.",
+        "tool": "doStuff"
+      },
+      {
+        "message": "`doStuff`'s description still contains placeholder text ('TODO').",
+        "related": [],
+        "rule": "MCP015",
+        "severity": "error",
+        "suggestion": "Replace it with a real description of what `doStuff` does. Placeholder text is not neutral: the model reads it, and a tool whose description says TODO reads as unfinished and unsafe to call.",
+        "tool": "doStuff"
+      },
+      {
+        "message": "`doStuff.action` has no description.",
+        "parameter": "action",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `action` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "doStuff"
+      },
+      {
+        "message": "`doStuff.params` has no description.",
+        "parameter": "params",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `params` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "doStuff"
+      },
+      {
+        "message": "`doStuff.target` has no description.",
+        "parameter": "target",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `target` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "doStuff"
+      },
+      {
+        "message": "`doStuff.params` has no declared type.",
+        "parameter": "params",
+        "related": [],
+        "rule": "MCP024",
+        "severity": "warning",
+        "suggestion": "Give `params` a concrete schema -- name its fields, or replace the free-form object with the two or three arguments it actually carries. An opaque bag is the one parameter shape a model cannot fill in correctly by reading the schema, so it guesses from the description instead, if there is one.",
+        "tool": "doStuff"
+      },
+      {
+        "message": "Nothing in `doStuff`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "doStuff"
+      },
+      {
+        "message": "`doStuff` changes state but declares no `idempotentHint`.",
+        "related": [],
+        "rule": "MCP042",
+        "severity": "info",
+        "suggestion": "Say whether calling `doStuff` twice with the same arguments is the same as calling it once. Clients use this to decide whether a timed-out call can be retried; without it the safe assumption is no, and the user is asked to sort out a call that may or may not have happened.",
+        "tool": "doStuff"
+      },
+      {
+        "message": "Every word in `update` is generic, so the name says nothing about what the tool operates on.",
+        "related": [],
+        "rule": "MCP002",
+        "severity": "warning",
+        "suggestion": "Rename `update` to verb-plus-object form that names the subject -- `search_users`, `create_support_ticket`, `archive_ticket`. A model ranks tools by name before it reads a single description, and a name that would fit on any server in the world gives it nothing to match against.",
+        "tool": "update"
+      },
+      {
+        "message": "`update.status` has no description.",
+        "parameter": "status",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `status` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "update"
+      },
+      {
+        "message": "`update.ticket_id` has no description.",
+        "parameter": "ticket_id",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `ticket_id` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "update"
+      },
+      {
+        "message": "`update.when` has no description.",
+        "parameter": "when",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `when` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "update"
+      },
+      {
+        "message": "`update.status` is a free-form string, but `status` almost always has a fixed set of valid values.",
+        "parameter": "status",
+        "related": [],
+        "rule": "MCP022",
+        "severity": "warning",
+        "suggestion": "Declare the allowed values as an `enum` on `status` -- in Python, type the argument as `Literal[\"open\", \"closed\"]` and the schema follows. A model given an open string will invent a plausible value and the call fails at validation, which reads to the user as the tool being broken.",
+        "tool": "update"
+      },
+      {
+        "message": "`update.when` looks like a date or timestamp but the schema constrains nothing.",
+        "parameter": "when",
+        "related": [],
+        "rule": "MCP023",
+        "severity": "warning",
+        "suggestion": "Add a JSON Schema `format` (`date`, `date-time`, `email`, `uri`) or a `pattern` to `when`, and put a concrete example in its description. Otherwise every model picks its own convention and half of them are wrong -- this is where `2026-01-31` and `31/01/2026` and `last Tuesday` all arrive at the same endpoint.",
+        "tool": "update"
+      },
+      {
+        "message": "Nothing in `update`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "update"
+      },
+      {
+        "message": "`update` changes state but declares no `idempotentHint`.",
+        "related": [],
+        "rule": "MCP042",
+        "severity": "info",
+        "suggestion": "Say whether calling `update` twice with the same arguments is the same as calling it once. Clients use this to decide whether a timed-out call can be retried; without it the safe assumption is no, and the user is asked to sort out a call that may or may not have happened.",
+        "tool": "update"
+      },
+      {
+        "message": "`delete_all_tickets.confirm` has no description.",
+        "parameter": "confirm",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `confirm` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "delete_all_tickets"
+      },
+      {
+        "message": "`delete_all_tickets.org` has no description.",
+        "parameter": "org",
+        "related": [],
+        "rule": "MCP020",
+        "severity": "warning",
+        "suggestion": "Describe what `org` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter.",
+        "tool": "delete_all_tickets"
+      },
+      {
+        "message": "Nothing in `delete_all_tickets`'s schema shows an example value.",
+        "related": [],
+        "rule": "MCP025",
+        "severity": "info",
+        "suggestion": "Put one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like.",
+        "tool": "delete_all_tickets"
+      },
+      {
+        "message": "`delete_all_tickets` reads as destructive but declares no `destructiveHint`.",
+        "related": [],
+        "rule": "MCP040",
+        "severity": "error",
+        "suggestion": "Set `destructiveHint: true` on `delete_all_tickets` (and `readOnlyHint: false`) so clients can prompt before calling it. A client that cannot tell this apart from a read has two options, and both are bad: confirm everything, which trains users to click through, or confirm nothing.",
+        "tool": "delete_all_tickets"
+      },
+      {
+        "message": "`delete_all_tickets` changes state but declares no `idempotentHint`.",
+        "related": [],
+        "rule": "MCP042",
+        "severity": "info",
+        "suggestion": "Say whether calling `delete_all_tickets` twice with the same arguments is the same as calling it once. Clients use this to decide whether a timed-out call can be retried; without it the safe assumption is no, and the user is asked to sort out a call that may or may not have happened.",
+        "tool": "delete_all_tickets"
+      }
+    ],
+    "server": {
+      "name": "acme-directory",
+      "protocol_version": "2026-07-28",
+      "version": "0.4.2"
+    },
+    "target": "python server.py",
+    "tool_count": 10
+  },
+  "server": {
+    "name": "acme-directory",
+    "protocol_version": "2026-07-28",
+    "version": "0.4.2"
+  },
+  "target": "python server.py"
+}

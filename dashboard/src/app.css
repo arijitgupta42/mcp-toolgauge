@@ -1,0 +1,613 @@
+/*
+ * Component styles. The tokens and type primitives live in theme.css; this file arranges them
+ * into the masthead, the source bar, the scorecard, and the three views. Nothing here invents
+ * a colour -- every value is a token, so light and dark come for free.
+ */
+
+/* ---- Masthead --------------------------------------------------------------------- */
+
+.masthead {
+  padding: 48px 0 24px;
+}
+.masthead .eyebrow {
+  color: var(--accent-strong);
+}
+.tagline {
+  font-size: clamp(24px, 4vw, 40px);
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  margin: 12px 0 0;
+  max-width: 18ch;
+}
+
+/* ---- Source bar ------------------------------------------------------------------- */
+
+.sourcebar {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.sourcebar.dragging {
+  border-color: var(--accent-strong);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.source-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.demo-switch {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--surface-2);
+  padding: 3px;
+  border-radius: 999px;
+}
+.seg {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 999px;
+  transition: background 0.15s, color 0.15s;
+}
+.seg.active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+}
+.seg:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.url-form {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 320px;
+  min-width: 240px;
+}
+.url-input {
+  flex: 1;
+  font-size: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+}
+.url-input:focus {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: -1px;
+}
+.seg.go {
+  background: var(--ink);
+  color: var(--paper);
+}
+.source-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: baseline;
+  margin-top: 12px;
+}
+.drop-hint {
+  font-size: 12px;
+}
+.muted {
+  color: var(--muted);
+}
+.source-error {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--sev-error) 12%, transparent);
+  color: var(--sev-error);
+  font-size: 13px;
+}
+
+/* ---- Scorecard (the inverted hero) ------------------------------------------------ */
+
+.scorecard {
+  /* The one inverted band: it paints itself in --ink and writes in --paper, so it flips to a
+     light card on the dark page in dark mode. Its muted text is therefore a translucent
+     --paper, never a hardcoded white, or it would vanish on that light card. */
+  --sc-dim: color-mix(in srgb, var(--paper) 55%, transparent);
+  margin-top: 20px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 28px;
+  align-items: center;
+}
+.on-dark {
+  color: var(--sc-dim) !important;
+}
+.scorecard-hero {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-width: 0;
+}
+.score-numeral {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+.numeral {
+  font-size: 92px;
+  line-height: 0.9;
+  color: var(--band);
+}
+.numeral-max {
+  font-size: 18px;
+  color: var(--sc-dim);
+}
+.score-meta {
+  min-width: 0;
+}
+.server-name {
+  font-size: 22px;
+  margin: 6px 0 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.server-sub {
+  font-size: 12px;
+  color: var(--sc-dim);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.score-halves {
+  display: flex;
+  gap: 28px;
+}
+.half {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 88px;
+}
+.half-value {
+  font-size: 30px;
+}
+.half-detail {
+  font-size: 11px;
+  color: var(--sc-dim);
+}
+
+/* ---- Tabs ------------------------------------------------------------------------- */
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin: 28px 0 20px;
+  border-bottom: 1px solid var(--line);
+}
+.tab {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab.active {
+  color: var(--ink);
+  border-color: var(--accent-strong);
+}
+.tab-count {
+  color: var(--faint);
+  font-size: 12px;
+  margin-left: 2px;
+}
+
+/* ---- Empty states ----------------------------------------------------------------- */
+
+.empty {
+  padding: 40px 32px;
+  text-align: center;
+}
+.empty-mark {
+  font-size: 40px;
+  line-height: 1;
+}
+.empty-title {
+  font-size: 22px;
+  margin: 12px 0 8px;
+}
+.empty .muted {
+  max-width: 46ch;
+  margin: 0 auto;
+}
+
+/* ---- Findings --------------------------------------------------------------------- */
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.chip.filter {
+  background: var(--surface);
+  color: var(--muted);
+  transition: border-color 0.15s, color 0.15s;
+}
+.chip.filter.on {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+.chip.filter:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.chip.clear {
+  background: transparent;
+  border-style: dashed;
+  color: var(--muted);
+}
+.finding-group {
+  margin-bottom: 28px;
+}
+.group-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.group-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+.group-line {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+.finding {
+  padding: 14px 16px;
+  margin-bottom: 8px;
+}
+.finding-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.rule-id {
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: 6px;
+}
+.rule-id:hover {
+  background: var(--surface-2);
+}
+.sev-tag {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+.loc {
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: auto;
+}
+.finding-msg {
+  margin: 0 0 8px;
+  font-size: 14px;
+}
+.finding-fix {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+.finding-fix .eyebrow {
+  margin-right: 6px;
+}
+.tok {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--surface-2);
+  color: var(--ink);
+  padding: 1px 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+
+/* ---- Selection: rates, heatmap, bars, sentences ----------------------------------- */
+
+.rate-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.rate-tile {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.rate-val {
+  font-size: 28px;
+}
+.rate-sub {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.heatmap-wrap {
+  padding: 16px;
+  overflow-x: auto;
+}
+.heatmap {
+  display: grid;
+  gap: 3px;
+  min-width: max-content;
+}
+.hm-corner {
+  position: sticky;
+  left: 0;
+}
+.hm-col {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: center;
+  align-self: end;
+  padding-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 72px;
+}
+.hm-row {
+  font-size: 11px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+  position: sticky;
+  left: 0;
+  background: var(--surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+.hm-cell {
+  aspect-ratio: 1;
+  min-width: 44px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--ink);
+  background: var(--surface-2);
+}
+.hm-cell.diag {
+  font-weight: 600;
+}
+.hm-cell.steal {
+  outline: 1px solid rgba(var(--steal), 0.55);
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.bars {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bar-row {
+  display: grid;
+  grid-template-columns: 150px 1fr 44px 52px;
+  gap: 12px;
+  align-items: center;
+}
+.bar-name {
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bar-track {
+  height: 8px;
+  background: var(--surface-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+.bar-val {
+  font-size: 12px;
+  text-align: right;
+}
+.bar-sub {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+}
+
+.steal-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.steal-list li {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid rgba(var(--steal), 0.8);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 14px;
+}
+
+/* ---- History chart ---------------------------------------------------------------- */
+
+.chart-card {
+  padding: 20px;
+}
+.chart {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.chart .grid {
+  stroke: var(--line);
+  stroke-width: 1;
+}
+.axis-y {
+  fill: var(--faint);
+  font-size: 10px;
+  font-family: var(--mono);
+  text-anchor: end;
+}
+.axis-x {
+  fill: var(--muted);
+  font-size: 11px;
+  text-anchor: middle;
+}
+.axis-label {
+  fill: var(--faint);
+  font-size: 9px;
+  text-anchor: middle;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.pt-val {
+  fill: var(--ink);
+  font-size: 12px;
+  font-weight: 600;
+  text-anchor: middle;
+}
+.series {
+  fill: none;
+}
+.series.overall {
+  stroke: var(--ink);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.series.lint {
+  stroke: var(--muted);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 4;
+  stroke-linecap: round;
+}
+.series.eval {
+  stroke: var(--accent-strong);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+  stroke-linecap: round;
+}
+.chart-legend {
+  display: flex;
+  gap: 18px;
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.stroke {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  border-top-width: 2px;
+  border-top-style: solid;
+  vertical-align: middle;
+  margin-right: 2px;
+}
+.stroke.overall {
+  border-color: var(--ink);
+}
+.stroke.lint {
+  border-top-style: dotted;
+  border-color: var(--muted);
+}
+.stroke.eval {
+  border-top-style: dashed;
+  border-color: var(--accent-strong);
+}
+.history-foot {
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+/* ---- Footer ----------------------------------------------------------------------- */
+
+.colophon {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: baseline;
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+}
+
+/* ---- Narrow screens --------------------------------------------------------------- */
+
+@media (max-width: 720px) {
+  .scorecard {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .numeral {
+    font-size: 68px;
+  }
+  .rate-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bar-row {
+    grid-template-columns: 110px 1fr 40px;
+  }
+  .bar-sub {
+    display: none;
+  }
+}
