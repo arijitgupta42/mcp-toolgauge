@@ -1,15 +1,19 @@
 # mcp-doctor
 
+[![mcp-doctor health](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/arijitgupta42/mcp-doctor/main/badge.json)](docs/ci.md#the-badge)
+
 **Find out why your MCP server's tools don't get called.**
 
 `mcp-doctor` audits MCP servers three ways: a static linter for tool names, descriptions
 and schemas; a dynamic evaluator that measures whether a model actually picks the right
-tool; and a CI gate with a score badge.
+tool; and a CI gate with a score badge. The badge above is mcp-doctor scoring its own
+`goodserver` fixture — dogfooding, and the score renders once the repo is public.
 
-> **Status: early.** Milestones 1–4 of 6 are done — you can inspect a server, lint it
-> against 22 rules, measure whether a model actually picks the right tool, and gate a single
-> health score in CI with a badge and a GitHub Action. The dashboard and PyPI publishing are
-> not built yet. This README describes only what works today.
+> **Status: early.** Milestones 1–5 of 6 are done — you can inspect a server, lint it
+> against 22 rules, measure whether a model actually picks the right tool, gate a single
+> health score in CI with a badge and a GitHub Action, and explore any of it in a dashboard.
+> Only PyPI publishing (so `uvx mcp-doctor` needs no install) is left. This README describes
+> only what works today.
 
 ## Lint
 
@@ -288,6 +292,32 @@ and posts a sticky pull-request comment showing the delta against your base bran
 Until mcp-doctor is on PyPI (that ships at launch), pin `package-spec` to a git ref so the
 Action has something to install — see [docs/ci.md](docs/ci.md) for the full input list.
 
+## Dashboard
+
+Two of the tool's best outputs do not fit a terminal — the confusion matrix is a *matrix*,
+and a health score is only interesting as a *trajectory*. The dashboard is where those live:
+three views, findings, the confusion heatmap, and score history, over a static single-page app
+with no backend and nothing uploaded.
+
+```bash
+cd dashboard
+npm install
+npm run dev      # http://localhost:5173, opens on the two fixture servers
+npm run build    # static files in dashboard/dist/, host anywhere
+```
+
+It reads a `mcp-doctor ci --json` report — the bundled demos, a `?report=<raw-url>`, or a file
+you drop on the page. Keep a history file across runs and the third view draws your score over
+time:
+
+```bash
+mcp-doctor ci ./your/server --history history.json --json > report.json
+```
+
+The full tour, including how to publish your own, is in [docs/dashboard.md](docs/dashboard.md).
+A GitHub Pages workflow ships in `.github/workflows/pages.yml`; it publishes once the repo is
+public.
+
 ## Inspect
 
 ```bash
@@ -375,8 +405,8 @@ calls a model: the eval suite stubs the backend or replays the recorded caches.
 | `lint` — static rules for names, descriptions, schemas, annotations | done |
 | `eval` — tool-selection accuracy and a confusion matrix | done |
 | `ci` — health score, threshold gate, badge, GitHub Action | done |
-| Dashboard | next |
-| Ship to PyPI so `uvx mcp-doctor` needs no install | planned |
+| Dashboard — findings, confusion heatmap, score history | done |
+| Ship to PyPI so `uvx mcp-doctor` needs no install | next |
 
 ## Licence
 

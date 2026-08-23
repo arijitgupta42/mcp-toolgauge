@@ -58,6 +58,37 @@ jobs:
       - name: Run tests
         run: uv run --python ${{ matrix.python-version }} pytest -v --color=yes
 
+  dashboard:
+    name: dashboard build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dashboard
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: dashboard/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Types, the unit tests that pin the dashboard's score/confusion logic to the Python,
+      # and a real production build. The build is what proves the committed demo reports and
+      # the app actually compile together, not just that the source type-checks.
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm run test
+
+      - name: Build
+        run: npm run build
+
   smoke:
     name: uvx smoke test
     runs-on: ubuntu-latest

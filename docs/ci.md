@@ -80,11 +80,44 @@ uv run mcp-doctor ci . --badge badge.json       # write the shields.io endpoint 
 uv run mcp-doctor ci . --json                    # the full report, for --baseline later
 uv run mcp-doctor ci . --markdown comment.md     # the PR-comment body
 uv run mcp-doctor ci . --markdown comment.md --baseline main.json   # with a vs-base delta
+uv run mcp-doctor ci . --history history.json    # append this score to a trajectory
 uv run mcp-doctor ci . -v                         # the findings behind the lint score
 ```
 
 Exit codes match the rest of the tool: `0` at or above `--min-score` (or no gate), `1` below
 it, `2` a usage error, `3` could not reach the server.
+
+## Score history
+
+`--baseline` compares this run against one earlier one. `--history` keeps the *whole* line:
+
+```bash
+uv run mcp-doctor ci ./server --history history.json --history-label "$(git rev-parse --short HEAD)"
+```
+
+Each run appends one point — the timestamp, an optional label, and the same `HealthScore` the
+badge shows — to the file, creating it on the first run. Commit the file and it accumulates a
+trajectory across builds, which the [dashboard](dashboard.md)'s history view draws. The point
+is recorded *before* the `--min-score` gate, so a run that fails the gate still lands on the
+chart — a history that quietly skipped the bad runs would be a history of nothing but good
+news.
+
+The file is capped at the most recent 500 points, so a committed history cannot grow without
+bound. Its shape:
+
+```json
+{
+  "target": "./server",
+  "points": [
+    { "recorded_at": "2026-08-22T16:03:44+00:00", "label": "eval", "health": { "overall": 96, "lint_score": 100, "eval_score": 92, "errors": 0, "warnings": 0 } }
+  ]
+}
+```
+
+A `ci --json` run embeds whatever the history file holds under a top-level `history` key, so
+one published `--json` document drives all three dashboard views at once. Pointing `--history`
+at a file recorded for a different `target` warns and appends anyway — keep a per-server path
+to keep their trends apart.
 
 ## The badge
 
