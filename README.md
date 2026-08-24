@@ -1,24 +1,44 @@
 # mcpcheckup
 
 [![mcpcheckup health](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/arijitgupta42/mcpcheckup/main/badge.json)](docs/ci.md#the-badge)
+[![PyPI](https://img.shields.io/pypi/v/mcpcheckup)](https://pypi.org/project/mcpcheckup/)
+[![CI](https://github.com/arijitgupta42/mcpcheckup/actions/workflows/ci.yml/badge.svg)](https://github.com/arijitgupta42/mcpcheckup/actions/workflows/ci.yml)
+[![licence: MIT](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
 
 **Find out why your MCP server's tools don't get called.**
 
-`mcpcheckup` audits MCP servers three ways: a static linter for tool names, descriptions
-and schemas; a dynamic evaluator that measures whether a model actually picks the right
-tool; and a CI gate with a score badge. The badge above is mcpcheckup scoring its own
-`goodserver` fixture — dogfooding, and the score renders once the repo is public.
+![mcpcheckup finds a near-duplicate description, measures the tool-selection confusion it causes, and rolls it into one health score](docs/assets/demo.svg)
 
-> **Status: early.** Milestones 1–5 of 6 are done — you can inspect a server, lint it
-> against 22 rules, measure whether a model actually picks the right tool, gate a single
-> health score in CI with a badge and a GitHub Action, and explore any of it in a dashboard.
-> Only PyPI publishing (so `uvx mcpcheckup` needs no install) is left. This README describes
-> only what works today.
+`mcpcheckup` audits an MCP server three ways — a static **linter** for names, descriptions
+and schemas; a dynamic **evaluator** that measures whether a model actually picks the right
+tool; and a **CI gate** with a score badge — to answer the one question a server author keeps
+hitting: *why don't my tools get selected?*
+
+## Quickstart
+
+No install step — [`uvx`](https://docs.astral.sh/uv/) fetches and runs it:
+
+```bash
+uvx mcpcheckup lint ./your-server    # static rules, offline, no API key, free
+uvx mcpcheckup eval ./your-server    # does a model actually pick the right tool?
+uvx mcpcheckup ci   ./your-server    # roll both into one 0–100 score to gate on
+```
+
+Point any of them at a directory, a script, or a URL — it finds your server the way an MCP
+client does. Every command is read-only: it lists your tools and disconnects, and never
+invokes one of them. Prefer a persistent install? `uv tool install mcpcheckup`, or
+`pipx install mcpcheckup`. The examples below write it as the bare `mcpcheckup` command;
+`uvx mcpcheckup` in front of any of them works the same with nothing installed.
+
+> **Status.** All six milestones are built: `inspect`, `lint` against 22 rules, `eval` for
+> tool-selection accuracy with a confusion matrix, a composite `ci` health score with a badge
+> and a GitHub Action, and a dashboard. The badge above is mcpcheckup scoring its own
+> `goodserver` fixture — it dogfoods itself. This README describes only what works today.
 
 ## Lint
 
 ```bash
-uv run mcpcheckup lint ./path/to/your/server
+mcpcheckup lint ./path/to/your/server
 ```
 
 ```
@@ -79,12 +99,12 @@ a before and after.
 ### Options
 
 ```bash
-uv run mcpcheckup lint . -v                      # info findings, and every suggestion
-uv run mcpcheckup lint . --fail-on warning       # stricter gate
-uv run mcpcheckup lint . --fail-on off           # report without ever failing
-uv run mcpcheckup lint . --json                  # machine-readable, stable key order
-uv run mcpcheckup lint . --sarif > results.sarif # for GitHub code scanning
-uv run mcpcheckup lint . --no-config             # ignore any mcpcheckup.toml on disk
+mcpcheckup lint . -v                      # info findings, and every suggestion
+mcpcheckup lint . --fail-on warning       # stricter gate
+mcpcheckup lint . --fail-on off           # report without ever failing
+mcpcheckup lint . --json                  # machine-readable, stable key order
+mcpcheckup lint . --sarif > results.sarif # for GitHub code scanning
+mcpcheckup lint . --no-config             # ignore any mcpcheckup.toml on disk
 ```
 
 Exit codes: `0` clean, `1` a finding reached `--fail-on` (default `error`), `2` usage
@@ -112,8 +132,8 @@ you turned off is worse than one you never touched.
 Lint tells you two descriptions are near-identical. Eval tells you what that costs.
 
 ```bash
-uv run mcpcheckup eval ./path/to/your/server --init   # draft cases, then edit and commit them
-uv run mcpcheckup eval ./path/to/your/server          # run them
+mcpcheckup eval ./path/to/your/server --init   # draft cases, then edit and commit them
+mcpcheckup eval ./path/to/your/server          # run them
 ```
 
 It puts your real tool definitions in front of a real model at temperature 0 — your names,
@@ -207,13 +227,13 @@ The full methodology, including what the number does *not* tell you, is in
 ### Options
 
 ```bash
-uv run mcpcheckup eval . --model openai/gpt-4.1-mini   # anything LiteLLM can reach
-uv run mcpcheckup eval . --offline                     # replay a recorded cache; no key needed
-uv run mcpcheckup eval . --min-accuracy 80             # exit 1 below this
-uv run mcpcheckup eval . --max-cost 0.50               # stop once it has cost this much
-uv run mcpcheckup eval . --pace 3                      # wait between calls on a rate-limited tier
-uv run mcpcheckup eval . -v                            # every failing case, with its prompt
-uv run mcpcheckup eval . --json                        # the full confusion matrix
+mcpcheckup eval . --model openai/gpt-4.1-mini   # anything LiteLLM can reach
+mcpcheckup eval . --offline                     # replay a recorded cache; no key needed
+mcpcheckup eval . --min-accuracy 80             # exit 1 below this
+mcpcheckup eval . --max-cost 0.50               # stop once it has cost this much
+mcpcheckup eval . --pace 3                      # wait between calls on a rate-limited tier
+mcpcheckup eval . -v                            # every failing case, with its prompt
+mcpcheckup eval . --json                        # the full confusion matrix
 ```
 
 Calling a model needs the `eval` extra; `--offline` does not.
@@ -232,7 +252,7 @@ Lint says what is wrong; eval says what it costs. `ci` rolls both into one 0–1
 can gate a build on and put on a badge.
 
 ```bash
-uv run mcpcheckup ci ./path/to/your/server --min-score 80
+mcpcheckup ci ./path/to/your/server --min-score 80
 ```
 
 ```
@@ -265,7 +285,7 @@ error, `3` could not reach the server.
 ### Badge
 
 ```bash
-uv run mcpcheckup ci . --badge badge.json
+mcpcheckup ci . --badge badge.json
 ```
 
 Writes a [shields.io endpoint](https://shields.io/badges/endpoint-badge) document. Publish it
@@ -289,8 +309,8 @@ and posts a sticky pull-request comment showing the delta against your base bran
     min-score: "80"
 ```
 
-Until mcpcheckup is on PyPI (that ships at launch), pin `package-spec` to a git ref so the
-Action has something to install — see [docs/ci.md](docs/ci.md) for the full input list.
+`@v1` follows the latest `v1.x` release; pin an exact tag like `@v0.1.0` to freeze it. See
+[docs/ci.md](docs/ci.md) for the full input list.
 
 ## Dashboard
 
@@ -315,13 +335,13 @@ mcpcheckup ci ./your/server --history history.json --json > report.json
 ```
 
 The full tour, including how to publish your own, is in [docs/dashboard.md](docs/dashboard.md).
-A GitHub Pages workflow ships in `.github/workflows/pages.yml`; it publishes once the repo is
-public.
+A GitHub Pages workflow (`.github/workflows/pages.yml`) builds and publishes it on every push
+to `main`.
 
 ## Inspect
 
 ```bash
-uv run mcpcheckup inspect ./path/to/your/server
+mcpcheckup inspect ./path/to/your/server
 ```
 
 Point it at a directory and it finds your server the way your MCP client does — by reading
@@ -354,10 +374,10 @@ is a different problem, and one `lint` has opinions about.
 Both commands take the same target flags:
 
 ```bash
-uv run mcpcheckup lint https://example.com/mcp             # a running server over HTTP
-uv run mcpcheckup lint ./server.py                         # a single script
-uv run mcpcheckup lint . --server backend                  # pick one from a multi-server manifest
-uv run mcpcheckup lint . --command "node dist/server.js"   # say it yourself
+mcpcheckup lint https://example.com/mcp             # a running server over HTTP
+mcpcheckup lint ./server.py                         # a single script
+mcpcheckup lint . --server backend                  # pick one from a multi-server manifest
+mcpcheckup lint . --command "node dist/server.js"   # say it yourself
 ```
 
 **Both commands are read-only.** They connect, list tools, and disconnect. Neither ever
@@ -406,8 +426,13 @@ calls a model: the eval suite stubs the backend or replays the recorded caches.
 | `eval` — tool-selection accuracy and a confusion matrix | done |
 | `ci` — health score, threshold gate, badge, GitHub Action | done |
 | Dashboard — findings, confusion heatmap, score history | done |
-| Ship to PyPI so `uvx mcpcheckup` needs no install | next |
+| Ship to PyPI so `uvx mcpcheckup` needs no install | done |
+| Self-hosted dashboard on a private network | next |
+
+Ideas, rule proposals, and false-positive reports are all welcome — see
+[CONTRIBUTING.md](CONTRIBUTING.md), and the [`good first issue`](https://github.com/arijitgupta42/mcpcheckup/labels/good%20first%20issue)
+label for a place to start.
 
 ## Licence
 
-MIT
+MIT — see [LICENSE](LICENSE).
