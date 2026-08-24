@@ -29,7 +29,7 @@ jobs:
         run: uv run ruff check .
 
       - name: mypy
-        run: uv run mypy mcp-toolgauge
+        run: uv run mypy mcp_toolgauge
 
   test:
     name: tests (${{ matrix.os }}, py${{ matrix.python-version }})

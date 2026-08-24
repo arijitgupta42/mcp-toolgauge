@@ -411,7 +411,7 @@ uv sync                  # base install; enough for everything except calling a 
 uv sync --extra eval     # adds LiteLLM, for `eval` without --offline
 uv run pytest
 uv run ruff check .
-uv run mypy mcp-toolgauge
+uv run mypy mcp_toolgauge
 ```
 
 Skip the tests that spawn real servers with `uv run pytest -m "not integration"`. No test
