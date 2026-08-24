@@ -417,17 +417,7 @@ uv run mypy mcp_toolgauge
 Skip the tests that spawn real servers with `uv run pytest -m "not integration"`. No test
 calls a model: the eval suite stubs the backend or replays the recorded caches.
 
-## Roadmap
-
-| Milestone | Status |
-|---|---|
-| Connection and `inspect` | done |
-| `lint` — static rules for names, descriptions, schemas, annotations | done |
-| `eval` — tool-selection accuracy and a confusion matrix | done |
-| `ci` — health score, threshold gate, badge, GitHub Action | done |
-| Dashboard — findings, confusion heatmap, score history | done |
-| Ship to PyPI so `uvx mcp-toolgauge` needs no install | done |
-| Self-hosted dashboard on a private network | next |
+## Contributing
 
 Ideas, rule proposals, and false-positive reports are all welcome — see
 [CONTRIBUTING.md](CONTRIBUTING.md), and the [`good first issue`](https://github.com/arijitgupta42/mcp-toolgauge/labels/good%20first%20issue)
