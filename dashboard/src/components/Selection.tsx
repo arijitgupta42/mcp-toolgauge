@@ -26,7 +26,7 @@ export function Selection({ report }: { report: CiReport }) {
   if (!report.eval || !scores || (scores.selection_total ?? 0) === 0) {
     return (
       <div className="empty card">
-        <p className="empty-title display">No selection was measured.</p>
+        <p className="empty-title">No selection was measured.</p>
         <p className="muted">
           This report was scored on lint alone. Draft a suite with{" "}
           <code className="tok">mcp-toolgauge eval &lt;server&gt; --init</code>, commit it, and{" "}
@@ -53,27 +53,27 @@ export function Selection({ report }: { report: CiReport }) {
       <div className="rate-row">
         {rates.map(([label, correct, total]) => (
           <div className="rate-tile" key={label}>
-            <span className="eyebrow">{label}</span>
-            <span className="rate-val display tnum">
-              {total ? `${pct(correct / total)}%` : "—"}
-            </span>
-            <span className="rate-sub mono">
-              {correct}/{total}
+            <span className="rate-label">{label}</span>
+            <span className="rate-val tnum">{total ? `${pct(correct / total)}%` : "—"}</span>
+            <span className="rate-sub tnum">
+              {correct} of {total}
             </span>
           </div>
         ))}
       </div>
 
       <div className="section-label">
-        <span className="eyebrow">confusion</span>
-        <h2>Where each tool&rsquo;s traffic actually went</h2>
+        <h2>
+          Where each tool&rsquo;s traffic <span className="rest">actually went</span>
+        </h2>
       </div>
       <Heatmap matrix={matrix} />
       <Legend />
 
       <div className="section-label">
-        <span className="eyebrow">per tool</span>
-        <h2>Hit rate, worst first</h2>
+        <h2>
+          Hit rate, <span className="rest">worst first</span>
+        </h2>
       </div>
       <div className="card bars">
         {perTool.map((t) => (
@@ -84,8 +84,9 @@ export function Selection({ report }: { report: CiReport }) {
       {notable.length > 0 && (
         <>
           <div className="section-label">
-            <span className="eyebrow">the cost</span>
-            <h2>Traffic one tool is taking from another</h2>
+            <h2>
+              Traffic one tool <span className="rest">is taking from another</span>
+            </h2>
           </div>
           <ul className="steal-list">
             {notable.map((cell, i) => (
@@ -142,13 +143,17 @@ function Row({
         const background = !cell
           ? "transparent"
           : diagonal
-            ? `rgba(178, 235, 118, ${0.25 + 0.75 * share})`
+            ? `rgba(var(--correct), ${0.18 + 0.62 * share})`
             : nothing
               ? `rgba(var(--nothing), ${0.12 + 0.6 * share})`
               : `rgba(var(--steal), ${0.15 + 0.75 * share})`;
         const cls = ["hm-cell"];
         if (diagonal) cls.push("diag");
         if (cell && !diagonal && !nothing && share >= 0.2) cls.push("steal");
+        // Past roughly half share the fill is saturated enough that the theme's own ink stops
+        // reading on it -- in dark mode especially, where light text would sit on bright green.
+        // `hot` swaps in a fixed near-black, which reads on every hue at this end of the ramp.
+        if (cell && share >= 0.5) cls.push("hot");
         return (
           <div
             className={cls.join(" ")}
@@ -172,7 +177,7 @@ function Legend() {
   return (
     <div className="legend">
       <span className="legend-item">
-        <span className="swatch" style={{ background: "rgba(178,235,118,0.85)" }} /> correct
+        <span className="swatch" style={{ background: "rgba(var(--correct),0.8)" }} /> correct
       </span>
       <span className="legend-item">
         <span className="swatch" style={{ background: "rgba(var(--steal),0.7)" }} /> taken by
@@ -200,8 +205,8 @@ function ToolBar({ score }: { score: ToolScore }) {
           style={{ width: `${Math.max(2, percent)}%`, background: bandVar(percent) }}
         />
       </div>
-      <span className="bar-val mono tnum">{percent}%</span>
-      <span className="bar-sub mono">
+      <span className="bar-val tnum">{percent}%</span>
+      <span className="bar-sub tnum">
         {score.correct}/{score.total}
       </span>
     </div>

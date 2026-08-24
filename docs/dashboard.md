@@ -78,8 +78,27 @@ composite *rises* to 28 once selection is measured and turns out not to be zero.
 
 ## Design
 
-Type and colour are lifted from a reference the terminal tool has no room for: a near-black
-ink with a green cast on warm paper, a single lime accent, and mono uppercase eyebrow labels
-with wide tracking. The six score colours are the same bands `health.py` uses, so the
-dashboard, the badge, and the terminal never disagree about what a number is worth — the unit
-tests in `dashboard/src/lib/` pin that agreement to the Python.
+Type and colour are lifted from [mora.com](https://mora.com), read off the live page rather
+than guessed. Four things carry the look:
+
+- **Stacked greys.** A near-white page (`#fafafa`), white cards, and light grey "trays" that
+  the cards sit inside. A card is rarely alone — it is nested one shade inside another.
+- **Rings, not shadows.** Elevation is a hairline `0 0 0 1px` ring, sometimes with a white
+  inset highlight along the top edge. Nothing floats; it is all inlaid.
+- **Round corners and pills.** 20px outer, 16px card, 12px inner, 10px control, and segmented
+  pill controls in place of underlined tabs.
+- **Tight type.** A geometric semibold display face over a circular grotesque UI face, tracked
+  in by `-0.01em` at text size. Section headings are two-tone sentences — the first phrase in
+  ink, the rest in grey. Labels are sentence case at normal size, not stamped-out uppercase.
+
+Mora sets Artific over Basier Circle over Geist Mono; none of the first two are freely
+licensed, so the dashboard substitutes Plus Jakarta Sans, Inter, and JetBrains Mono from
+Google Fonts, each with a system fallback so the page is legible before — or without — the
+webfonts arriving.
+
+Mora is light-only. The dark half here is the same system inverted, so a reader on a dark OS
+is not flash-banged by their own dashboard.
+
+The six score colours are the same bands `health.py` uses, so the dashboard, the badge, and
+the terminal never disagree about what a number is worth — the unit tests in
+`dashboard/src/lib/` pin that agreement to the Python.

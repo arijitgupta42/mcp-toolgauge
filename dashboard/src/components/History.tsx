@@ -62,7 +62,7 @@ export function History({ report }: { report: CiReport }) {
   if (points.length === 0) {
     return (
       <div className="empty card">
-        <p className="empty-title display">No history yet.</p>
+        <p className="empty-title">No history yet.</p>
         <p className="muted">
           Pass <code className="tok">--history history.json</code> to{" "}
           <code className="tok">mcp-toolgauge ci</code> and every run appends a point. Commit the
@@ -81,8 +81,9 @@ export function History({ report }: { report: CiReport }) {
   return (
     <div>
       <div className="section-label">
-        <span className="eyebrow">history</span>
-        <h2>{n} scored runs</h2>
+        <h2>
+          {n} scored runs <span className="rest">since the first commit</span>
+        </h2>
       </div>
 
       <div className="card chart-card">

@@ -64,10 +64,8 @@ export function Findings({ report }: { report: CiReport }) {
   if (findings.length === 0) {
     return (
       <div className="empty card">
-        <span className="empty-mark" style={{ color: "var(--band-brightgreen)" }}>
-          ✓
-        </span>
-        <p className="empty-title display">No findings.</p>
+        <span className="empty-mark">✓</span>
+        <p className="empty-title">No findings.</p>
         <p className="muted">
           Every tool on this server passed all {report.lint.tool_count}-tool&rsquo;s worth of
           checks. That is what a clean lint looks like.
@@ -104,7 +102,9 @@ export function Findings({ report }: { report: CiReport }) {
           <div className="group-head">
             <span className="mono group-name">{tool}</span>
             <span className="group-line" />
-            <span className="eyebrow tnum">{list.length}</span>
+            <span className="group-count tnum">
+              {list.length} {list.length === 1 ? "finding" : "findings"}
+            </span>
           </div>
           {ORDER.flatMap((sev) =>
             list
@@ -119,25 +119,17 @@ export function Findings({ report }: { report: CiReport }) {
 
 function Row({ f }: { f: Finding }) {
   return (
-    <div className="finding card">
+    <div className="finding" style={{ ["--sev" as string]: sevColor[f.severity] }}>
       <div className="finding-top">
-        <a
-          className="rule-id mono"
-          href={`${DOCS}/${f.rule}.md`}
-          target="_blank"
-          rel="noreferrer"
-          style={{ borderColor: sevColor[f.severity] }}
-        >
+        <a className="rule-id" href={`${DOCS}/${f.rule}.md`} target="_blank" rel="noreferrer">
           {f.rule}
         </a>
-        <span className="sev-tag mono" style={{ color: sevColor[f.severity] }}>
-          {f.severity}
-        </span>
-        {f.parameter && <span className="loc mono">{f.parameter}</span>}
+        <span className="sev-tag">{f.severity}</span>
+        {f.parameter && <span className="loc">{f.parameter}</span>}
       </div>
       <p className="finding-msg">{renderBackticks(f.message)}</p>
       <p className="finding-fix">
-        <span className="eyebrow">fix</span> {renderBackticks(f.suggestion)}
+        <span className="fix-label">Fix</span> {renderBackticks(f.suggestion)}
       </p>
     </div>
   );

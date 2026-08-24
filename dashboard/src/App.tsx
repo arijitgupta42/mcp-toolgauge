@@ -59,9 +59,19 @@ export function App() {
   return (
     <div className="shell">
       <header className="masthead">
-        <span className="eyebrow">mcp-toolgauge</span>
-        <p className="tagline">
-          Why your MCP server&rsquo;s tools do &mdash; or don&rsquo;t &mdash; get called.
+        <span className="wordmark">
+          <span className="mark" aria-hidden="true">
+            M
+          </span>
+          mcp-toolgauge
+        </span>
+        <h1 className="tagline">
+          Why your MCP server&rsquo;s tools{" "}
+          <span className="rest">do &mdash; or don&rsquo;t &mdash; get called.</span>
+        </h1>
+        <p className="lede">
+          Lint findings, the tool-selection confusion matrix, and health over time, read
+          straight out of a <code className="tok">ci --json</code> report.
         </p>
       </header>
 
