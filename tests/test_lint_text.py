@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from mcpcheckup.lint.text import (
+from mcp_toolgauge.lint.text import (
     all_words,
     content_bag,
     content_words,

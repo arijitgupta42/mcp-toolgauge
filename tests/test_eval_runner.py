@@ -15,9 +15,9 @@ from typing import Any
 
 import pytest
 
-from mcpcheckup.eval.backend import BackendError, Completion, ToolCall, build_messages
-from mcpcheckup.eval.cache import CachedCall, CacheMiss, ResponseCache, cache_key
-from mcpcheckup.eval.runner import (
+from mcp_toolgauge.eval.backend import BackendError, Completion, ToolCall, build_messages
+from mcp_toolgauge.eval.cache import CachedCall, CacheMiss, ResponseCache, cache_key
+from mcp_toolgauge.eval.runner import (
     BACKOFF_SECONDS,
     MAX_ATTEMPTS,
     MAX_BACKOFF_SECONDS,
@@ -25,7 +25,7 @@ from mcpcheckup.eval.runner import (
     cached_text_completer,
     run_suite,
 )
-from mcpcheckup.model import CaseKind, CaseSuite, EvalCase, ServerInfo, ToolSpec, tool_digest
+from mcp_toolgauge.model import CaseKind, CaseSuite, EvalCase, ServerInfo, ToolSpec, tool_digest
 
 TOOLS = (
     ToolSpec(
@@ -434,7 +434,7 @@ class TestTextCompleter:
             calls["n"] += 1
             return "generated text", Completion(call=ToolCall())
 
-        monkeypatch.setattr("mcpcheckup.eval.backend.complete_text", fake)
+        monkeypatch.setattr("mcp_toolgauge.eval.backend.complete_text", fake)
         messages = [{"role": "user", "content": "write cases"}]
 
         first = cached_text_completer(model="m", cache=cache, tool_digest=DIGEST)(messages)
@@ -455,7 +455,7 @@ class TestTextCompleter:
                 raise BackendError("Rate limited", retryable=True)
             return "ok", Completion(call=ToolCall())
 
-        monkeypatch.setattr("mcpcheckup.eval.backend.complete_text", flaky)
+        monkeypatch.setattr("mcp_toolgauge.eval.backend.complete_text", flaky)
 
         complete = cached_text_completer(
             model="m", cache=cache, tool_digest=DIGEST, sleep=lambda _: None

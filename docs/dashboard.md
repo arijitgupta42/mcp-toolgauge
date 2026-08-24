@@ -1,6 +1,6 @@
 # The dashboard
 
-`mcpcheckup` is a terminal tool, and two of its best outputs do not fit a terminal. The
+`mcp-toolgauge` is a terminal tool, and two of its best outputs do not fit a terminal. The
 confusion matrix is a *matrix* — the eval report itself gives up and drops the "went instead
 to" column on a narrow terminal — and a health score is only interesting as a *trajectory*,
 which a single run cannot show. The dashboard is where those two live.
@@ -28,7 +28,7 @@ header, not a fourth view — there are deliberately only three.
 
 ## Where a report comes from
 
-The dashboard reads a `mcpcheckup ci --json` document. It gets one of three ways:
+The dashboard reads a `mcp-toolgauge ci --json` document. It gets one of three ways:
 
 1. **The bundled demos.** It opens showing the two fixture servers — one clean, one riddled —
    with a switcher. Nothing to set up.
@@ -41,13 +41,13 @@ The dashboard reads a `mcpcheckup ci --json` document. It gets one of three ways
 Produce a report for your own server with:
 
 ```bash
-mcpcheckup ci ./path/to/your/server --json > report.json
+mcp-toolgauge ci ./path/to/your/server --json > report.json
 ```
 
 and, for the history view, keep appending to a history file across runs:
 
 ```bash
-mcpcheckup ci ./path/to/your/server --history history.json --json > report.json
+mcp-toolgauge ci ./path/to/your/server --history history.json --json > report.json
 ```
 
 The `--json` document embeds whatever history the file holds, so one published file drives all
@@ -64,12 +64,12 @@ npm run build    # static files in dashboard/dist/
 
 The build is plain static files behind no server, so it hosts anywhere. This repository ships
 a GitHub Pages workflow (`.github/workflows/pages.yml`) that builds and publishes it; because
-Pages serves from a repo subpath, that build sets `VITE_BASE=/mcpcheckup/`. Serving from a
+Pages serves from a repo subpath, that build sets `VITE_BASE=/mcp_toolgauge/`. Serving from a
 domain root instead is `VITE_BASE=/`.
 
 ## A note on the demo data
 
-The two bundled reports in `dashboard/public/reports/` are real `mcpcheckup ci` output, not
+The two bundled reports in `dashboard/public/reports/` are real `mcp-toolgauge ci` output, not
 mock-ups. Their history series were produced by checking out each of this repository's
 milestone commits and scoring the fixture at that commit — which is why goodserver's line
 reads 97 → 100 → 96 → 96, the dip being the composite honestly falling the moment selection

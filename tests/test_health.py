@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import pytest
 
-from mcpcheckup.health import EVAL_WEIGHT, LINT_WEIGHT, color_for, health_score, lint_subscore
-from mcpcheckup.model import EvalScores, Finding, LintResult, ServerInfo, Severity
+from mcp_toolgauge.health import EVAL_WEIGHT, LINT_WEIGHT, color_for, health_score, lint_subscore
+from mcp_toolgauge.model import EvalScores, Finding, LintResult, ServerInfo, Severity
 
 _RULE = {Severity.ERROR: "MCP013", Severity.WARNING: "MCP020", Severity.INFO: "MCP025"}
 

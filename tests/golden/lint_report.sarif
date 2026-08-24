@@ -20,7 +20,7 @@
             "text": "Tool names mix conventions: 2 snake_case, 1 camelCase. The odd ones out are `doStuff`.\n\nRename `doStuff` to snake_case so the whole server reads as one API. Mixed conventions make a tool list look assembled rather than designed, and give a model one more axis of variation that carries no meaning."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "dc69f216dd467dd8"
+            "mcpToolgaugeFinding/v1": "dc69f216dd467dd8"
           },
           "ruleId": "MCP004"
         },
@@ -41,7 +41,7 @@
             "text": "`search_users` promises `user` in its name, but the description never mentions it.\n\nSay what `user` means here in the first sentence of `search_users`'s description. Retrieval matches a user's phrasing against the description as much as the name, so a description that never names its own subject loses to any sibling whose description does."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "a888ece65b70b9bf"
+            "mcpToolgaugeFinding/v1": "a888ece65b70b9bf"
           },
           "ruleId": "MCP003"
         },
@@ -62,7 +62,7 @@
             "text": "`search_users` and `search_orgs` share 78% of their meaningful words -- their descriptions are near-identical.\n\nRewrite one of them around what makes it different. If `search_users` and `search_orgs` really do the same thing, delete one; if they do not, the first sentence of each should name the thing only that one handles. Two descriptions this close are a coin flip at selection time, and the model has no way to know it guessed wrong."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "16d8eee1757125d2"
+            "mcpToolgaugeFinding/v1": "16d8eee1757125d2"
           },
           "ruleId": "MCP013"
         },
@@ -83,7 +83,7 @@
             "text": "`search_users` overlaps with `search_orgs`, and its description never says which to prefer.\n\nAdd a sentence to `search_users` of the form \"Use this when X. If you need Y, use `search_orgs` instead.\" Overlap between sibling tools is normal and usually unavoidable; what separates a server whose tools get picked correctly from one whose tools do not is whether the descriptions say how to choose."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "664f185df24e3012"
+            "mcpToolgaugeFinding/v1": "664f185df24e3012"
           },
           "ruleId": "MCP014"
         },
@@ -104,7 +104,7 @@
             "text": "`search_users.query` has no description.\n\nDescribe what `query` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "3275d49a7923d988"
+            "mcpToolgaugeFinding/v1": "3275d49a7923d988"
           },
           "ruleId": "MCP020"
         },
@@ -125,7 +125,7 @@
             "text": "Nothing in `search_users`'s schema shows an example value.\n\nPut one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "13549bf40803b35f"
+            "mcpToolgaugeFinding/v1": "13549bf40803b35f"
           },
           "ruleId": "MCP025"
         },
@@ -146,7 +146,7 @@
             "text": "`search_users` reads as read-only but declares no `readOnlyHint`.\n\nSet `readOnlyHint: true` on `search_users`. This is the annotation that *earns* you calls rather than costing them: clients use it to run safe tools without interrupting the user, and an unmarked read gets the same confirmation prompt as a delete."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "de84b5b57083d082"
+            "mcpToolgaugeFinding/v1": "de84b5b57083d082"
           },
           "ruleId": "MCP041"
         },
@@ -167,7 +167,7 @@
             "text": "`search_orgs` promises `org` in its name, but the description never mentions it.\n\nSay what `org` means here in the first sentence of `search_orgs`'s description. Retrieval matches a user's phrasing against the description as much as the name, so a description that never names its own subject loses to any sibling whose description does."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "feb895812bc7e8a8"
+            "mcpToolgaugeFinding/v1": "feb895812bc7e8a8"
           },
           "ruleId": "MCP003"
         },
@@ -188,7 +188,7 @@
             "text": "`search_orgs` overlaps with `search_users`, and its description never says which to prefer.\n\nAdd a sentence to `search_orgs` of the form \"Use this when X. If you need Y, use `search_users` instead.\" Overlap between sibling tools is normal and usually unavoidable; what separates a server whose tools get picked correctly from one whose tools do not is whether the descriptions say how to choose."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "9f6321cf9914a965"
+            "mcpToolgaugeFinding/v1": "9f6321cf9914a965"
           },
           "ruleId": "MCP014"
         },
@@ -209,7 +209,7 @@
             "text": "`search_orgs.query` has no description.\n\nDescribe what `query` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "f9359abb2c4d3034"
+            "mcpToolgaugeFinding/v1": "f9359abb2c4d3034"
           },
           "ruleId": "MCP020"
         },
@@ -230,7 +230,7 @@
             "text": "Nothing in `search_orgs`'s schema shows an example value.\n\nPut one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "7ffd05a9c3c598f0"
+            "mcpToolgaugeFinding/v1": "7ffd05a9c3c598f0"
           },
           "ruleId": "MCP025"
         },
@@ -251,7 +251,7 @@
             "text": "`search_orgs` reads as read-only but declares no `readOnlyHint`.\n\nSet `readOnlyHint: true` on `search_orgs`. This is the annotation that *earns* you calls rather than costing them: clients use it to run safe tools without interrupting the user, and an unmarked read gets the same confirmation prompt as a delete."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "83506320c780d7ce"
+            "mcpToolgaugeFinding/v1": "83506320c780d7ce"
           },
           "ruleId": "MCP041"
         },
@@ -272,7 +272,7 @@
             "text": "Every word in `doStuff` is generic, so the name says nothing about what the tool operates on.\n\nRename `doStuff` to verb-plus-object form that names the subject -- `search_users`, `create_support_ticket`, `archive_ticket`. A model ranks tools by name before it reads a single description, and a name that would fit on any server in the world gives it nothing to match against."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "87c8738f5cb54b22"
+            "mcpToolgaugeFinding/v1": "87c8738f5cb54b22"
           },
           "ruleId": "MCP002"
         },
@@ -293,7 +293,7 @@
             "text": "`doStuff`'s description is 4 words long.\n\nWrite at least one full sentence saying what the tool does and when to use it, then a second saying what it returns. A fragment gives retrieval almost nothing to match a user's phrasing against."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "f31642db47221b63"
+            "mcpToolgaugeFinding/v1": "f31642db47221b63"
           },
           "ruleId": "MCP011"
         },
@@ -314,7 +314,7 @@
             "text": "`doStuff`'s description still contains placeholder text ('TODO').\n\nReplace it with a real description of what `doStuff` does. Placeholder text is not neutral: the model reads it, and a tool whose description says TODO reads as unfinished and unsafe to call."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "e6aae373494994e1"
+            "mcpToolgaugeFinding/v1": "e6aae373494994e1"
           },
           "ruleId": "MCP015"
         },
@@ -335,7 +335,7 @@
             "text": "`doStuff.params` has no description.\n\nDescribe what `params` is for, what a valid value looks like, and what happens when it is omitted. An auto-generated `title` is not a description -- it is the parameter name with a capital letter."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "8a2d5fd465e30211"
+            "mcpToolgaugeFinding/v1": "8a2d5fd465e30211"
           },
           "ruleId": "MCP020"
         },
@@ -356,7 +356,7 @@
             "text": "`doStuff.params` has no declared type.\n\nGive `params` a concrete schema -- name its fields, or replace the free-form object with the two or three arguments it actually carries. An opaque bag is the one parameter shape a model cannot fill in correctly by reading the schema, so it guesses from the description instead, if there is one."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "9ac5e9e1ecf897d5"
+            "mcpToolgaugeFinding/v1": "9ac5e9e1ecf897d5"
           },
           "ruleId": "MCP024"
         },
@@ -377,7 +377,7 @@
             "text": "Nothing in `doStuff`'s schema shows an example value.\n\nPut one concrete value in the description of the least obvious parameter -- \"e.g. 'usr_1a2b'\" -- or add JSON Schema `examples`. Identifiers and formatted strings are the ones that matter: a model can guess what a search query looks like, and cannot guess what your IDs look like."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "3e94a4d0e0f084e8"
+            "mcpToolgaugeFinding/v1": "3e94a4d0e0f084e8"
           },
           "ruleId": "MCP025"
         },
@@ -398,24 +398,24 @@
             "text": "`doStuff` changes state but declares no `idempotentHint`.\n\nSay whether calling `doStuff` twice with the same arguments is the same as calling it once. Clients use this to decide whether a timed-out call can be retried; without it the safe assumption is no, and the user is asked to sort out a call that may or may not have happened."
           },
           "partialFingerprints": {
-            "mcpCheckupFinding/v1": "a23e2f4026cb9233"
+            "mcpToolgaugeFinding/v1": "a23e2f4026cb9233"
           },
           "ruleId": "MCP042"
         }
       ],
       "tool": {
         "driver": {
-          "informationUri": "https://github.com/arijitgupta42/mcpcheckup",
-          "name": "mcpcheckup",
+          "informationUri": "https://github.com/arijitgupta42/mcp-toolgauge",
+          "name": "mcp-toolgauge",
           "rules": [
             {
               "defaultConfiguration": {
                 "level": "error"
               },
               "help": {
-                "text": "Two tools have names that reduce to the same words. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP001.md for why this matters."
+                "text": "Two tools have names that reduce to the same words. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP001.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP001.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP001.md",
               "id": "MCP001",
               "name": "NearDuplicateToolNames",
               "shortDescription": {
@@ -427,9 +427,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "Every word in the name is generic, so it says nothing about what the tool does. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP002.md for why this matters."
+                "text": "Every word in the name is generic, so it says nothing about what the tool does. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP002.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP002.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP002.md",
               "id": "MCP002",
               "name": "NonDescriptiveToolName",
               "shortDescription": {
@@ -441,9 +441,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "A subject named in the tool name never appears in its description. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP003.md for why this matters."
+                "text": "A subject named in the tool name never appears in its description. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP003.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP003.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP003.md",
               "id": "MCP003",
               "name": "NameSubjectMissingFromDescription",
               "shortDescription": {
@@ -455,9 +455,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "The server mixes naming conventions across its tools. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP004.md for why this matters."
+                "text": "The server mixes naming conventions across its tools. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP004.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP004.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP004.md",
               "id": "MCP004",
               "name": "MixedNamingConventions",
               "shortDescription": {
@@ -469,9 +469,9 @@
                 "level": "error"
               },
               "help": {
-                "text": "The tool has no description at all. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP010.md for why this matters."
+                "text": "The tool has no description at all. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP010.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP010.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP010.md",
               "id": "MCP010",
               "name": "MissingDescription",
               "shortDescription": {
@@ -483,9 +483,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "The description is a fragment rather than a sentence. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP011.md for why this matters."
+                "text": "The description is a fragment rather than a sentence. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP011.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP011.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP011.md",
               "id": "MCP011",
               "name": "DescriptionTooShort",
               "shortDescription": {
@@ -497,9 +497,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "The description only repeats the words already in the name. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP012.md for why this matters."
+                "text": "The description only repeats the words already in the name. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP012.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP012.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP012.md",
               "id": "MCP012",
               "name": "DescriptionRestatesName",
               "shortDescription": {
@@ -511,9 +511,9 @@
                 "level": "error"
               },
               "help": {
-                "text": "Two tools' descriptions are near-identical. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP013.md for why this matters."
+                "text": "Two tools' descriptions are near-identical. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP013.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP013.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP013.md",
               "id": "MCP013",
               "name": "OverlappingDescriptions",
               "shortDescription": {
@@ -525,9 +525,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "A tool overlaps with a sibling and never says which to prefer. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP014.md for why this matters."
+                "text": "A tool overlaps with a sibling and never says which to prefer. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP014.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP014.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP014.md",
               "id": "MCP014",
               "name": "NoDisambiguationGuidance",
               "shortDescription": {
@@ -539,9 +539,9 @@
                 "level": "error"
               },
               "help": {
-                "text": "A description still contains placeholder text. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP015.md for why this matters."
+                "text": "A description still contains placeholder text. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP015.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP015.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP015.md",
               "id": "MCP015",
               "name": "PlaceholderText",
               "shortDescription": {
@@ -553,9 +553,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "A parameter has no description. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP020.md for why this matters."
+                "text": "A parameter has no description. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP020.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP020.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP020.md",
               "id": "MCP020",
               "name": "ParameterMissingDescription",
               "shortDescription": {
@@ -567,9 +567,9 @@
                 "level": "note"
               },
               "help": {
-                "text": "A parameter's description only repeats its name. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP021.md for why this matters."
+                "text": "A parameter's description only repeats its name. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP021.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP021.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP021.md",
               "id": "MCP021",
               "name": "ParameterDescriptionRestatesName",
               "shortDescription": {
@@ -581,9 +581,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "A free-form string parameter looks like it has a fixed set of valid values. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP022.md for why this matters."
+                "text": "A free-form string parameter looks like it has a fixed set of valid values. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP022.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP022.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP022.md",
               "id": "MCP022",
               "name": "FreeStringWithEnumCandidates",
               "shortDescription": {
@@ -595,9 +595,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "A date, email, or URL parameter declares no format or pattern. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP023.md for why this matters."
+                "text": "A date, email, or URL parameter declares no format or pattern. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP023.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP023.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP023.md",
               "id": "MCP023",
               "name": "UnconstrainedWellKnownFormat",
               "shortDescription": {
@@ -609,9 +609,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "A parameter has no declared type, or is an object with no declared shape. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP024.md for why this matters."
+                "text": "A parameter has no declared type, or is an object with no declared shape. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP024.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP024.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP024.md",
               "id": "MCP024",
               "name": "UntypedParameter",
               "shortDescription": {
@@ -623,9 +623,9 @@
                 "level": "note"
               },
               "help": {
-                "text": "Nothing in the tool's schema shows an example value. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP025.md for why this matters."
+                "text": "Nothing in the tool's schema shows an example value. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP025.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP025.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP025.md",
               "id": "MCP025",
               "name": "NoExampleValues",
               "shortDescription": {
@@ -637,9 +637,9 @@
                 "level": "error"
               },
               "help": {
-                "text": "A tool that looks destructive declares no destructiveHint. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP040.md for why this matters."
+                "text": "A tool that looks destructive declares no destructiveHint. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP040.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP040.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP040.md",
               "id": "MCP040",
               "name": "DestructiveToolWithoutHint",
               "shortDescription": {
@@ -651,9 +651,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "A tool that looks read-only declares no readOnlyHint. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP041.md for why this matters."
+                "text": "A tool that looks read-only declares no readOnlyHint. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP041.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP041.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP041.md",
               "id": "MCP041",
               "name": "ReadOnlyToolWithoutHint",
               "shortDescription": {
@@ -665,9 +665,9 @@
                 "level": "note"
               },
               "help": {
-                "text": "A tool that changes state declares no idempotentHint. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP042.md for why this matters."
+                "text": "A tool that changes state declares no idempotentHint. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP042.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP042.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP042.md",
               "id": "MCP042",
               "name": "MissingIdempotentHint",
               "shortDescription": {
@@ -679,9 +679,9 @@
                 "level": "note"
               },
               "help": {
-                "text": "A single tool's definition is large enough to crowd out its neighbours. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP050.md for why this matters."
+                "text": "A single tool's definition is large enough to crowd out its neighbours. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP050.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP050.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP050.md",
               "id": "MCP050",
               "name": "SingleToolDefinitionTooLarge",
               "shortDescription": {
@@ -693,9 +693,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "The server's tool definitions add up to a large context cost. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP051.md for why this matters."
+                "text": "The server's tool definitions add up to a large context cost. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP051.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP051.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP051.md",
               "id": "MCP051",
               "name": "ServerToolBudgetExceeded",
               "shortDescription": {
@@ -707,9 +707,9 @@
                 "level": "warning"
               },
               "help": {
-                "text": "The server has enough tools that selection accuracy suffers. See https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP052.md for why this matters."
+                "text": "The server has enough tools that selection accuracy suffers. See https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP052.md for why this matters."
               },
-              "helpUri": "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules/MCP052.md",
+              "helpUri": "https://github.com/arijitgupta42/mcp-toolgauge/blob/main/docs/rules/MCP052.md",
               "id": "MCP052",
               "name": "TooManyTools",
               "shortDescription": {

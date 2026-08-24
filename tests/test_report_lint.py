@@ -15,8 +15,8 @@ from pathlib import Path
 import pytest
 from rich.console import Console
 
-from mcpcheckup.model import Finding, LintResult, ServerInfo, Severity
-from mcpcheckup.report import render_lint_json, render_lint_table
+from mcp_toolgauge.model import Finding, LintResult, ServerInfo, Severity
+from mcp_toolgauge.report import render_lint_json, render_lint_table
 
 GOLDEN = Path(__file__).parent / "golden" / "lint_report.txt"
 

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { bandVar, scoreBand } from "./score";
 
 /*
- * These pin the band ladder to mcpcheckup/health.py's `_BANDS` / `color_for`. If the Python
+ * These pin the band ladder to mcp_toolgauge/health.py's `_BANDS` / `color_for`. If the Python
  * moves a boundary and this file is not moved with it, the dashboard would colour a score
  * differently from the badge on the same repo -- so the boundaries are asserted exactly, at
  * the floor and one below it, for every band.

@@ -1,7 +1,7 @@
 /*
  * The confusion matrix, and the "steals this much" sentences under it.
  *
- * `notableConfusions` is a port of the function of the same name in mcpcheckup/eval/score.py,
+ * `notableConfusions` is a port of the function of the same name in mcp_toolgauge/eval/score.py,
  * and matrix.test.ts pins it against that function's rule cell for cell: an off-diagonal cell,
  * whose `selected` is a real tool (not the "called nothing" row), whose share is at least
  * 0.20, sorted by descending share then descending count then the two tool names, capped at

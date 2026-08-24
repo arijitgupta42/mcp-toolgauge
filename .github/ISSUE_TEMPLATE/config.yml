@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
   - name: Question or idea
-    url: https://github.com/arijitgupta42/mcpcheckup/discussions
+    url: https://github.com/arijitgupta42/mcp-toolgauge/discussions
     about: For anything that isn't a bug or a concrete proposal — usage questions, ideas, "is this in scope?"
   - name: Security vulnerability
-    url: https://github.com/arijitgupta42/mcpcheckup/security/advisories/new
+    url: https://github.com/arijitgupta42/mcp-toolgauge/security/advisories/new
     about: Report privately, not in a public issue. See SECURITY.md.

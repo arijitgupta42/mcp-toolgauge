@@ -13,11 +13,11 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from mcpcheckup.cli import app
-from mcpcheckup.eval.backend import Completion, ToolCall, build_messages
-from mcpcheckup.eval.cache import CachedCall, ResponseCache, cache_key, cache_path
-from mcpcheckup.eval.cases import CASES_FILENAME, write_suite
-from mcpcheckup.model import (
+from mcp_toolgauge.cli import app
+from mcp_toolgauge.eval.backend import Completion, ToolCall, build_messages
+from mcp_toolgauge.eval.cache import CachedCall, ResponseCache, cache_key, cache_path
+from mcp_toolgauge.eval.cases import CASES_FILENAME, write_suite
+from mcp_toolgauge.model import (
     CaseKind,
     CaseSuite,
     EvalCase,
@@ -84,7 +84,7 @@ def project(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     def fake_fetch(target: str, **kwargs) -> InspectResult:
         return InspectResult(target="python server.py", server=SERVER, tools=TOOLS)
 
-    monkeypatch.setattr("mcpcheckup.cli._fetch", fake_fetch)
+    monkeypatch.setattr("mcp_toolgauge.cli._fetch", fake_fetch)
 
     write_suite(
         tmp_path / CASES_FILENAME,
@@ -169,7 +169,7 @@ class TestCaseFileErrors:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setattr(
-            "mcpcheckup.cli._fetch",
+            "mcp_toolgauge.cli._fetch",
             lambda target, **kw: InspectResult(target="t", server=SERVER, tools=TOOLS),
         )
 
@@ -245,7 +245,7 @@ class TestWarnings:
     ) -> None:
         extra = (*TOOLS, ToolSpec(name="archive_ticket", description="Archive a ticket."))
         monkeypatch.setattr(
-            "mcpcheckup.cli._fetch",
+            "mcp_toolgauge.cli._fetch",
             lambda target, **kw: InspectResult(target="t", server=SERVER, tools=extra),
         )
 
@@ -285,13 +285,13 @@ class TestInit:
         def reply(**kwargs: object) -> tuple[str, Completion]:
             return DRAFT_REPLY, Completion(call=ToolCall())
 
-        monkeypatch.setattr("mcpcheckup.eval.backend.complete_text", reply)
+        monkeypatch.setattr("mcp_toolgauge.eval.backend.complete_text", reply)
 
     def test_it_writes_a_case_file(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setattr(
-            "mcpcheckup.cli._fetch",
+            "mcp_toolgauge.cli._fetch",
             lambda target, **kw: InspectResult(target="t", server=SERVER, tools=TOOLS),
         )
         self.draft(monkeypatch)
@@ -324,7 +324,7 @@ class TestInit:
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
     ) -> None:
         monkeypatch.setattr(
-            "mcpcheckup.cli._fetch",
+            "mcp_toolgauge.cli._fetch",
             lambda target, **kw: InspectResult(target="t", server=SERVER, tools=()),
         )
 

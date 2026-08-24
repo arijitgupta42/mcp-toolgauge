@@ -12,9 +12,9 @@ from typing import Any
 
 import pytest
 
-from mcpcheckup.eval import check_arguments, score
-from mcpcheckup.lint import LintContext, get_rule, lint
-from mcpcheckup.model import (
+from mcp_toolgauge.eval import check_arguments, score
+from mcp_toolgauge.lint import LintContext, get_rule, lint
+from mcp_toolgauge.model import (
     CaseKind,
     CaseOutcome,
     CaseSuite,

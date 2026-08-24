@@ -1,6 +1,6 @@
 """badserver -- the same directory and ticketing API as ``goodserver``, written carelessly.
 
-This is mcpcheckup's demo villain. It is deliberately bad, but it is meant to look like a
+This is mcp-toolgauge's demo villain. It is deliberately bad, but it is meant to look like a
 real server that grew without review: tools bolted on over time, names that made sense to
 the author, descriptions copy-pasted between siblings and never differentiated. It is not
 a checklist of every lint rule -- per-rule micro-fixtures live next to their rules.
@@ -8,7 +8,7 @@ a checklist of every lint rule -- per-rule micro-fixtures live next to their rul
 The headline problem is `search_users` versus `search_orgs`: near-identical descriptions
 with nothing telling a model when to prefer one over the other.
 
-Nothing here does real work. mcpcheckup never invokes a tool (read-only invariant), so
+Nothing here does real work. mcp-toolgauge never invokes a tool (read-only invariant), so
 every body calls `_never_called`, which writes a marker to stderr. If that marker ever
 shows up in a test run, the invariant is broken.
 """
@@ -23,7 +23,7 @@ from mcp.server.mcpserver import MCPServer
 
 mcp = MCPServer(name="acme-directory", version="0.4.2")
 
-NEVER_CALLED_MARKER = "MCPCHECKUP_FIXTURE_TOOL_WAS_INVOKED"
+NEVER_CALLED_MARKER = "MCP_TOOLGAUGE_FIXTURE_TOOL_WAS_INVOKED"
 
 
 def _never_called(tool: str) -> dict[str, Any]:

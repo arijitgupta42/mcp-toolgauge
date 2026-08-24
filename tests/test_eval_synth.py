@@ -15,16 +15,16 @@ import json
 
 import pytest
 
-from mcpcheckup.eval.backend import BackendError, Completion, ToolCall
-from mcpcheckup.eval.synth import (
+from mcp_toolgauge.eval.backend import BackendError, Completion, ToolCall
+from mcp_toolgauge.eval.synth import (
     SynthesisFailed,
     _extract_json,
     confusable_pairs,
     draft_cases,
     looks_usable,
 )
-from mcpcheckup.lint.rules.description import CONFUSABLE_SIMILARITY
-from mcpcheckup.model import CaseKind, ToolSpec
+from mcp_toolgauge.lint.rules.description import CONFUSABLE_SIMILARITY
+from mcp_toolgauge.model import CaseKind, ToolSpec
 
 TWINS = (
     ToolSpec(
@@ -95,7 +95,7 @@ class TestConfusablePairs:
     def test_the_threshold_is_the_linters(self) -> None:
         """Imported, not restated. A pair the linter warns about is a pair that gets hard
         cases, and the two must not drift."""
-        import mcpcheckup.eval.synth as synth
+        import mcp_toolgauge.eval.synth as synth
 
         assert synth.CONFUSABLE_SIMILARITY is CONFUSABLE_SIMILARITY
 
@@ -398,8 +398,8 @@ class TestCacheRejectsUnusableReplies:
     def test_a_recorded_but_unreadable_reply_is_not_served_back(self, tmp_path) -> None:
         """Otherwise one malformed answer is pinned forever and the affected tool is
         skipped on every future run, with no way to retry short of deleting the file."""
-        from mcpcheckup.eval.cache import CachedCall, ResponseCache, cache_key
-        from mcpcheckup.eval.runner import cached_text_completer
+        from mcp_toolgauge.eval.cache import CachedCall, ResponseCache, cache_key
+        from mcp_toolgauge.eval.runner import cached_text_completer
 
         cache = ResponseCache.load(tmp_path / "c.jsonl")
         messages = [{"role": "user", "content": "go"}]
@@ -412,7 +412,7 @@ class TestCacheRejectsUnusableReplies:
             calls["n"] += 1
             return json.dumps(FOUR), Completion(call=ToolCall())
 
-        import mcpcheckup.eval.backend as backend_module
+        import mcp_toolgauge.eval.backend as backend_module
 
         original = backend_module.complete_text
         backend_module.complete_text = fresh  # type: ignore[assignment]

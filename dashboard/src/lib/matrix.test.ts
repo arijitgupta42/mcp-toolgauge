@@ -3,7 +3,7 @@ import type { ConfusionCell } from "../types";
 import { buildMatrix, describeConfusion, notableConfusions } from "./matrix";
 
 /*
- * notableConfusions is a port of the same function in mcpcheckup/eval/score.py, and these
+ * notableConfusions is a port of the same function in mcp_toolgauge/eval/score.py, and these
  * tests are its contract, cell for cell: off-diagonal only, the "called nothing" row excluded,
  * share >= 0.20, sorted by descending share then descending count then the two names, top five.
  * The confusion sentence is the single output the whole eval exists to produce, so a drift

@@ -18,12 +18,12 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from mcpcheckup.cli import app
-from mcpcheckup.connect import inspect_server_sync, resolve_target
-from mcpcheckup.eval.backend import build_messages
-from mcpcheckup.eval.cache import CachedCall, ResponseCache, cache_key, cache_path
-from mcpcheckup.eval.cases import CASES_FILENAME, write_suite
-from mcpcheckup.model import CaseKind, CaseSuite, EvalCase, InspectResult, tool_digest
+from mcp_toolgauge.cli import app
+from mcp_toolgauge.connect import inspect_server_sync, resolve_target
+from mcp_toolgauge.eval.backend import build_messages
+from mcp_toolgauge.eval.cache import CachedCall, ResponseCache, cache_key, cache_path
+from mcp_toolgauge.eval.cases import CASES_FILENAME, write_suite
+from mcp_toolgauge.model import CaseKind, CaseSuite, EvalCase, InspectResult, tool_digest
 
 pytestmark = pytest.mark.integration
 
@@ -251,5 +251,5 @@ class TestReadOnly:
 
         result = evaluate(tmp_path)
 
-        assert "MCPCHECKUP_FIXTURE_TOOL_WAS_INVOKED" not in (result.stdout + result.stderr)
+        assert "MCP_TOOLGAUGE_FIXTURE_TOOL_WAS_INVOKED" not in (result.stdout + result.stderr)
         assert result.exit_code == 0

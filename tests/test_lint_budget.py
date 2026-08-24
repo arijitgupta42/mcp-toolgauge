@@ -8,13 +8,13 @@ does not" -- not a particular number that a later tuning would falsify.
 
 from __future__ import annotations
 
-from mcpcheckup.lint.rules.budget import (
+from mcp_toolgauge.lint.rules.budget import (
     SERVER_BUDGET,
     SINGLE_TOOL_LIMIT,
     TOOL_COUNT_LIMIT,
     _definition_tokens,
 )
-from mcpcheckup.model import ToolSpec
+from mcp_toolgauge.model import ToolSpec
 
 
 def sized_tool(name: str, tokens: int) -> ToolSpec:

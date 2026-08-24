@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from mcpcheckup.connect.target import (
+from mcp_toolgauge.connect.target import (
     HttpTarget,
     StdioTarget,
     TargetResolutionError,

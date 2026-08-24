@@ -59,7 +59,7 @@ export function App() {
   return (
     <div className="shell">
       <header className="masthead">
-        <span className="eyebrow">mcpcheckup</span>
+        <span className="eyebrow">mcp-toolgauge</span>
         <p className="tagline">
           Why your MCP server&rsquo;s tools do &mdash; or don&rsquo;t &mdash; get called.
         </p>
@@ -106,7 +106,7 @@ export function App() {
       )}
 
       <footer className="colophon">
-        <span className="eyebrow">mcpcheckup</span>
+        <span className="eyebrow">mcp-toolgauge</span>
         <span className="muted">
           Static report viewer &mdash; nothing you load here is uploaded anywhere.
         </span>

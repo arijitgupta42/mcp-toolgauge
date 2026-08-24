@@ -1,4 +1,4 @@
-## 🔴 mcpcheckup health: 42 / 100
+## 🔴 mcp-toolgauge health: 42 / 100
 
 `acme-directory` — python server.py
 
@@ -12,4 +12,4 @@
 - `search_users` captures 83% of the prompts meant for `search_orgs`.
 - `search_orgs` captures 33% of the prompts meant for `search_users`.
 
-<sub>Measured by [mcpcheckup](https://github.com/arijitgupta42/mcpcheckup).</sub>
+<sub>Measured by [mcp-toolgauge](https://github.com/arijitgupta42/mcp-toolgauge).</sub>

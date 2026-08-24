@@ -1,6 +1,6 @@
 """The README demo SVG is committed, real output -- these keep it honest.
 
-`scripts/render_demo.py` captures real mcpcheckup output into docs/assets/demo.svg. That
+`scripts/render_demo.py` captures real mcp-toolgauge output into docs/assets/demo.svg. That
 script connects to both fixture servers, so it runs by hand, not in CI (the same reason the
 dashboard's demo reports are committed rather than regenerated). What CI *can* cheaply do is
 shape-check the committed file: that it is a valid, animated SVG and that it still tells the

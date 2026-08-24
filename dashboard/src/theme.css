@@ -8,7 +8,7 @@
  * It suits a tool whose other face is a terminal.
  *
  * Colours are defined as tokens on :root and swapped under prefers-color-scheme, so light and
- * dark are one palette seen two ways. The six score bands mirror mcpcheckup/health.py exactly
+ * dark are one palette seen two ways. The six score bands mirror mcp_toolgauge/health.py exactly
  * (90 / 75 / 60 / 45 / 30) so the dashboard, the badge, and the terminal never disagree about
  * what a number is worth.
  */
