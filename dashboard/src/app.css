@@ -30,10 +30,14 @@
   z-index: 40;
 }
 
-/* The near-black strip across the top, straight off the reference's announcement bar. */
+/*
+ * The strip across the top, straight off the reference's announcement bar. It is the one
+ * inverted surface on the page, so it takes the --invert-* pair rather than an ink colour:
+ * near-black under a light theme, near-white under a dark one.
+ */
 .strip {
-  background: var(--ink-strong);
-  color: var(--on-dark);
+  background: var(--invert-bg);
+  color: var(--invert-fg);
   font-size: 13px;
 }
 
@@ -52,8 +56,11 @@
   font-weight: 500;
 }
 
+/* Quieter than the sentence beside it, but derived from the strip's own ink so it stays
+   legible whichever way the pair is flipped. */
 .strip a {
-  color: rgba(245, 245, 245, 0.62);
+  color: var(--invert-fg);
+  opacity: 0.68;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -61,7 +68,7 @@
 }
 
 .strip a:hover {
-  color: var(--on-dark);
+  opacity: 1;
 }
 
 /* ---- The sticky rail --------------------------------------------------------------- */
@@ -168,11 +175,13 @@
 .rail-link .n {
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--grey);
+  color: var(--muted);
 }
 
+/* The active numeral takes ink, not the accent: the accent green is 3.47:1 on white, and
+   the label beside it already carries the state in colour and weight. */
 .rail-link.here .n {
-  color: var(--accent);
+  color: var(--ink);
 }
 
 .rail-right {
@@ -227,7 +236,7 @@
 }
 
 .drawer input::placeholder {
-  color: var(--grey);
+  color: var(--muted);
 }
 
 .drawer-note {
@@ -362,7 +371,7 @@
   transform: translateX(-50%);
   font-family: var(--mono);
   font-size: 11px;
-  color: var(--grey);
+  color: var(--muted);
 }
 
 /* ---- The wall of cells ------------------------------------------------------------- */
@@ -391,7 +400,7 @@
 .cell .k {
   display: block;
   font-size: 12.5px;
-  color: var(--grey);
+  color: var(--muted);
   margin-bottom: 10px;
 }
 
@@ -409,7 +418,7 @@
 
 .cell .v .u {
   font-size: 15px;
-  color: var(--grey);
+  color: var(--muted);
   letter-spacing: -0.01em;
 }
 
@@ -444,7 +453,7 @@
 .sec-head .n {
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--grey);
+  color: var(--muted);
   display: block;
   margin-bottom: 14px;
 }
@@ -468,6 +477,16 @@
 
 .sub-head h3 {
   font-size: clamp(19px, 2vw, 23px);
+}
+
+/*
+ * The two-tone device below display size. --grey only clears contrast as large text (24px+),
+ * which the verdict and section headings always are -- these two are not, so their faded half
+ * steps up to --muted. Same effect, one notch less air.
+ */
+.sub-head h3 .dim,
+.nothing .say .dim {
+  color: var(--muted);
 }
 
 /* ---- Ledger (findings) ------------------------------------------------------------- */
@@ -578,14 +597,14 @@
 .f .f-fix .lab {
   display: block;
   font-size: 12px;
-  color: var(--grey);
+  color: var(--muted);
   margin-bottom: 6px;
 }
 
 .f .where {
   font-family: var(--mono);
   font-size: 11.5px;
-  color: var(--grey);
+  color: var(--muted);
 }
 
 /* ---- Matrix (selection) ------------------------------------------------------------ */
@@ -645,14 +664,10 @@
   border-left: 1px solid var(--hair);
 }
 
+/* No special case for a saturated cell: each theme's ramp composites away from its own text
+   (see --correct / --steal in theme.css), so --ink reads at every alpha. */
 .hm-cell.filled {
   color: var(--ink);
-}
-
-/* Past about half share the fill swamps the theme's own ink -- in dark mode especially,
-   where pale text would sit on bright green. A fixed near-black reads on every hue here. */
-.hm-cell.hot {
-  color: var(--on-hot);
   font-weight: 500;
 }
 
@@ -693,7 +708,7 @@
 .steal .idx {
   font-family: var(--mono);
   font-size: 12px;
-  color: var(--grey);
+  color: var(--muted);
   flex: none;
 }
 
@@ -704,7 +719,7 @@
   font-size: clamp(17px, 2vw, 22px);
   line-height: 1.25;
   letter-spacing: -0.015em;
-  color: var(--grey);
+  color: var(--muted);
 }
 
 .steal p b {
@@ -750,7 +765,7 @@
 }
 
 .hit .num small {
-  color: var(--grey);
+  color: var(--muted);
   font-size: 12px;
   margin-left: 7px;
 }
@@ -781,7 +796,7 @@
 }
 
 .chart .axis {
-  fill: var(--grey);
+  fill: var(--muted);
   font-family: var(--mono);
   font-size: 10.5px;
 }
