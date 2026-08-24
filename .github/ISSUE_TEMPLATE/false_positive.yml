@@ -1,0 +1,43 @@
+name: False positive
+description: A lint rule flagged something that is actually fine.
+labels: ["bug", "false-positive"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        A linter that cries wolf gets turned off, so these reports matter a lot. The more of
+        the tool definition you can share, the faster this gets fixed — a rule is only as good
+        as the cases it's tested against, and yours becomes a regression test.
+  - type: input
+    id: rule
+    attributes:
+      label: Which rule
+      description: The rule ID from the finding.
+      placeholder: "MCP013"
+    validations:
+      required: true
+  - type: textarea
+    id: finding
+    attributes:
+      label: What it said
+      description: The finding, copied from the output.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: tool
+    attributes:
+      label: The tool definition it flagged
+      description: >
+        The name, description, and schema of the tool (and its sibling, for the rules about
+        overlap). Redact anything private — a paraphrase that still trips the rule is fine.
+      render: json
+    validations:
+      required: true
+  - type: textarea
+    id: why-fine
+    attributes:
+      label: Why it's actually fine
+      description: What the rule missed. This is the part that turns into the fix.
+    validations:
+      required: true

@@ -1,0 +1,40 @@
+name: Rule proposal
+description: Suggest a new lint rule for a tool-definition smell.
+labels: ["enhancement", "rule-proposal"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The test for a new rule is simple: does the thing it flags actually make a model less
+        likely to pick the right tool? If you can point at a real server where it bit you, the
+        proposal is most of the way there.
+  - type: textarea
+    id: smell
+    attributes:
+      label: The smell
+      description: What's wrong with the tool definition, and how a reader would recognise it.
+      placeholder: >
+        A parameter named `type` or `mode` that takes a free-form string when the description
+        lists exactly three accepted values — it should be an enum.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it hurts selection
+      description: The mechanism. How does this make the wrong tool get called, or the right one get called wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: The fix it should suggest
+      description: Every rule proposes a concrete fix. What would this one tell the author to do?
+    validations:
+      required: true
+  - type: input
+    id: severity
+    attributes:
+      label: Severity
+      description: error, warning, or info — and a word on why.
+      placeholder: "warning — it's usually wrong but occasionally deliberate"

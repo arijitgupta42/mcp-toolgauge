@@ -2,17 +2,15 @@ name: Deploy dashboard to Pages
 
 # Publishes the dashboard (dashboard/) to GitHub Pages.
 #
-# Manual-only for now, on purpose. The repository is private until launch, and GitHub Pages
-# will not serve a private repo without a paid plan -- so a push-triggered deploy would fail
-# on every merge to main and, per the project's rule, main must stay green. Once the repo is
-# public and Pages is enabled (Settings -> Pages -> Source: GitHub Actions), add the push
-# trigger below and every merge republishes:
-#
-#   on:
-#     push:
-#       branches: [main]
-#     workflow_dispatch:
+# The push trigger is guarded rather than absent (see the build job's `if`). GitHub Pages
+# will not serve a private repo without a paid plan, so while the repo is private a
+# push-triggered run would fail on every merge to main -- and main must stay green. The guard
+# skips the run (green, not failed) until the repo is public, at which point every merge
+# republishes with no further edit to this file. Enabling Pages is a one-time manual step:
+# Settings -> Pages -> Source: GitHub Actions.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 # Pages needs these; nothing else in the repo does, so they are scoped to this workflow.
@@ -31,6 +29,9 @@ jobs:
   build:
     name: build
     runs-on: ubuntu-latest
+    # A manual dispatch always runs; a push only once the repo is public and Pages can
+    # actually serve it. Until then the push run is skipped, which keeps main green.
+    if: github.event_name == 'workflow_dispatch' || github.event.repository.visibility == 'public'
     defaults:
       run:
         working-directory: dashboard
