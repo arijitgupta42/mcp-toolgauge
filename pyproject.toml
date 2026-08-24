@@ -56,6 +56,23 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["mcpcheckup"]
 
+# Without an explicit list, hatchling sweeps the whole working tree into the sdist --
+# including dashboard/node_modules, which is a 17 MB source distribution dominated by a
+# Windows esbuild.exe. The dashboard is a separate npm project, not part of the Python
+# package, so name exactly what belongs in the source release and nothing else. The two
+# fixture servers (with their committed eval caches) come in via tests/, so `eval --offline`
+# works from an sdist install too.
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "mcpcheckup",
+    "tests",
+    "docs",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "pyproject.toml",
+]
+
 [tool.ruff]
 line-length = 100
 target-version = "py311"

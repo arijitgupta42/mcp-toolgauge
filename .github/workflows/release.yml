@@ -1,0 +1,92 @@
+name: Release
+
+# Cuts a release from a version tag and publishes it to PyPI by trusted publishing (OIDC) --
+# there is no API token stored anywhere. Pushing a tag like `v0.1.0` is the whole trigger.
+#
+# One-time setup on PyPI (Settings -> Publishing): add a pending publisher for project
+# `mcpcheckup`, owner `arijitgupta42`, repo `mcpcheckup`, workflow `release.yml`, environment
+# `pypi`. Until that publisher exists, the publish job fails closed -- which is the safe way
+# round.
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    name: build and check the tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      # The classic release footgun: a tag that disagrees with the packaged version, so the
+      # thing on PyPI is not the thing the tag names. Fail before building, not after
+      # uploading -- a bad upload cannot be taken back.
+      - name: The tag must match the packaged version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          packaged="$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml','rb'))['project']['version'])")"
+          echo "tag=$tag  packaged=$packaged"
+          if [ "$tag" != "$packaged" ]; then
+            echo "::error::tag v$tag does not match project.version $packaged in pyproject.toml"
+            exit 1
+          fi
+
+      - name: Build
+        run: uv build
+
+      # Twine's check catches a README that PyPI would reject before the irreversible upload.
+      - name: Check the distributions render on PyPI
+        run: uvx twine check dist/*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish:
+    name: publish to PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    # The environment is where the trusted-publishing identity is scoped, and it's the gate a
+    # branch-protection rule can require. It must match the pending publisher on PyPI.
+    environment:
+      name: pypi
+      url: https://pypi.org/project/mcpcheckup/
+    permissions:
+      id-token: write # OIDC: this is what lets PyPI trust the run without a stored token.
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  smoke:
+    name: install from PyPI and run it
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: astral-sh/setup-uv@v5
+
+      # Proves the headline claim on every release: a stranger can `uvx mcpcheckup` with no
+      # install step and it works. PyPI's index takes a moment to serve a new version, so this
+      # retries rather than racing it.
+      - name: uvx the freshly published version
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          for attempt in 1 2 3 4 5; do
+            if uvx "mcpcheckup@${version}" --version; then
+              exit 0
+            fi
+            echo "attempt $attempt: not on the index yet, waiting..."
+            sleep 15
+          done
+          echo "::error::mcpcheckup ${version} did not become installable from PyPI"
+          exit 1
