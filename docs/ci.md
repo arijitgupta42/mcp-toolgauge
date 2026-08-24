@@ -159,10 +159,8 @@ jobs:
 Inputs: `target`, `min-score`, `model`, `cases`, `badge-path`, `comment`, `track-score`,
 `package-spec`, `python-version`. Outputs: `score` and `color`.
 
-Until mcpcheckup is published to PyPI (that lands with the launch), pin `package-spec` to a
-git ref so the Action has something to install:
-
-```yaml
-        with:
-          package-spec: git+https://github.com/arijitgupta42/mcpcheckup
-```
+`@v1` is a moving major-version tag that follows the latest `v1.x` release, so you get fixes
+without re-pinning. Pin an exact tag like `@v0.1.0` if you'd rather freeze it. The Action
+installs mcpcheckup from PyPI by default; `package-spec` overrides what it installs — point it
+at a git ref (`git+https://github.com/arijitgupta42/mcpcheckup@main`) to run an unreleased
+version.

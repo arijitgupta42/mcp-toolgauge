@@ -9,9 +9,9 @@ branding:
 # so a server author gets a health gate, a badge, and a PR comment with the delta against
 # their base branch, in one step.
 #
-# Note: it installs mcpcheckup with `uvx`, which resolves `package-spec` (the published
-# package by default). Until mcpcheckup is on PyPI (Session 6), pin `package-spec` to a git
-# ref, e.g. `git+https://github.com/arijitgupta42/mcpcheckup`.
+# Note: it installs mcpcheckup with `uvx`, which resolves `package-spec` -- the published
+# PyPI package by default. Override it to run an unreleased version, e.g.
+# `git+https://github.com/arijitgupta42/mcpcheckup@main`.
 
 inputs:
   target:

@@ -1,0 +1,41 @@
+name: Bug report
+description: Something in mcpcheckup behaves wrong — a crash, a bad exit code, wrong output.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. If this is about a lint rule firing where it shouldn't, use the
+        **False positive** template instead — it asks the right questions for that.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, and what you got instead.
+      placeholder: |
+        I ran `mcpcheckup ci ./my-server` and it exited 3 with "could not reach the server",
+        but the same server inspects fine with `mcpcheckup inspect ./my-server`.
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: The exact command
+      description: The full command line, and any relevant `mcpcheckup.toml`.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output
+      description: The output, ideally with `-v`. Paste as text, not a screenshot, so it's searchable.
+      render: text
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The output of `mcpcheckup --version`, and your OS and Python version.
+      placeholder: "mcpcheckup 0.1.0, macOS 14, Python 3.12"
+    validations:
+      required: true
