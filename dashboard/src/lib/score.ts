@@ -1,6 +1,6 @@
 /*
  * Turning a 0-100 score into the band it belongs to. This is a straight port of the ladder
- * in mcpcheckup/health.py (`_BANDS` / `color_for`), and the port is not incidental: the whole
+ * in mcp_toolgauge/health.py (`_BANDS` / `color_for`), and the port is not incidental: the whole
  * value of the dashboard is that it agrees with the badge and the terminal about what a number
  * is worth. score.test.ts pins these boundaries against the Python so a change to one side
  * that is not mirrored on the other fails CI rather than shipping a dashboard that quietly

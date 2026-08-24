@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from mcpcheckup.model import CiReport
+from mcp_toolgauge.model import CiReport
 
 REPORTS = Path(__file__).resolve().parent.parent / "dashboard" / "public" / "reports"
 DEMOS = ["goodserver", "badserver"]

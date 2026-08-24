@@ -18,7 +18,7 @@ One thing: **given a user's request and your tool list, does the model call the 
 meant?**
 
 Not whether the model's answer was good. Not whether the tool returned the right data --
-`mcpcheckup` never calls your tools at all. Just selection, which is the step that fails
+`mcp-toolgauge` never calls your tools at all. Just selection, which is the step that fails
 silently. A wrong tool call succeeds, returns plausible data, and nobody ever finds out.
 
 The mechanics are deliberately ordinary, because the point is to reproduce what your users'
@@ -182,10 +182,10 @@ Worth saying plainly, because a number invites more confidence than it earns.
 ## Reading a run
 
 ```bash
-mcpcheckup eval ./your-server --init    # draft a suite; then edit it and commit it
-mcpcheckup eval ./your-server           # run it
-mcpcheckup eval ./your-server -v        # every failing case, with the prompt
-mcpcheckup eval ./your-server --offline # replay the cache; no model, no cost
+mcp-toolgauge eval ./your-server --init    # draft a suite; then edit it and commit it
+mcp-toolgauge eval ./your-server           # run it
+mcp-toolgauge eval ./your-server -v        # every failing case, with the prompt
+mcp-toolgauge eval ./your-server --offline # replay the cache; no model, no cost
 ```
 
 Start at the bottom. The sentences naming two tools are the finding; the percentages above

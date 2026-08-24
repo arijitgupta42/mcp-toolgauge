@@ -1,15 +1,15 @@
-# mcpcheckup
+# mcp-toolgauge
 
-[![mcpcheckup health](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/arijitgupta42/mcpcheckup/main/badge.json)](docs/ci.md#the-badge)
-[![PyPI](https://img.shields.io/pypi/v/mcpcheckup)](https://pypi.org/project/mcpcheckup/)
-[![CI](https://github.com/arijitgupta42/mcpcheckup/actions/workflows/ci.yml/badge.svg)](https://github.com/arijitgupta42/mcpcheckup/actions/workflows/ci.yml)
+[![mcp-toolgauge health](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/arijitgupta42/mcp-toolgauge/main/badge.json)](docs/ci.md#the-badge)
+[![PyPI](https://img.shields.io/pypi/v/mcp-toolgauge)](https://pypi.org/project/mcp_toolgauge/)
+[![CI](https://github.com/arijitgupta42/mcp-toolgauge/actions/workflows/ci.yml/badge.svg)](https://github.com/arijitgupta42/mcp-toolgauge/actions/workflows/ci.yml)
 [![licence: MIT](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
 
 **Find out why your MCP server's tools don't get called.**
 
-![mcpcheckup finds a near-duplicate description, measures the tool-selection confusion it causes, and rolls it into one health score](https://raw.githubusercontent.com/arijitgupta42/mcpcheckup/main/docs/assets/demo.svg)
+![mcp-toolgauge finds a near-duplicate description, measures the tool-selection confusion it causes, and rolls it into one health score](https://raw.githubusercontent.com/arijitgupta42/mcp-toolgauge/main/docs/assets/demo.svg)
 
-`mcpcheckup` audits an MCP server three ways — a static **linter** for names, descriptions
+`mcp-toolgauge` audits an MCP server three ways — a static **linter** for names, descriptions
 and schemas; a dynamic **evaluator** that measures whether a model actually picks the right
 tool; and a **CI gate** with a score badge — to answer the one question a server author keeps
 hitting: *why don't my tools get selected?*
@@ -19,26 +19,26 @@ hitting: *why don't my tools get selected?*
 No install step — [`uvx`](https://docs.astral.sh/uv/) fetches and runs it:
 
 ```bash
-uvx mcpcheckup lint ./your-server    # static rules, offline, no API key, free
-uvx mcpcheckup eval ./your-server    # does a model actually pick the right tool?
-uvx mcpcheckup ci   ./your-server    # roll both into one 0–100 score to gate on
+uvx mcp-toolgauge lint ./your-server    # static rules, offline, no API key, free
+uvx mcp-toolgauge eval ./your-server    # does a model actually pick the right tool?
+uvx mcp-toolgauge ci   ./your-server    # roll both into one 0–100 score to gate on
 ```
 
 Point any of them at a directory, a script, or a URL — it finds your server the way an MCP
 client does. Every command is read-only: it lists your tools and disconnects, and never
-invokes one of them. Prefer a persistent install? `uv tool install mcpcheckup`, or
-`pipx install mcpcheckup`. The examples below write it as the bare `mcpcheckup` command;
-`uvx mcpcheckup` in front of any of them works the same with nothing installed.
+invokes one of them. Prefer a persistent install? `uv tool install mcp-toolgauge`, or
+`pipx install mcp-toolgauge`. The examples below write it as the bare `mcp-toolgauge` command;
+`uvx mcp-toolgauge` in front of any of them works the same with nothing installed.
 
 > **Status.** All six milestones are built: `inspect`, `lint` against 22 rules, `eval` for
 > tool-selection accuracy with a confusion matrix, a composite `ci` health score with a badge
-> and a GitHub Action, and a dashboard. The badge above is mcpcheckup scoring its own
+> and a GitHub Action, and a dashboard. The badge above is mcp-toolgauge scoring its own
 > `goodserver` fixture — it dogfoods itself. This README describes only what works today.
 
 ## Lint
 
 ```bash
-mcpcheckup lint ./path/to/your/server
+mcp-toolgauge lint ./path/to/your/server
 ```
 
 ```
@@ -99,12 +99,12 @@ a before and after.
 ### Options
 
 ```bash
-mcpcheckup lint . -v                      # info findings, and every suggestion
-mcpcheckup lint . --fail-on warning       # stricter gate
-mcpcheckup lint . --fail-on off           # report without ever failing
-mcpcheckup lint . --json                  # machine-readable, stable key order
-mcpcheckup lint . --sarif > results.sarif # for GitHub code scanning
-mcpcheckup lint . --no-config             # ignore any mcpcheckup.toml on disk
+mcp-toolgauge lint . -v                      # info findings, and every suggestion
+mcp-toolgauge lint . --fail-on warning       # stricter gate
+mcp-toolgauge lint . --fail-on off           # report without ever failing
+mcp-toolgauge lint . --json                  # machine-readable, stable key order
+mcp-toolgauge lint . --sarif > results.sarif # for GitHub code scanning
+mcp-toolgauge lint . --no-config             # ignore any mcp-toolgauge.toml on disk
 ```
 
 Exit codes: `0` clean, `1` a finding reached `--fail-on` (default `error`), `2` usage
@@ -112,7 +112,7 @@ error, `3` could not reach the server.
 
 ### Configuration
 
-Optional. Put an `mcpcheckup.toml` next to your server, or a `[tool.mcpcheckup]` section in
+Optional. Put an `mcp-toolgauge.toml` next to your server, or a `[tool.mcp-toolgauge]` section in
 your `pyproject.toml`:
 
 ```toml
@@ -132,8 +132,8 @@ you turned off is worse than one you never touched.
 Lint tells you two descriptions are near-identical. Eval tells you what that costs.
 
 ```bash
-mcpcheckup eval ./path/to/your/server --init   # draft cases, then edit and commit them
-mcpcheckup eval ./path/to/your/server          # run them
+mcp-toolgauge eval ./path/to/your/server --init   # draft cases, then edit and commit them
+mcp-toolgauge eval ./path/to/your/server          # run them
 ```
 
 It puts your real tool definitions in front of a real model at temperature 0 — your names,
@@ -195,8 +195,8 @@ when…"* and one that does not is the difference between 100% and a coin flip.
 Reproduce both, offline and free, from the recorded runs in this repo:
 
 ```bash
-uv run mcpcheckup eval tests/fixtures/goodserver --offline
-uv run mcpcheckup eval tests/fixtures/badserver --offline
+uv run mcp-toolgauge eval tests/fixtures/goodserver --offline
+uv run mcp-toolgauge eval tests/fixtures/badserver --offline
 ```
 
 ### How it works
@@ -227,19 +227,19 @@ The full methodology, including what the number does *not* tell you, is in
 ### Options
 
 ```bash
-mcpcheckup eval . --model openai/gpt-4.1-mini   # anything LiteLLM can reach
-mcpcheckup eval . --offline                     # replay a recorded cache; no key needed
-mcpcheckup eval . --min-accuracy 80             # exit 1 below this
-mcpcheckup eval . --max-cost 0.50               # stop once it has cost this much
-mcpcheckup eval . --pace 3                      # wait between calls on a rate-limited tier
-mcpcheckup eval . -v                            # every failing case, with its prompt
-mcpcheckup eval . --json                        # the full confusion matrix
+mcp-toolgauge eval . --model openai/gpt-4.1-mini   # anything LiteLLM can reach
+mcp-toolgauge eval . --offline                     # replay a recorded cache; no key needed
+mcp-toolgauge eval . --min-accuracy 80             # exit 1 below this
+mcp-toolgauge eval . --max-cost 0.50               # stop once it has cost this much
+mcp-toolgauge eval . --pace 3                      # wait between calls on a rate-limited tier
+mcp-toolgauge eval . -v                            # every failing case, with its prompt
+mcp-toolgauge eval . --json                        # the full confusion matrix
 ```
 
 Calling a model needs the `eval` extra; `--offline` does not.
 
 ```bash
-uv pip install 'mcpcheckup[eval]'
+uv pip install 'mcp-toolgauge[eval]'
 ```
 
 The default model is a free one on OpenRouter, so a first run costs nothing beyond an
@@ -252,7 +252,7 @@ Lint says what is wrong; eval says what it costs. `ci` rolls both into one 0–1
 can gate a build on and put on a badge.
 
 ```bash
-mcpcheckup ci ./path/to/your/server --min-score 80
+mcp-toolgauge ci ./path/to/your/server --min-score 80
 ```
 
 ```
@@ -285,14 +285,14 @@ error, `3` could not reach the server.
 ### Badge
 
 ```bash
-mcpcheckup ci . --badge badge.json
+mcp-toolgauge ci . --badge badge.json
 ```
 
 Writes a [shields.io endpoint](https://shields.io/badges/endpoint-badge) document. Publish it
 — a raw GitHub URL is enough — and point a badge at it:
 
 ```markdown
-![mcpcheckup](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/OWNER/REPO/main/badge.json)
+![mcp-toolgauge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/OWNER/REPO/main/badge.json)
 ```
 
 ### GitHub Action
@@ -302,8 +302,8 @@ and posts a sticky pull-request comment showing the delta against your base bran
 
 ```yaml
 - uses: actions/checkout@v4
-# install your server's own dependencies here, so mcpcheckup can start it
-- uses: arijitgupta42/mcpcheckup@v1
+# install your server's own dependencies here, so mcp-toolgauge can start it
+- uses: arijitgupta42/mcp-toolgauge@v1
   with:
     target: .
     min-score: "80"
@@ -326,12 +326,12 @@ npm run dev      # http://localhost:5173, opens on the two fixture servers
 npm run build    # static files in dashboard/dist/, host anywhere
 ```
 
-It reads a `mcpcheckup ci --json` report — the bundled demos, a `?report=<raw-url>`, or a file
+It reads a `mcp-toolgauge ci --json` report — the bundled demos, a `?report=<raw-url>`, or a file
 you drop on the page. Keep a history file across runs and the third view draws your score over
 time:
 
 ```bash
-mcpcheckup ci ./your/server --history history.json --json > report.json
+mcp-toolgauge ci ./your/server --history history.json --json > report.json
 ```
 
 The full tour, including how to publish your own, is in [docs/dashboard.md](docs/dashboard.md).
@@ -341,7 +341,7 @@ to `main`.
 ## Inspect
 
 ```bash
-mcpcheckup inspect ./path/to/your/server
+mcp-toolgauge inspect ./path/to/your/server
 ```
 
 Point it at a directory and it finds your server the way your MCP client does — by reading
@@ -374,10 +374,10 @@ is a different problem, and one `lint` has opinions about.
 Both commands take the same target flags:
 
 ```bash
-mcpcheckup lint https://example.com/mcp             # a running server over HTTP
-mcpcheckup lint ./server.py                         # a single script
-mcpcheckup lint . --server backend                  # pick one from a multi-server manifest
-mcpcheckup lint . --command "node dist/server.js"   # say it yourself
+mcp-toolgauge lint https://example.com/mcp             # a running server over HTTP
+mcp-toolgauge lint ./server.py                         # a single script
+mcp-toolgauge lint . --server backend                  # pick one from a multi-server manifest
+mcp-toolgauge lint . --command "node dist/server.js"   # say it yourself
 ```
 
 **Both commands are read-only.** They connect, list tools, and disconnect. Neither ever
@@ -389,14 +389,14 @@ The repo ships two fixture servers with the same API — one written well, one w
 carelessly:
 
 ```bash
-uv run mcpcheckup lint tests/fixtures/goodserver
-uv run mcpcheckup lint tests/fixtures/badserver
+uv run mcp-toolgauge lint tests/fixtures/goodserver
+uv run mcp-toolgauge lint tests/fixtures/badserver
 
-uv run mcpcheckup eval tests/fixtures/goodserver --offline
-uv run mcpcheckup eval tests/fixtures/badserver --offline
+uv run mcp-toolgauge eval tests/fixtures/goodserver --offline
+uv run mcp-toolgauge eval tests/fixtures/badserver --offline
 
-uv run mcpcheckup ci tests/fixtures/goodserver
-uv run mcpcheckup ci tests/fixtures/badserver
+uv run mcp-toolgauge ci tests/fixtures/goodserver
+uv run mcp-toolgauge ci tests/fixtures/badserver
 ```
 
 The first lints clean; the second produces 74 findings. The eval runs need no API key —
@@ -411,7 +411,7 @@ uv sync                  # base install; enough for everything except calling a 
 uv sync --extra eval     # adds LiteLLM, for `eval` without --offline
 uv run pytest
 uv run ruff check .
-uv run mypy mcpcheckup
+uv run mypy mcp-toolgauge
 ```
 
 Skip the tests that spawn real servers with `uv run pytest -m "not integration"`. No test
@@ -426,11 +426,11 @@ calls a model: the eval suite stubs the backend or replays the recorded caches.
 | `eval` — tool-selection accuracy and a confusion matrix | done |
 | `ci` — health score, threshold gate, badge, GitHub Action | done |
 | Dashboard — findings, confusion heatmap, score history | done |
-| Ship to PyPI so `uvx mcpcheckup` needs no install | done |
+| Ship to PyPI so `uvx mcp-toolgauge` needs no install | done |
 | Self-hosted dashboard on a private network | next |
 
 Ideas, rule proposals, and false-positive reports are all welcome — see
-[CONTRIBUTING.md](CONTRIBUTING.md), and the [`good first issue`](https://github.com/arijitgupta42/mcpcheckup/labels/good%20first%20issue)
+[CONTRIBUTING.md](CONTRIBUTING.md), and the [`good first issue`](https://github.com/arijitgupta42/mcp-toolgauge/labels/good%20first%20issue)
 label for a place to start.
 
 ## Licence

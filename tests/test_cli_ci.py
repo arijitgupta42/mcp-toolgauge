@@ -14,11 +14,11 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from mcpcheckup.cli import app
-from mcpcheckup.eval.backend import build_messages
-from mcpcheckup.eval.cache import CachedCall, ResponseCache, cache_key, cache_path
-from mcpcheckup.eval.cases import CASES_FILENAME, write_suite
-from mcpcheckup.model import (
+from mcp_toolgauge.cli import app
+from mcp_toolgauge.eval.backend import build_messages
+from mcp_toolgauge.eval.cache import CachedCall, ResponseCache, cache_key, cache_path
+from mcp_toolgauge.eval.cases import CASES_FILENAME, write_suite
+from mcp_toolgauge.model import (
     CaseKind,
     CaseSuite,
     EvalCase,
@@ -88,7 +88,7 @@ def _seed(directory: Path) -> None:
 @pytest.fixture
 def project(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """A directory with a committed suite, a full cache, and a stubbed server behind it."""
-    monkeypatch.setattr("mcpcheckup.cli._fetch", _stub_fetch)
+    monkeypatch.setattr("mcp_toolgauge.cli._fetch", _stub_fetch)
     suite = CaseSuite(target="python server.py", tool_digest=DIGEST, cases=CASES)
     write_suite(tmp_path / CASES_FILENAME, suite)
     _seed(tmp_path)
@@ -98,7 +98,7 @@ def project(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 @pytest.fixture
 def bare(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """A directory with a server but no eval suite -- the lint-only path."""
-    monkeypatch.setattr("mcpcheckup.cli._fetch", _stub_fetch)
+    monkeypatch.setattr("mcp_toolgauge.cli._fetch", _stub_fetch)
     return tmp_path
 
 
@@ -168,7 +168,7 @@ class TestBadge:
         assert result.exit_code == 0
         payload = json.loads(out.read_text(encoding="utf-8"))
         assert payload["schemaVersion"] == 1
-        assert payload["label"] == "mcpcheckup"
+        assert payload["label"] == "mcp-toolgauge"
         assert payload["message"].isdigit()
         assert payload["color"] in {
             "brightgreen", "green", "yellowgreen", "yellow", "orange", "red"
@@ -181,12 +181,12 @@ class TestComment:
         run(str(project), "--markdown", str(out))
 
         text = out.read_text(encoding="utf-8")
-        assert "mcpcheckup health" in text
+        assert "mcp-toolgauge health" in text
 
     def test_dash_writes_the_comment_to_stdout(self, project: Path) -> None:
         result = run(str(project), "--markdown", "-")
 
-        assert "mcpcheckup health" in result.stdout
+        assert "mcp-toolgauge health" in result.stdout
 
     def test_a_baseline_adds_the_delta_column(self, project: Path, tmp_path: Path) -> None:
         baseline = tmp_path / "base.json"

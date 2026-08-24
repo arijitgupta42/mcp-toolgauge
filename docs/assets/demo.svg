@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1092" height="758" viewBox="0 0 1092 758">
-<title>mcpcheckup: lint, eval, and CI-gate an MCP server</title>
+<title>mcp-toolgauge: lint, eval, and CI-gate an MCP server</title>
 <rect width="1092" height="758" rx="8" fill="rgb(13,17,23)"/>
-<g opacity="1"><animate attributeName="opacity" dur="21s" repeatCount="indefinite" calcMode="linear" keyTimes="0.0000;0.3095;0.3333;0.9762;1.0000" values="1;1;0;0;1"/><svg width="1092" height="587" viewBox="0 0 1092 587">
+<g opacity="1"><animate attributeName="opacity" dur="21s" repeatCount="indefinite" calcMode="linear" keyTimes="0.0000;0.3095;0.3333;0.9762;1.0000" values="1;1;0;0;1"/><svg width="1092" height="611" viewBox="0 0 1092 611">
     <!-- Generated with Rich https://www.textualize.io -->
     <style>
 
@@ -49,7 +49,7 @@
 
     <defs>
     <clipPath id="scene-lint-clip-terminal">
-      <rect x="0" y="0" width="1072.6" height="535.8" />
+      <rect x="0" y="0" width="1072.6" height="560.1999999999999" />
     </clipPath>
     <clipPath id="scene-lint-line-0">
     <rect x="0" y="1.5" width="1073.6" height="24.65"/>
@@ -114,9 +114,12 @@
 <clipPath id="scene-lint-line-20">
     <rect x="0" y="489.5" width="1073.6" height="24.65"/>
             </clipPath>
+<clipPath id="scene-lint-line-21">
+    <rect x="0" y="513.9" width="1073.6" height="24.65"/>
+            </clipPath>
     </defs>
 
-    <rect fill="#0d1117" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1090" height="584.8" rx="8"/><text class="scene-lint-title" fill="#c9d1d9" text-anchor="middle" x="545" y="27">mcpcheckup&#160;lint&#160;&#160;—&#160;&#160;why&#160;won&#x27;t&#160;this&#160;tool&#160;get&#160;called?</text>
+    <rect fill="#0d1117" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1090" height="609.2" rx="8"/><text class="scene-lint-title" fill="#c9d1d9" text-anchor="middle" x="545" y="27">mcp-toolgauge&#160;lint&#160;&#160;—&#160;&#160;why&#160;won&#x27;t&#160;this&#160;tool&#160;get&#160;called?</text>
             <g transform="translate(26,22)">
             <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
             <circle cx="22" cy="0" r="7" fill="#febc2e"/>
@@ -147,7 +150,8 @@
 </text><text class="scene-lint-r3" x="1073.6" y="459.2" textLength="12.2" clip-path="url(#scene-lint-line-18)">
 </text><text class="scene-lint-r4" x="0" y="483.6" textLength="244" clip-path="url(#scene-lint-line-19)">10&#160;tools,&#160;7&#160;findings</text><text class="scene-lint-r4" x="244" y="483.6" textLength="366" clip-path="url(#scene-lint-line-19)">&#160;&#160;&#160;1&#160;error,&#160;5&#160;warnings,&#160;1&#160;info</text><text class="scene-lint-r4" x="610" y="483.6" textLength="280.6" clip-path="url(#scene-lint-line-19)">&#160;&#160;&#160;1&#160;hidden,&#160;-v&#160;to&#160;show</text><text class="scene-lint-r3" x="1073.6" y="483.6" textLength="12.2" clip-path="url(#scene-lint-line-19)">
 </text><text class="scene-lint-r4" x="0" y="508" textLength="573.4" clip-path="url(#scene-lint-line-20)">Most&#160;common:&#160;MCP020&#160;(2),&#160;MCP003&#160;(1),&#160;MCP013&#160;(1)</text><text class="scene-lint-r3" x="1073.6" y="508" textLength="12.2" clip-path="url(#scene-lint-line-20)">
-</text><text class="scene-lint-r4" x="0" y="532.4" textLength="109.8" clip-path="url(#scene-lint-line-21)">&#160;&#160;one&#160;of&#160;</text><text class="scene-lint-r9" x="109.8" y="532.4" textLength="24.4" clip-path="url(#scene-lint-line-21)">10</text><text class="scene-lint-r4" x="134.2" y="532.4" textLength="183" clip-path="url(#scene-lint-line-21)">&#160;tools&#160;shown&#160;·&#160;</text><text class="scene-lint-r9" x="317.2" y="532.4" textLength="24.4" clip-path="url(#scene-lint-line-21)">74</text><text class="scene-lint-r4" x="341.6" y="532.4" textLength="219.6" clip-path="url(#scene-lint-line-21)">&#160;findings&#160;in&#160;all,&#160;</text><text class="scene-lint-r9" x="561.2" y="532.4" textLength="12.2" clip-path="url(#scene-lint-line-21)">5</text><text class="scene-lint-r4" x="573.4" y="532.4" textLength="170.8" clip-path="url(#scene-lint-line-21)">&#160;errors&#160;·&#160;run:</text><text class="scene-lint-r6" x="756.4" y="532.4" textLength="195.2" clip-path="url(#scene-lint-line-21)">mcpcheckup&#160;lint&#160;</text><text class="scene-lint-r10" x="951.6" y="532.4" textLength="12.2" clip-path="url(#scene-lint-line-21)">&lt;</text><text class="scene-lint-r10" x="963.8" y="532.4" textLength="73.2" clip-path="url(#scene-lint-line-21)">server</text><text class="scene-lint-r10" x="1037" y="532.4" textLength="12.2" clip-path="url(#scene-lint-line-21)">&gt;</text><text class="scene-lint-r3" x="1073.6" y="532.4" textLength="12.2" clip-path="url(#scene-lint-line-21)">
+</text><text class="scene-lint-r4" x="0" y="532.4" textLength="109.8" clip-path="url(#scene-lint-line-21)">&#160;&#160;one&#160;of&#160;</text><text class="scene-lint-r9" x="109.8" y="532.4" textLength="24.4" clip-path="url(#scene-lint-line-21)">10</text><text class="scene-lint-r4" x="134.2" y="532.4" textLength="183" clip-path="url(#scene-lint-line-21)">&#160;tools&#160;shown&#160;·&#160;</text><text class="scene-lint-r9" x="317.2" y="532.4" textLength="24.4" clip-path="url(#scene-lint-line-21)">74</text><text class="scene-lint-r4" x="341.6" y="532.4" textLength="219.6" clip-path="url(#scene-lint-line-21)">&#160;findings&#160;in&#160;all,&#160;</text><text class="scene-lint-r9" x="561.2" y="532.4" textLength="12.2" clip-path="url(#scene-lint-line-21)">5</text><text class="scene-lint-r4" x="573.4" y="532.4" textLength="170.8" clip-path="url(#scene-lint-line-21)">&#160;errors&#160;·&#160;run:</text><text class="scene-lint-r6" x="756.4" y="532.4" textLength="231.8" clip-path="url(#scene-lint-line-21)">mcp-toolgauge&#160;lint&#160;</text><text class="scene-lint-r3" x="1073.6" y="532.4" textLength="12.2" clip-path="url(#scene-lint-line-21)">
+</text><text class="scene-lint-r10" x="0" y="556.8" textLength="12.2" clip-path="url(#scene-lint-line-22)">&lt;</text><text class="scene-lint-r10" x="12.2" y="556.8" textLength="73.2" clip-path="url(#scene-lint-line-22)">server</text><text class="scene-lint-r10" x="85.4" y="556.8" textLength="12.2" clip-path="url(#scene-lint-line-22)">&gt;</text><text class="scene-lint-r3" x="1073.6" y="556.8" textLength="12.2" clip-path="url(#scene-lint-line-22)">
 </text>
     </g>
     </g>
@@ -288,7 +292,7 @@
             </clipPath>
     </defs>
 
-    <rect fill="#0d1117" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1090" height="755.6" rx="8"/><text class="scene-eval-title" fill="#c9d1d9" text-anchor="middle" x="545" y="27">mcpcheckup&#160;eval&#160;&#160;—&#160;&#160;where&#160;does&#160;the&#160;traffic&#160;actually&#160;go?</text>
+    <rect fill="#0d1117" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1090" height="755.6" rx="8"/><text class="scene-eval-title" fill="#c9d1d9" text-anchor="middle" x="545" y="27">mcp-toolgauge&#160;eval&#160;&#160;—&#160;&#160;where&#160;does&#160;the&#160;traffic&#160;actually&#160;go?</text>
             <g transform="translate(26,22)">
             <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
             <circle cx="22" cy="0" r="7" fill="#febc2e"/>
@@ -442,7 +446,7 @@
             </clipPath>
     </defs>
 
-    <rect fill="#0d1117" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1090" height="560.4" rx="8"/><text class="scene-ci-title" fill="#c9d1d9" text-anchor="middle" x="545" y="27">mcpcheckup&#160;ci&#160;&#160;—&#160;&#160;one&#160;score&#160;you&#160;can&#160;gate&#160;a&#160;build&#160;on</text>
+    <rect fill="#0d1117" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1090" height="560.4" rx="8"/><text class="scene-ci-title" fill="#c9d1d9" text-anchor="middle" x="545" y="27">mcp-toolgauge&#160;ci&#160;&#160;—&#160;&#160;one&#160;score&#160;you&#160;can&#160;gate&#160;a&#160;build&#160;on</text>
             <g transform="translate(26,22)">
             <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
             <circle cx="22" cy="0" r="7" fill="#febc2e"/>
@@ -452,7 +456,7 @@
     <g transform="translate(9, 41)" clip-path="url(#scene-ci-clip-terminal)">
     
     <g class="scene-ci-matrix">
-    <text class="scene-ci-r1" x="0" y="20" textLength="317.2" clip-path="url(#scene-ci-line-0)">$&#160;mcpcheckup&#160;ci&#160;goodserver</text><text class="scene-ci-r2" x="1073.6" y="20" textLength="12.2" clip-path="url(#scene-ci-line-0)">
+    <text class="scene-ci-r1" x="0" y="20" textLength="353.8" clip-path="url(#scene-ci-line-0)">$&#160;mcp-toolgauge&#160;ci&#160;goodserver</text><text class="scene-ci-r2" x="1073.6" y="20" textLength="12.2" clip-path="url(#scene-ci-line-0)">
 </text><text class="scene-ci-r1" x="0" y="44.4" textLength="170.8" clip-path="url(#scene-ci-line-1)">acme-directory</text><text class="scene-ci-r3" x="170.8" y="44.4" textLength="73.2" clip-path="url(#scene-ci-line-1)">&#160;1.0.0</text><text class="scene-ci-r2" x="1073.6" y="44.4" textLength="12.2" clip-path="url(#scene-ci-line-1)">
 </text><text class="scene-ci-r4" x="0" y="68.8" textLength="195.2" clip-path="url(#scene-ci-line-2)">python&#160;server.py</text><text class="scene-ci-r2" x="1073.6" y="68.8" textLength="12.2" clip-path="url(#scene-ci-line-2)">
 </text><text class="scene-ci-r2" x="1073.6" y="93.2" textLength="12.2" clip-path="url(#scene-ci-line-3)">
@@ -462,7 +466,7 @@
 </text><text class="scene-ci-r2" x="1073.6" y="190.8" textLength="12.2" clip-path="url(#scene-ci-line-7)">
 </text><text class="scene-ci-r7" x="0" y="215.2" textLength="195.2" clip-path="url(#scene-ci-line-8)">get_user_profile</text><text class="scene-ci-r2" x="195.2" y="215.2" textLength="475.8" clip-path="url(#scene-ci-line-8)">&#160;captures&#160;50%&#160;of&#160;the&#160;prompts&#160;meant&#160;for&#160;</text><text class="scene-ci-r7" x="671" y="215.2" textLength="256.2" clip-path="url(#scene-ci-line-8)">create_support_ticket</text><text class="scene-ci-r2" x="927.2" y="215.2" textLength="12.2" clip-path="url(#scene-ci-line-8)">.</text><text class="scene-ci-r2" x="1073.6" y="215.2" textLength="12.2" clip-path="url(#scene-ci-line-8)">
 </text><text class="scene-ci-r2" x="1073.6" y="239.6" textLength="12.2" clip-path="url(#scene-ci-line-9)">
-</text><text class="scene-ci-r1" x="0" y="264" textLength="305" clip-path="url(#scene-ci-line-10)">$&#160;mcpcheckup&#160;ci&#160;badserver</text><text class="scene-ci-r2" x="1073.6" y="264" textLength="12.2" clip-path="url(#scene-ci-line-10)">
+</text><text class="scene-ci-r1" x="0" y="264" textLength="341.6" clip-path="url(#scene-ci-line-10)">$&#160;mcp-toolgauge&#160;ci&#160;badserver</text><text class="scene-ci-r2" x="1073.6" y="264" textLength="12.2" clip-path="url(#scene-ci-line-10)">
 </text><text class="scene-ci-r1" x="0" y="288.4" textLength="170.8" clip-path="url(#scene-ci-line-11)">acme-directory</text><text class="scene-ci-r3" x="170.8" y="288.4" textLength="73.2" clip-path="url(#scene-ci-line-11)">&#160;0.4.2</text><text class="scene-ci-r2" x="1073.6" y="288.4" textLength="12.2" clip-path="url(#scene-ci-line-11)">
 </text><text class="scene-ci-r4" x="0" y="312.8" textLength="195.2" clip-path="url(#scene-ci-line-12)">python&#160;server.py</text><text class="scene-ci-r2" x="1073.6" y="312.8" textLength="12.2" clip-path="url(#scene-ci-line-12)">
 </text><text class="scene-ci-r2" x="1073.6" y="337.2" textLength="12.2" clip-path="url(#scene-ci-line-13)">

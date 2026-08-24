@@ -14,8 +14,8 @@ from __future__ import annotations
 
 import pytest
 
-from mcpcheckup.eval.arguments import check_arguments, describe
-from mcpcheckup.model import ArgumentCheck, ToolSpec
+from mcp_toolgauge.eval.arguments import check_arguments, describe
+from mcp_toolgauge.model import ArgumentCheck, ToolSpec
 
 
 def spec(properties: dict, required: list[str] | None = None, **extra) -> ToolSpec:

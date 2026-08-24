@@ -5,7 +5,7 @@ name is descriptive, every description is a full sentence that says when to use 
 *instead of its siblings*, every parameter is documented and constrained, and every tool
 carries the annotations a client needs to decide whether it is safe to call.
 
-Nothing here does real work. mcpcheckup never invokes a tool (read-only invariant), so the
+Nothing here does real work. mcp-toolgauge never invokes a tool (read-only invariant), so the
 bodies return canned data and exist only to give the decorators something to hang on.
 """
 

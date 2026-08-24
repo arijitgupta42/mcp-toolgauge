@@ -37,12 +37,12 @@ function parseReport(text: string): CiReport {
   try {
     value = JSON.parse(text);
   } catch {
-    throw new Error("That is not valid JSON. Paste the output of `mcpcheckup ci --json`.");
+    throw new Error("That is not valid JSON. Paste the output of `mcp-toolgauge ci --json`.");
   }
   if (!isCiReport(value)) {
     throw new Error(
-      "That JSON is not a mcpcheckup report -- it has no health score. " +
-        "Produce one with `mcpcheckup ci <server> --json`.",
+      "That JSON is not a mcp-toolgauge report -- it has no health score. " +
+        "Produce one with `mcp-toolgauge ci <server> --json`.",
     );
   }
   return value;

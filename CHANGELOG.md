@@ -8,7 +8,7 @@ All notable changes to this project are documented here. The format follows
 
 ## [0.1.0] — 2026-08-24
 
-The first public release. `mcpcheckup` audits an MCP server three ways and rolls the result
+The first public release. `mcp-toolgauge` audits an MCP server three ways and rolls the result
 into one health score you can gate a build on.
 
 ### Added
@@ -18,7 +18,7 @@ into one health score you can gate a build on.
   conventional entrypoint).
 - **`lint`** — 22 deterministic, offline rules across five families (naming, descriptions,
   parameters, annotations, context budget) for the things that stop a tool being selected.
-  Rich, JSON, and SARIF output; `mcpcheckup.toml` for per-rule severity; a docs page per rule.
+  Rich, JSON, and SARIF output; `mcp-toolgauge.toml` for per-rule severity; a docs page per rule.
 - **`eval`** — put your real tool definitions in front of a real model at temperature 0 and
   measure top-1 selection accuracy, with a confusion matrix showing which tool steals traffic
   from which. Cases are a committed artifact; every answer is cached, so a re-run is free and
@@ -31,5 +31,5 @@ into one health score you can gate a build on.
 - Two fixture servers — the same directory-and-ticketing API written once carefully and once
   carelessly — scoring **96** and **28**, so every command has something to show on day one.
 
-[Unreleased]: https://github.com/arijitgupta42/mcpcheckup/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/arijitgupta42/mcpcheckup/releases/tag/v0.1.0
+[Unreleased]: https://github.com/arijitgupta42/mcp-toolgauge/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/arijitgupta42/mcp-toolgauge/releases/tag/v0.1.0

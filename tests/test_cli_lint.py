@@ -5,7 +5,7 @@ badserver fails and goodserver passes, so those two assertions are the ones that
 whether the feature works.
 
 These tests pass `--no-config` wherever the result depends on rule severity, so that a
-`mcpcheckup.toml` in some ancestor of the checkout cannot quietly change what they prove.
+`mcp-toolgauge.toml` in some ancestor of the checkout cannot quietly change what they prove.
 """
 
 from __future__ import annotations
@@ -16,8 +16,8 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from mcpcheckup.cli import EXIT_CONNECTION, EXIT_OK, EXIT_THRESHOLD, EXIT_USAGE, app
-from mcpcheckup.lint import all_rules
+from mcp_toolgauge.cli import EXIT_CONNECTION, EXIT_OK, EXIT_THRESHOLD, EXIT_USAGE, app
+from mcp_toolgauge.lint import all_rules
 
 runner = CliRunner()
 
@@ -140,7 +140,7 @@ class TestSarifOutput:
 @pytest.mark.integration
 class TestConfiguration:
     def test_a_config_can_silence_a_rule(self, badserver_dir: Path, tmp_path: Path) -> None:
-        config = tmp_path / "mcpcheckup.toml"
+        config = tmp_path / "mcp-toolgauge.toml"
         config.write_text("[lint.rules]\nMCP013 = 'off'\n", encoding="utf-8")
 
         output = lint(str(badserver_dir), "--config", str(config)).output
@@ -148,7 +148,7 @@ class TestConfiguration:
         assert "MCP013" not in output
 
     def test_a_config_can_make_a_server_pass(self, badserver_dir: Path, tmp_path: Path) -> None:
-        config = tmp_path / "mcpcheckup.toml"
+        config = tmp_path / "mcp-toolgauge.toml"
         config.write_text("[lint]\nfail_on = 'off'\n", encoding="utf-8")
 
         assert lint(str(badserver_dir), "--config", str(config)).exit_code == EXIT_OK
@@ -156,7 +156,7 @@ class TestConfiguration:
     def test_the_command_line_beats_the_config_file(
         self, badserver_dir: Path, tmp_path: Path
     ) -> None:
-        config = tmp_path / "mcpcheckup.toml"
+        config = tmp_path / "mcp-toolgauge.toml"
         config.write_text("[lint]\nfail_on = 'off'\n", encoding="utf-8")
 
         result = lint(str(badserver_dir), "--config", str(config), "--fail-on", "error")
@@ -166,7 +166,7 @@ class TestConfiguration:
     def test_an_unknown_rule_in_config_is_a_usage_error(
         self, goodserver_dir: Path, tmp_path: Path
     ) -> None:
-        config = tmp_path / "mcpcheckup.toml"
+        config = tmp_path / "mcp-toolgauge.toml"
         config.write_text("[lint.rules]\nMCP999 = 'off'\n", encoding="utf-8")
 
         result = lint(str(goodserver_dir), "--config", str(config))
@@ -178,7 +178,7 @@ class TestConfiguration:
         self, tmp_path: Path
     ) -> None:
         """No point spawning a subprocess we already know we cannot use the result of."""
-        config = tmp_path / "mcpcheckup.toml"
+        config = tmp_path / "mcp-toolgauge.toml"
         config.write_text("[lint.rules]\nMCP999 = 'off'\n", encoding="utf-8")
 
         result = lint(str(tmp_path / "does-not-exist"), "--config", str(config))
@@ -187,9 +187,9 @@ class TestConfiguration:
         assert "MCP999" in result.output
 
     def test_verbose_names_the_config_in_use(self, goodserver_dir: Path, tmp_path: Path) -> None:
-        config = tmp_path / "mcpcheckup.toml"
+        config = tmp_path / "mcp-toolgauge.toml"
         config.write_text("[lint.rules]\nMCP013 = 'off'\n", encoding="utf-8")
 
         result = lint(str(goodserver_dir), "--config", str(config), "-v")
 
-        assert "mcpcheckup.toml" in result.output
+        assert "mcp-toolgauge.toml" in result.output

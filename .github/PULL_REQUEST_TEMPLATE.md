@@ -18,7 +18,7 @@ plainly what you could not verify. -->
 
 ## Checklist
 
-- [ ] `uv run pytest` passes (and `ruff`, `mypy mcpcheckup`)
+- [ ] `uv run pytest` passes (and `ruff`, `mypy mcp-toolgauge`)
 - [ ] New behaviour has a test; a new lint rule has a positive **and** a negative fixture
 - [ ] A new lint rule has a `docs/rules/MCP0xx.md` page explaining *why it matters*
 - [ ] Any new dependency is justified above (prefer the standard library)

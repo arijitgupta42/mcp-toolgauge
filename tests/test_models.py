@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from mcpcheckup.model import InspectResult, ServerInfo, ToolAnnotations, ToolSpec, canonical_json
+from mcp_toolgauge.model import InspectResult, ServerInfo, ToolAnnotations, ToolSpec, canonical_json
 
 
 def _spec(**overrides) -> ToolSpec:

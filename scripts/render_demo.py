@@ -1,6 +1,6 @@
 """Generate the animated terminal demo in the README (docs/assets/demo.svg).
 
-This is a build tool, not part of the package. It drives mcpcheckup's *own* renderers with a
+This is a build tool, not part of the package. It drives mcp-toolgauge's *own* renderers with a
 recording Rich console, so every frame is real output -- the exact colours and layout a user
 sees -- captured through `Console.export_svg` rather than mocked up. Three scenes, cross-faded
 on a loop:
@@ -28,16 +28,16 @@ from pathlib import Path
 from rich.console import Console
 from rich.terminal_theme import TerminalTheme
 
-from mcpcheckup.cli import _fetch, _replay_eval
-from mcpcheckup.eval.backend import DEFAULT_MODEL
-from mcpcheckup.health import health_score
-from mcpcheckup.lint import lint as run_lint
-from mcpcheckup.model.eval import EvalResult
-from mcpcheckup.model.finding import Severity
-from mcpcheckup.model.health import CiReport
-from mcpcheckup.report.ci import render_ci_table
-from mcpcheckup.report.eval import render_eval_table
-from mcpcheckup.report.lint import render_lint_table
+from mcp_toolgauge.cli import _fetch, _replay_eval
+from mcp_toolgauge.eval.backend import DEFAULT_MODEL
+from mcp_toolgauge.health import health_score
+from mcp_toolgauge.lint import lint as run_lint
+from mcp_toolgauge.model.eval import EvalResult
+from mcp_toolgauge.model.finding import Severity
+from mcp_toolgauge.model.health import CiReport
+from mcp_toolgauge.report.ci import render_ci_table
+from mcp_toolgauge.report.eval import render_eval_table
+from mcp_toolgauge.report.lint import render_lint_table
 
 REPO = Path(__file__).resolve().parent.parent
 BADSERVER = str(REPO / "tests" / "fixtures" / "badserver")
@@ -84,7 +84,7 @@ def _console() -> Console:
 def _evaluate(target: str) -> EvalResult:
     """Replay a fixture's committed eval cache, quietly -- no warnings into the frame."""
     result = _fetch(target, command=None, server=None, timeout=30.0)
-    cases = Path(target) / "mcpcheckup-cases.yaml"
+    cases = Path(target) / "mcp-toolgauge-cases.yaml"
     # A throwaway quiet console swallows the loader's drift/validation notes; the caller
     # renders the returned result into the recording console itself.
     return _replay_eval(
@@ -104,9 +104,9 @@ def _scene_lint() -> str:
     errors = report.counts()[Severity.ERROR]
     console.print(
         f"[dim]  one of 10 tools shown · {len(report.findings)} findings in all, "
-        f"{errors} errors · run:[/dim] [cyan]mcpcheckup lint <server>[/cyan]"
+        f"{errors} errors · run:[/dim] [cyan]mcp-toolgauge lint <server>[/cyan]"
     )
-    return console.export_svg(title="mcpcheckup lint  —  why won't this tool get called?",
+    return console.export_svg(title="mcp-toolgauge lint  —  why won't this tool get called?",
                               theme=THEME, unique_id="scene-lint")
 
 
@@ -114,7 +114,7 @@ def _scene_eval() -> str:
     """badserver eval replayed offline -- the confusion matrix and the steal lines."""
     console = _console()
     render_eval_table(_evaluate(BADSERVER), console)
-    return console.export_svg(title="mcpcheckup eval  —  where does the traffic actually go?",
+    return console.export_svg(title="mcp-toolgauge eval  —  where does the traffic actually go?",
                               theme=THEME, unique_id="scene-eval")
 
 
@@ -134,12 +134,12 @@ def _ci_report(target: str) -> CiReport:
 def _scene_ci() -> str:
     """Both servers scored, side by side: the 96-vs-28 payoff."""
     console = _console()
-    console.print("[bold]$ mcpcheckup ci goodserver[/bold]")
+    console.print("[bold]$ mcp-toolgauge ci goodserver[/bold]")
     render_ci_table(_ci_report(GOODSERVER), console)
     console.print()
-    console.print("[bold]$ mcpcheckup ci badserver[/bold]")
+    console.print("[bold]$ mcp-toolgauge ci badserver[/bold]")
     render_ci_table(_ci_report(BADSERVER), console)
-    return console.export_svg(title="mcpcheckup ci  —  one score you can gate a build on",
+    return console.export_svg(title="mcp-toolgauge ci  —  one score you can gate a build on",
                               theme=THEME, unique_id="scene-ci")
 
 
@@ -224,7 +224,7 @@ def compose(scenes: list[str]) -> str:
         f'xmlns:xlink="http://www.w3.org/1999/xlink" '
         f'width="{width:.0f}" height="{height:.0f}" '
         f'viewBox="0 0 {width:.0f} {height:.0f}">\n'
-        f"<title>mcpcheckup: lint, eval, and CI-gate an MCP server</title>\n"
+        f"<title>mcp-toolgauge: lint, eval, and CI-gate an MCP server</title>\n"
         f"{bg}\n{body}\n</svg>\n"
     )
 

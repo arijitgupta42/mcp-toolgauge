@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from mcpcheckup.eval.score import (
+from mcp_toolgauge.eval.score import (
     NOTABLE_SHARE,
     confusion_matrix,
     describe_confusion,
@@ -25,7 +25,7 @@ from mcpcheckup.eval.score import (
     per_tool_scores,
     score,
 )
-from mcpcheckup.model import (
+from mcp_toolgauge.model import (
     ArgumentCheck,
     CaseKind,
     CaseOutcome,
@@ -36,7 +36,7 @@ from mcpcheckup.model import (
 )
 
 REPO_ROOT = Path(__file__).parent.parent
-SCORE_SOURCE = REPO_ROOT / "mcpcheckup" / "eval" / "score.py"
+SCORE_SOURCE = REPO_ROOT / "mcp_toolgauge" / "eval" / "score.py"
 
 
 def case(
@@ -375,10 +375,10 @@ class TestPurity:
             for node in ast.walk(tree)
             if isinstance(node, ast.ImportFrom)
             and node.module
-            and node.module.startswith("mcpcheckup")
+            and node.module.startswith("mcp_toolgauge")
         }
 
-        assert internal == {"mcpcheckup.model"}
+        assert internal == {"mcp_toolgauge.model"}
 
 
 class TestKnownFixture:

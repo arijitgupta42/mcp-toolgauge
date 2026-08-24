@@ -29,7 +29,7 @@ export function Selection({ report }: { report: CiReport }) {
         <p className="empty-title display">No selection was measured.</p>
         <p className="muted">
           This report was scored on lint alone. Draft a suite with{" "}
-          <code className="tok">mcpcheckup eval &lt;server&gt; --init</code>, commit it, and{" "}
+          <code className="tok">mcp-toolgauge eval &lt;server&gt; --init</code>, commit it, and{" "}
           <code className="tok">ci</code> will measure whether a model actually picks the right
           tool.
         </p>

@@ -1,5 +1,5 @@
 name: Bug report
-description: Something in mcpcheckup behaves wrong — a crash, a bad exit code, wrong output.
+description: Something in mcp-toolgauge behaves wrong — a crash, a bad exit code, wrong output.
 labels: ["bug"]
 body:
   - type: markdown
@@ -13,15 +13,15 @@ body:
       label: What happened
       description: What you ran, what you expected, and what you got instead.
       placeholder: |
-        I ran `mcpcheckup ci ./my-server` and it exited 3 with "could not reach the server",
-        but the same server inspects fine with `mcpcheckup inspect ./my-server`.
+        I ran `mcp-toolgauge ci ./my-server` and it exited 3 with "could not reach the server",
+        but the same server inspects fine with `mcp-toolgauge inspect ./my-server`.
     validations:
       required: true
   - type: textarea
     id: command
     attributes:
       label: The exact command
-      description: The full command line, and any relevant `mcpcheckup.toml`.
+      description: The full command line, and any relevant `mcp-toolgauge.toml`.
       render: shell
     validations:
       required: true
@@ -35,7 +35,7 @@ body:
     id: version
     attributes:
       label: Version
-      description: The output of `mcpcheckup --version`, and your OS and Python version.
-      placeholder: "mcpcheckup 0.1.0, macOS 14, Python 3.12"
+      description: The output of `mcp-toolgauge --version`, and your OS and Python version.
+      placeholder: "mcp-toolgauge 0.1.0, macOS 14, Python 3.12"
     validations:
       required: true

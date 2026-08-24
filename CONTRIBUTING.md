@@ -1,4 +1,4 @@
-# Contributing to mcpcheckup
+# Contributing to mcp-toolgauge
 
 Thanks for wanting to help. This project has a narrow, defensible job — tell MCP server
 authors *why their tools don't get called* — and the fastest way to get a change merged is to
@@ -32,7 +32,7 @@ The checks CI runs, which you can run locally:
 uv run pytest                     # the whole suite
 uv run pytest -m "not integration"  # fast subset, no subprocesses, sub-second
 uv run ruff check .
-uv run mypy mcpcheckup
+uv run mypy mcp-toolgauge
 ```
 
 No test calls a live model — the eval suite stubs the backend or replays a committed cache.
@@ -81,7 +81,7 @@ exception:
    and after. The docs are the marketing — a rule without a persuasive "why" is a rule people
    disable.
 
-Rules live in [`mcpcheckup/lint/rules/`](mcpcheckup/lint/rules/), one module per family, and
+Rules live in [`mcp_toolgauge/lint/rules/`](mcp_toolgauge/lint/rules/), one module per family, and
 register through the engine's decorator. Two hard invariants:
 
 - **Lint rules never call a model.** Deterministic, offline, free — that's what makes lint
@@ -93,7 +93,7 @@ register through the engine's decorator. Two hard invariants:
 
 ## Touching the eval scorer
 
-`mcpcheckup/eval/score.py` is pure — no network, no filesystem, no clock — and has the
+`mcp_toolgauge/eval/score.py` is pure — no network, no filesystem, no clock — and has the
 highest test coverage in the repo. Keep it that way: every function takes data and returns
 data, and new behaviour comes with a hand-built fixture whose correct answer is known. The
 scoring formula is the intellectual content of the project; a change to *what the number

@@ -5,8 +5,8 @@ name: action self-test
 # done-criterion. This is separate from ci.yml so the repository's own pipeline stays
 # untouched in shape.
 #
-# The Action installs mcpcheckup with `uvx --from .` (this checkout, so it runs the PR's
-# code). mcpcheckup then spawns each fixture with `python server.py`, so the project venv is
+# The Action installs mcp-toolgauge with `uvx --from .` (this checkout, so it runs the PR's
+# code). mcp-toolgauge then spawns each fixture with `python server.py`, so the project venv is
 # put on PATH first to give that `python` the `mcp` package.
 
 on:

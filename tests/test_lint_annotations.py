@@ -8,7 +8,7 @@ any server that had already thought about the question.
 
 from __future__ import annotations
 
-from mcpcheckup.model import ToolAnnotations
+from mcp_toolgauge.model import ToolAnnotations
 
 READ_ONLY = ToolAnnotations(read_only_hint=True, destructive_hint=False, idempotent_hint=True)
 DESTRUCTIVE = ToolAnnotations(read_only_hint=False, destructive_hint=True, idempotent_hint=True)
