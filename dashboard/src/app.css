@@ -1,841 +1,989 @@
 /*
- * Component styles. The tokens and type primitives live in theme.css; this file arranges them
- * into the masthead, the source bar, the scorecard, and the three views. Nothing here invents
- * a colour -- every value is a token, so light and dark come for free.
+ * Layout. The page is a drafting sheet, not a dashboard: one white column ruled top to
+ * bottom, divided into bands by hairlines, with content laid into cells.
  *
- * The Mora grammar this file applies, over and over: a white card inlaid with a hairline ring,
- * nested inside a light grey tray; controls as pills in a segmented track; numbers big and set
- * in the display face; labels small, sentence case, grey.
+ * The two kinds of line mean different things, and the distinction is worth keeping:
+ *
+ *   DASHED (--rule, via .rule-y / .rule-x) is structure -- the frame's own edges and the
+ *   column guides inside a grid. It is the drawing's scaffolding.
+ *
+ *   SOLID (--hair) is content -- the division between one band and the next, one cell and
+ *   its neighbour. It is what the drawing contains.
+ *
+ * There is no card, no tray, and no drop shadow in this file. Radius appears only on things
+ * you click. If a new element wants a rounded white box, it wants the wrong thing.
  */
 
-/* ---- Masthead --------------------------------------------------------------------- */
+/* ---- Shell ------------------------------------------------------------------------ */
 
-.masthead {
-  padding: 56px 0 28px;
+.page {
+  min-height: 100vh;
+}
+
+/* Whole-page drop target. The border sits inside so nothing reflows when it appears. */
+.page.dropping::after {
+  content: "";
+  position: fixed;
+  inset: 8px;
+  border: 1.5px dashed var(--ink);
+  pointer-events: none;
+  z-index: 40;
+}
+
+/* The near-black strip across the top, straight off the reference's announcement bar. */
+.strip {
+  background: var(--ink-strong);
+  color: var(--on-dark);
+  font-size: 13px;
+}
+
+.strip-in {
+  max-width: var(--frame);
+  margin: 0 auto;
+  padding: 9px var(--gutter);
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.strip b {
+  font-weight: 500;
+}
+
+.strip a {
+  color: rgba(245, 245, 245, 0.62);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.strip a:hover {
+  color: var(--on-dark);
+}
+
+/* ---- The sticky rail --------------------------------------------------------------- */
+
+.rail {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hair);
+}
+
+.rail-in {
+  max-width: var(--frame);
+  margin: 0 auto;
+  height: var(--rail-h);
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
   gap: 18px;
 }
 
-/* The wordmark, as a pill -- Mora's own "Introducing Mora" chip, reused as a logotype. */
-.wordmark {
+.mark {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 5px 12px 5px 8px;
-  border-radius: 999px;
-  background: var(--surface);
-  box-shadow: var(--ring);
-  color: var(--ink);
-}
-
-.wordmark .mark {
-  width: 16px;
-  height: 16px;
-  border-radius: 5px;
-  background: var(--ink);
-  color: var(--surface);
-  font-size: 10px;
-  font-weight: 700;
-  display: grid;
-  place-items: center;
-  letter-spacing: 0;
-}
-
-.tagline {
+  gap: 9px;
   font-family: var(--display);
-  font-size: clamp(34px, 5vw, 48px);
   font-weight: 600;
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-  margin: 0;
-  max-width: 20ch;
+  font-size: 15px;
+  letter-spacing: -0.02em;
   color: var(--ink);
+  text-decoration: none;
+  flex: none;
 }
-
-/* The second half of the sentence goes grey. Mora does this to every heading on the page. */
-.tagline .rest {
-  color: var(--faint);
-}
-
-.masthead .lede {
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: -0.01em;
-  color: var(--muted);
-  margin: -6px 0 0;
-  max-width: 52ch;
-}
-
-/* ---- Source bar ------------------------------------------------------------------- */
-
-.sourcebar {
-  background: var(--tray);
-  border-radius: var(--r-lg);
-  padding: 4px;
-  transition: background 0.15s, box-shadow 0.15s;
-}
-.sourcebar.dragging {
-  background: var(--accent-soft);
-  box-shadow: 0 0 0 1px var(--accent);
-}
-.sourcebar-inner {
-  background: var(--surface);
-  border-radius: var(--r);
-  box-shadow: var(--ring);
-  padding: 14px 16px;
-}
-.source-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Segmented control: a grey track, the active segment a white pill riding in it. */
-.segmented {
-  display: inline-flex;
-  gap: 2px;
-  background: var(--tray-2);
-  padding: 3px;
-  border-radius: 999px;
-}
-.seg {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  padding: 6px 14px;
-  border-radius: 999px;
-  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
-}
-.seg:hover:not(:disabled):not(.active) {
-  color: var(--ink);
-}
-.seg.active {
-  background: var(--surface);
-  color: var(--ink);
-  box-shadow: var(--inlay);
-}
-.seg:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-.url-form {
-  display: flex;
-  gap: 8px;
-  flex: 1 1 320px;
-  min-width: 240px;
-}
-.url-input {
-  flex: 1;
-  font-family: var(--mono);
-  font-size: 13px;
-  letter-spacing: -0.01em;
-  padding: 8px 12px;
-  border: 0;
-  border-radius: var(--r-btn);
-  background: var(--tray);
-  box-shadow: var(--ring);
-  color: var(--ink);
-}
-.url-input::placeholder {
-  color: var(--faint);
-}
-.url-input:focus {
-  outline: none;
-  background: var(--surface);
-  box-shadow: var(--focus-ring);
-}
-
-/* Primary button: ink fill, 10px radius, 14px medium. Mora's "Sign up". */
-.btn {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  padding: 8px 14px;
-  border: 0;
-  border-radius: var(--r-btn);
-  background: var(--ink);
-  color: var(--paper);
-  transition: opacity 0.15s;
-}
-.btn:hover:not(:disabled) {
-  opacity: 0.85;
-}
-.btn:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.source-foot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px 14px;
-  align-items: baseline;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
-}
-.drop-hint {
-  font-size: 13px;
-}
-.muted {
-  color: var(--muted);
-}
-.source-error {
-  margin: 12px 0 0;
-  padding: 10px 12px;
-  border-radius: var(--r-sm);
-  background: color-mix(in srgb, var(--sev-error) 8%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--sev-error) 30%, transparent);
-  color: var(--sev-error);
-  font-size: 13px;
-}
-
-/* ---- Scorecard -------------------------------------------------------------------- */
 
 /*
- * Mora is light end to end -- there is no inverted slab anywhere on the page -- so the health
- * hero is a white card in a tray, and the emphasis comes from the size of the numeral and the
- * band colour rather than from a dark ground. The three tiles are Mora's own dashboard mock
- * ("Cash / Runway / ARR"): grey inset tile, small grey label, big display number.
+ * The glyph: a gauge, drawn as three ascending bars in a square. The product is a gauge and
+ * the mark should say so -- and it is CSS rather than an asset so it inherits the theme.
  */
-.scorecard {
-  margin-top: 20px;
+.glyph {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: end;
+  gap: 2px;
 }
-.scorecard-inner {
-  background: var(--surface);
-  border-radius: var(--r);
-  box-shadow: var(--ring);
-  padding: 22px 24px 24px;
+
+.glyph i {
+  display: block;
+  background: var(--ink);
+  border-radius: 1px;
 }
-.scorecard-head {
+
+.glyph i:nth-child(1) {
+  height: 40%;
+}
+.glyph i:nth-child(2) {
+  height: 70%;
+}
+.glyph i:nth-child(3) {
+  height: 100%;
+  background: var(--accent);
+}
+
+.rail-nav {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px 16px;
-  align-items: baseline;
-  justify-content: space-between;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--line);
-  margin-bottom: 18px;
+  align-items: center;
+  gap: 2px;
+  margin-left: 6px;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
-.server-name {
-  font-family: var(--display);
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+
+.rail-nav::-webkit-scrollbar {
+  display: none;
 }
-.server-sub {
-  font-size: 13px;
+
+.rail-link {
+  border: 0;
+  background: transparent;
+  padding: 7px 11px;
+  border-radius: var(--r-btn);
+  font-size: 13.5px;
+  font-weight: 400;
   color: var(--muted);
-  margin: 4px 0 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.band-pill {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
-  font-weight: 500;
-  padding: 5px 12px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--band) 10%, transparent);
-  color: var(--band);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--band) 26%, transparent);
   white-space: nowrap;
 }
-.band-pill .dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: currentColor;
+
+.rail-link:hover {
+  color: var(--ink);
+  background: var(--sunk);
 }
 
-.score-tiles {
-  display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
-  gap: 8px;
+.rail-link.here {
+  color: var(--ink);
+  font-weight: 500;
 }
-.tile {
-  background: var(--tray);
-  border-radius: var(--r-sm);
-  padding: 16px 18px;
+
+.rail-link .n {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--grey);
+}
+
+.rail-link.here .n {
+  color: var(--accent);
+}
+
+.rail-right {
+  margin-left: auto;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+}
+
+/* The demo switch: two pills, the live one inked. */
+.switch {
+  display: inline-flex;
+  gap: 4px;
+}
+
+/* ---- The source drawer ------------------------------------------------------------- */
+
+.drawer {
+  background: var(--sunk);
+  border-bottom: 1px solid var(--hair);
+}
+
+.drawer-in {
+  max-width: var(--frame);
+  margin: 0 auto;
+  padding: 16px var(--gutter) 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.drawer form {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 420px;
+  min-width: 260px;
+}
+
+.drawer input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+  background: var(--surface);
+  border: 0;
+  box-shadow: var(--ring);
+  border-radius: var(--r-btn);
+  padding: 9px 12px;
+}
+
+.drawer input::placeholder {
+  color: var(--grey);
+}
+
+.drawer-note {
+  flex: 1 1 100%;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.err {
+  flex: 1 1 100%;
+  color: var(--sev-error);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* ---- The frame --------------------------------------------------------------------- */
+
+/*
+ * The white column, ruled down both edges for the full height of the document. The two
+ * dashes are background layers on the frame itself rather than pseudo-elements, so they
+ * stretch with the content automatically however long the report is.
+ */
+.frame {
+  max-width: var(--frame);
+  margin: 0 auto;
+  background-color: var(--surface);
+  background-image: linear-gradient(var(--rule) 2px, transparent 2px),
+    linear-gradient(var(--rule) 2px, transparent 2px);
+  background-size: 1px 4px, 1px 4px;
+  background-position: left top, right top;
+  background-repeat: repeat-y, repeat-y;
+}
+
+.band {
+  border-top: 1px solid var(--hair);
+}
+
+.band:first-child {
+  border-top: 0;
+}
+
+.pad {
+  padding: 0 var(--gutter);
+}
+
+/* ---- Verdict --------------------------------------------------------------------- */
+
+.verdict-head {
+  padding: 34px var(--gutter) 0;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.verdict-head .name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.verdict-say {
+  padding: 18px var(--gutter) 40px;
+  font-size: clamp(30px, 4.3vw, 50px);
+  max-width: 20ch;
   min-width: 0;
 }
-.tile-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
+
+@media (min-width: 720px) {
+  .verdict-say {
+    max-width: 26ch;
+  }
 }
-.tile-value {
+
+/* ---- The gauge --------------------------------------------------------------------- */
+
+/*
+ * A 0-100 rail with the six health bands drawn to scale and a needle at the score. It is
+ * the one figure on the page that shows what a number is worth rather than just printing
+ * it: 28 is not simply "low", it is deep inside the red segment with four bands above it.
+ */
+.gauge {
+  position: relative;
+  border-top: 1px solid var(--hair);
+  padding: 46px 0 34px;
+}
+
+.gauge-bar {
+  display: flex;
+  height: 16px;
+}
+
+.gauge-seg {
+  position: relative;
+  box-shadow: inset 1px 0 0 var(--surface);
+}
+
+.gauge-seg:first-child {
+  box-shadow: none;
+}
+
+.gauge-needle {
+  position: absolute;
+  top: 30px;
+  height: 48px;
+  width: 2px;
+  background: var(--ink-strong);
+  transform: translateX(-1px);
+}
+
+.gauge-flag {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.gauge-flag .v {
   font-family: var(--display);
   font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1;
-  font-size: 38px;
-  color: var(--band, var(--ink));
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.gauge-tick {
+  position: absolute;
+  bottom: 8px;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--grey);
+}
+
+/* ---- The wall of cells ------------------------------------------------------------- */
+
+/*
+ * The reference divides a row of content into cells with hairlines that run right to the
+ * frame's edge -- its logo wall does exactly this. Every metric row on the page is one of
+ * these, so a reader learns the shape once.
+ */
+.wall {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+  border-top: 1px solid var(--hair);
+}
+
+.cell {
+  padding: 20px var(--gutter) 22px;
+  border-left: 1px solid var(--hair);
+  min-width: 0;
+}
+
+.cell:first-child {
+  border-left: 0;
+}
+
+.cell .k {
+  display: block;
+  font-size: 12.5px;
+  color: var(--grey);
+  margin-bottom: 10px;
+}
+
+.cell .v {
   display: flex;
   align-items: baseline;
   gap: 3px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 34px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--ink);
 }
-.tile.hero .tile-value {
-  font-size: 60px;
-}
-.tile-max {
-  font-family: var(--sans);
+
+.cell .v .u {
   font-size: 15px;
-  font-weight: 500;
+  color: var(--grey);
   letter-spacing: -0.01em;
-  color: var(--faint);
 }
-.tile-detail {
-  font-size: 13px;
+
+.cell .s {
+  display: block;
+  margin-top: 9px;
+  font-size: 12.5px;
   color: var(--muted);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-/* ---- Tabs ------------------------------------------------------------------------- */
-
-/* Not underlined tabs -- a pill segmented control, the way Mora switches Dashboard/Data Studio. */
-.tabs {
-  display: inline-flex;
-  gap: 2px;
-  margin: 28px 0 24px;
-  padding: 3px;
-  background: var(--tray);
-  border-radius: 999px;
-}
-.tab {
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  padding: 7px 16px;
-  border-radius: 999px;
-  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
-}
-.tab:hover:not(.active) {
-  color: var(--ink);
-}
-.tab.active {
-  background: var(--surface);
-  color: var(--ink);
-  box-shadow: var(--inlay);
-}
-.tab-count {
-  color: var(--faint);
-  font-size: 13px;
-  margin-left: 5px;
+/* A band-coloured keel under a scored cell: the colour without a coloured numeral. */
+.cell.scored .v::before {
+  content: "";
+  width: 4px;
+  align-self: stretch;
+  margin-right: 8px;
+  background: var(--band, var(--grey));
+  border-radius: 2px;
 }
 
-/* ---- Empty states ----------------------------------------------------------------- */
+/* ---- Section headings -------------------------------------------------------------- */
 
-.empty {
-  padding: 56px 32px;
-  text-align: center;
+.sec-head {
+  padding: 52px var(--gutter) 26px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
 }
-.empty-mark {
-  display: inline-grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 999px;
-  font-size: 20px;
-  background: var(--accent-soft);
-  color: var(--accent);
+
+.sec-head .n {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--grey);
+  display: block;
   margin-bottom: 14px;
 }
-.empty-title {
-  font-family: var(--display);
-  font-size: 24px;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin: 0 0 8px;
-}
-.empty .muted {
-  max-width: 52ch;
-  margin: 0 auto;
-  font-size: 15px;
-  line-height: 23px;
+
+.sec-head h2 {
+  font-size: clamp(24px, 2.6vw, 32px);
 }
 
-/* ---- Findings --------------------------------------------------------------------- */
-
-.filter-row {
+.sec-tools {
   display: flex;
+  align-items: center;
+  gap: 6px;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 22px;
-}
-.chip.filter {
-  color: var(--muted);
-  transition: box-shadow 0.15s, color 0.15s, background 0.15s;
-}
-.chip.filter:hover:not(:disabled) {
-  color: var(--ink);
-}
-.chip.filter.on {
-  color: var(--paper);
-  background: var(--ink);
-  box-shadow: none;
-}
-.chip.filter.on .tnum {
-  color: color-mix(in srgb, var(--paper) 65%, transparent);
-}
-.chip.filter:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
-.chip.filter .tnum {
-  color: var(--faint);
-}
-.chip.clear {
-  background: transparent;
-  box-shadow: 0 0 0 1px var(--line-strong);
-  color: var(--muted);
 }
 
-/* Each tool's findings live in one tray, so a tool reads as a single object. */
-.finding-group {
-  margin-bottom: 12px;
-  background: var(--tray);
-  border-radius: var(--r-lg);
-  padding: 4px;
+/* A minor heading inside a section. */
+.sub-head {
+  padding: 40px var(--gutter) 18px;
+  border-top: 1px solid var(--hair);
 }
-.group-head {
+
+.sub-head h3 {
+  font-size: clamp(19px, 2vw, 23px);
+}
+
+/* ---- Ledger (findings) ------------------------------------------------------------- */
+
+.grp {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 14px 11px;
+  gap: 12px;
+  padding: 11px var(--gutter);
+  background: var(--sunk);
+  border-top: 1px solid var(--hair);
+  border-bottom: 1px solid var(--hair);
+  position: sticky;
+  top: var(--rail-h);
+  z-index: 10;
 }
-.group-name {
+
+.grp .who {
+  font-family: var(--mono);
   font-size: 13px;
-  font-weight: 500;
   color: var(--ink);
 }
-.group-line {
-  flex: 1;
-}
-.group-count {
-  font-size: 13px;
-  color: var(--muted);
-}
-.finding {
-  background: var(--surface);
-  border-radius: var(--r-sm);
-  box-shadow: var(--ring);
-  padding: 14px 16px;
-  margin-bottom: 4px;
-}
-.finding:last-child {
-  margin-bottom: 0;
-}
-.finding-top {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-.rule-id {
-  font-family: var(--mono);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
-  text-decoration: none;
-  padding: 3px 8px;
-  border-radius: 7px;
-  background: color-mix(in srgb, var(--sev) 10%, transparent);
-  color: var(--sev);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--sev) 26%, transparent);
-  transition: background 0.15s;
-}
-.rule-id:hover {
-  background: color-mix(in srgb, var(--sev) 20%, transparent);
-}
-.sev-tag {
-  font-size: 13px;
-  color: var(--muted);
-}
-.loc {
-  font-family: var(--mono);
-  font-size: 12px;
-  color: var(--faint);
+
+.grp .how-many {
   margin-left: auto;
-}
-.finding-msg {
-  margin: 0 0 8px;
-  font-size: 14px;
-  line-height: 21px;
-  color: var(--ink);
-}
-.finding-fix {
-  margin: 0;
-  font-size: 14px;
-  line-height: 21px;
+  font-size: 12.5px;
   color: var(--muted);
 }
-.finding-fix .fix-label {
-  color: var(--ink);
-  font-weight: 500;
-  margin-right: 5px;
-}
-.tok {
-  font-family: var(--mono);
-  font-size: 0.86em;
-  background: var(--tray);
-  color: var(--ink);
-  padding: 2px 6px;
-  border-radius: 6px;
-  box-shadow: var(--ring);
-  white-space: nowrap;
-}
 
-/* ---- Selection: rates, heatmap, bars, sentences ----------------------------------- */
-
-.rate-row {
+/*
+ * A finding is a ledger line, not a card: an identifier column, then what is wrong, then
+ * what to do about it. The dashed guide between the last two columns is the point of the
+ * layout -- the fix always sits in the same place, so it can be read down the page.
+ */
+.f {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  grid-template-columns: 168px minmax(0, 1fr) minmax(0, 1fr);
+  border-top: 1px solid var(--hair);
 }
-.rate-tile {
-  background: var(--surface);
-  border-radius: var(--r);
-  box-shadow: var(--ring);
-  padding: 16px 18px;
+
+.f:first-of-type {
+  border-top: 0;
+}
+
+.f > * {
+  padding: 17px 22px;
+  min-width: 0;
+}
+
+.f .f-id {
+  padding-left: var(--gutter);
   display: flex;
   flex-direction: column;
-  gap: 5px;
-}
-.rate-val {
-  font-family: var(--display);
-  font-size: 32px;
-  font-weight: 600;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-.rate-label {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-}
-.rate-sub {
-  font-size: 13px;
-  color: var(--faint);
+  gap: 8px;
+  align-items: flex-start;
 }
 
-.heatmap-wrap {
-  padding: 16px;
-  overflow-x: auto;
+.f .f-rule {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--hair-strong);
 }
-.heatmap {
+
+.f .f-rule:hover {
+  border-bottom-color: var(--ink);
+}
+
+.f .f-sev {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.f .f-sev i {
+  width: 8px;
+  height: 8px;
+  background: var(--sev);
+  display: block;
+}
+
+.f .f-msg,
+.f .f-fix {
+  background-image: linear-gradient(var(--rule) 2px, transparent 2px);
+  background-size: 1px 4px;
+  background-repeat: repeat-y;
+  background-position: left top;
+}
+
+.f .f-msg p,
+.f .f-fix p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.f .f-msg p {
+  color: var(--ink);
+}
+
+.f .f-fix p {
+  color: var(--muted);
+}
+
+.f .f-fix .lab {
+  display: block;
+  font-size: 12px;
+  color: var(--grey);
+  margin-bottom: 6px;
+}
+
+.f .where {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--grey);
+}
+
+/* ---- Matrix (selection) ------------------------------------------------------------ */
+
+.hm-scroll {
+  overflow-x: auto;
+  border-top: 1px solid var(--hair);
+}
+
+.hm {
   display: grid;
-  gap: 4px;
   min-width: max-content;
 }
+
 .hm-corner {
-  position: sticky;
-  left: 0;
+  border-bottom: 1px solid var(--hair);
 }
+
+/*
+ * Column headers run bottom-to-top. Tool names are long and there can be a dozen columns;
+ * turning the labels is what lets the grid stay square enough to read as a matrix instead
+ * of collapsing into a wide, thin strip of truncated text.
+ */
 .hm-col {
-  font-family: var(--mono);
-  font-size: 11px;
-  color: var(--muted);
-  text-align: center;
-  align-self: end;
-  padding-bottom: 6px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 72px;
-}
-.hm-row {
-  font-family: var(--mono);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  padding: 12px 0;
   font-size: 12px;
+  color: var(--muted);
+  justify-self: center;
+  align-self: end;
+  border-bottom: 1px solid var(--hair);
+  max-height: 132px;
+  overflow: hidden;
+}
+
+.hm-row {
+  padding: 0 14px 0 var(--gutter);
+  font-size: 12.5px;
   color: var(--ink);
   display: flex;
   align-items: center;
-  padding-right: 10px;
-  position: sticky;
-  left: 0;
-  background: var(--surface);
+  justify-content: flex-end;
+  text-align: right;
+  border-top: 1px solid var(--hair);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 160px;
 }
+
 .hm-cell {
-  aspect-ratio: 1;
-  min-width: 44px;
-  border-radius: var(--r-btn);
+  min-height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  font-weight: 500;
+  color: var(--muted);
+  border-top: 1px solid var(--hair);
+  border-left: 1px solid var(--hair);
+}
+
+.hm-cell.filled {
   color: var(--ink);
-  background: var(--tray);
 }
-.hm-cell.diag {
-  font-weight: 600;
-}
+
+/* Past about half share the fill swamps the theme's own ink -- in dark mode especially,
+   where pale text would sit on bright green. A fixed near-black reads on every hue here. */
 .hm-cell.hot {
   color: var(--on-hot);
+  font-weight: 500;
 }
-.hm-cell.steal {
-  box-shadow: 0 0 0 1px rgba(var(--steal), 0.5);
+
+.hm-cell.diag {
+  box-shadow: inset 0 0 0 1px rgba(var(--correct), 0.45);
 }
-.legend {
+
+.hm-legend {
   display: flex;
+  gap: 20px;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 12px;
+  padding: 14px var(--gutter) 0;
+  font-size: 12.5px;
+  color: var(--muted);
 }
-.legend-item {
+
+.hm-legend span.item {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 13px;
-  color: var(--muted);
-  background: var(--surface);
-  box-shadow: var(--ring);
-  border-radius: 999px;
-  padding: 5px 12px 5px 8px;
-}
-.swatch {
-  width: 12px;
-  height: 12px;
-  border-radius: 4px;
 }
 
-.bars {
-  padding: 14px 16px;
+.hm-legend i {
+  width: 11px;
+  height: 11px;
+  display: block;
+}
+
+/* The confusion sentences: prose, at heading size, one per ruled row. */
+.steal {
+  border-top: 1px solid var(--hair);
+  padding: 22px var(--gutter);
   display: flex;
-  flex-direction: column;
-  gap: 10px;
+  gap: 18px;
+  align-items: baseline;
 }
-.bar-row {
-  display: grid;
-  grid-template-columns: 150px 1fr 44px 52px;
-  gap: 12px;
-  align-items: center;
-}
-.bar-name {
+
+.steal .idx {
   font-family: var(--mono);
   font-size: 12px;
+  color: var(--grey);
+  flex: none;
+}
+
+.steal p {
+  margin: 0;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(17px, 2vw, 22px);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  color: var(--grey);
+}
+
+.steal p b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/* Per-tool hit rate: a ruled row, name / track / number. */
+.hit {
+  display: grid;
+  grid-template-columns: minmax(120px, 210px) minmax(0, 1fr) 96px;
+  align-items: center;
+  gap: 18px;
+  padding: 12px var(--gutter);
+  border-top: 1px solid var(--hair);
+}
+
+.hit .who {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--ink);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.bar-track {
+
+.hit .track {
   height: 8px;
-  background: var(--tray-2);
-  border-radius: 999px;
-  overflow: hidden;
+  background: var(--sunk-2);
+  position: relative;
 }
-.bar-fill {
-  height: 100%;
-  border-radius: 999px;
-  transition: width 0.4s ease;
+
+.hit .fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--band);
 }
-.bar-val {
-  font-size: 13px;
-  font-weight: 500;
+
+.hit .num {
   text-align: right;
-}
-.bar-sub {
   font-size: 13px;
-  color: var(--faint);
-  text-align: right;
+  color: var(--ink);
 }
 
-.steal-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.steal-list li {
-  background: var(--surface);
-  border-radius: var(--r);
-  box-shadow: var(--ring);
-  padding: 14px 18px 14px 16px;
-  font-size: 14px;
-  line-height: 22px;
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-}
-.steal-list li::before {
-  content: "";
-  flex: none;
-  width: 3px;
-  align-self: stretch;
-  border-radius: 999px;
-  background: rgba(var(--steal), 0.8);
+.hit .num small {
+  color: var(--grey);
+  font-size: 12px;
+  margin-left: 7px;
 }
 
-/* ---- History chart ---------------------------------------------------------------- */
+/* ---- Trend (history) --------------------------------------------------------------- */
 
-.chart-card {
-  padding: 20px;
+.chart-wrap {
+  border-top: 1px solid var(--hair);
+  padding: 26px var(--gutter) 10px;
 }
+
 .chart {
   width: 100%;
   height: auto;
   display: block;
+  overflow: visible;
 }
-.chart .grid {
-  stroke: var(--line);
+
+.chart .grid-line {
+  stroke: var(--hair);
   stroke-width: 1;
 }
-.axis-y {
-  fill: var(--faint);
-  font-size: 11px;
-  font-family: var(--mono);
-  text-anchor: end;
+
+.chart .drop {
+  stroke: var(--rule);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
 }
-.axis-x {
+
+.chart .axis {
+  fill: var(--grey);
+  font-family: var(--mono);
+  font-size: 10.5px;
+}
+
+.chart .stamp {
   fill: var(--muted);
-  font-size: 11px;
   font-family: var(--sans);
-  text-anchor: middle;
+  font-size: 11px;
 }
-.axis-label {
-  fill: var(--faint);
-  font-size: 10px;
-  font-family: var(--mono);
-  text-anchor: middle;
-}
-.pt-val {
+
+.chart .val {
   fill: var(--ink);
-  font-size: 12px;
-  font-weight: 600;
   font-family: var(--display);
-  text-anchor: middle;
-}
-.series {
-  fill: none;
-}
-.series.overall {
-  stroke: var(--ink);
-  stroke-width: 2.5;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-.series.lint {
-  stroke: var(--faint);
-  stroke-width: 1.5;
-  stroke-dasharray: 2 4;
-  stroke-linecap: round;
-}
-.series.eval {
-  stroke: var(--accent);
-  stroke-width: 1.5;
-  stroke-dasharray: 5 4;
-  stroke-linecap: round;
-}
-.chart-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-.stroke {
-  display: inline-block;
-  width: 16px;
-  height: 0;
-  border-top-width: 2px;
-  border-top-style: solid;
-  vertical-align: middle;
-}
-.stroke.overall {
-  border-color: var(--ink);
-}
-.stroke.lint {
-  border-top-style: dotted;
-  border-color: var(--faint);
-}
-.stroke.eval {
-  border-top-style: dashed;
-  border-color: var(--accent);
-}
-.history-foot {
-  margin-top: 16px;
-  font-size: 14px;
-}
-
-/* ---- Footer ----------------------------------------------------------------------- */
-
-.colophon {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
-  align-items: baseline;
-  margin-top: 64px;
-  padding-top: 22px;
-  border-top: 1px solid var(--line);
+  font-weight: 600;
   font-size: 13px;
 }
 
-/* ---- Narrow screens --------------------------------------------------------------- */
+.chart .series {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 
-@media (max-width: 860px) {
-  .score-tiles {
-    grid-template-columns: 1fr 1fr;
+.chart .series.overall {
+  stroke: var(--ink);
+  stroke-width: 2;
+}
+
+.chart .series.lint {
+  stroke: var(--grey);
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+}
+
+.chart .series.eval {
+  stroke: var(--accent);
+  stroke-width: 1.25;
+  stroke-dasharray: 4 3;
+}
+
+.chart-key {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 6px var(--gutter) 34px;
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.chart-key span.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart-key i {
+  width: 16px;
+  height: 0;
+  border-top: 2px solid var(--grey);
+  display: block;
+}
+
+.chart-key i.overall {
+  border-color: var(--ink);
+}
+
+.chart-key i.lint {
+  border-top-style: dashed;
+}
+
+.chart-key i.eval {
+  border-color: var(--accent);
+  border-top-style: dashed;
+}
+
+/* ---- Empty states ------------------------------------------------------------------ */
+
+/*
+ * An empty state is a band with something to say, not a grey box with a shrug in it. The
+ * clean-lint one is the good news the whole product is selling, so it gets heading size.
+ */
+.nothing {
+  padding: 44px var(--gutter) 52px;
+  border-top: 1px solid var(--hair);
+}
+
+.nothing .say {
+  font-size: clamp(21px, 2.4vw, 28px);
+  max-width: 24ch;
+}
+
+.nothing p.how {
+  margin: 16px 0 0;
+  color: var(--muted);
+  font-size: 13.5px;
+  max-width: 62ch;
+  line-height: 1.6;
+}
+
+/* ---- Colophon ---------------------------------------------------------------------- */
+
+.colophon {
+  border-top: 1px solid var(--hair);
+  padding: 26px var(--gutter) 34px;
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 12.5px;
+}
+
+.colophon a {
+  color: var(--ink);
+}
+
+.tail {
+  height: 56px;
+}
+
+/* ---- Narrow ------------------------------------------------------------------------ */
+
+@media (max-width: 900px) {
+  :root {
+    --gutter: 18px;
   }
-  .tile.hero {
+
+  .wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Cells wrap onto a second row, so the row above needs a line under it. */
+  .cell {
+    border-top: 1px solid var(--hair);
+  }
+
+  .cell:nth-child(-n + 2) {
+    border-top: 0;
+  }
+
+  .cell:nth-child(odd) {
+    border-left: 0;
+  }
+
+  .f {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .f > * {
+    padding: 14px var(--gutter);
+  }
+
+  .f .f-id {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 0;
+  }
+
+  /* Stacked, the dashed guide is between rows rather than columns. */
+  .f .f-msg,
+  .f .f-fix {
+    background-image: none;
+  }
+
+  .f .f-fix {
+    padding-top: 4px;
+  }
+
+  .hit {
+    grid-template-columns: minmax(0, 1fr) 88px;
+    gap: 10px 14px;
+  }
+
+  .hit .track {
     grid-column: 1 / -1;
+  }
+
+  .rail-nav {
+    gap: 0;
+    margin-left: 0;
+  }
+
+  .rail-link {
+    padding: 7px 8px;
   }
 }
 
-@media (max-width: 720px) {
-  .shell {
-    padding: 0 16px 80px;
+@media (max-width: 620px) {
+  .strip-in {
+    font-size: 12px;
   }
-  .tile.hero .tile-value {
-    font-size: 48px;
-  }
-  .rate-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  .bar-row {
-    grid-template-columns: 110px 1fr 40px;
-  }
-  .bar-sub {
+
+  .rail-link .lab {
     display: none;
   }
-  .tabs {
-    display: flex;
-    width: 100%;
+
+  .rail-link .n {
+    font-size: 12px;
   }
-  .tab {
-    flex: 1;
-    padding: 7px 8px;
+
+  .gauge-tick {
+    font-size: 10px;
   }
 }
