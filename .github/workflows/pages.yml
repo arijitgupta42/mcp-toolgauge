@@ -47,13 +47,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Pages serves from a repo subpath (https://<user>.github.io/mcp-doctor/), so the build
+      # Pages serves from a repo subpath (https://<user>.github.io/mcpcheckup/), so the build
       # is told that prefix or every asset URL 404s. A site served from a domain root sets
       # VITE_BASE=/ instead -- which is what the self-hosted deployment does.
       - name: Build
         run: npm run build
         env:
-          VITE_BASE: /mcp-doctor/
+          VITE_BASE: /mcpcheckup/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

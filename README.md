@@ -1,24 +1,24 @@
-# mcp-doctor
+# mcpcheckup
 
-[![mcp-doctor health](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/arijitgupta42/mcp-doctor/main/badge.json)](docs/ci.md#the-badge)
+[![mcpcheckup health](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/arijitgupta42/mcpcheckup/main/badge.json)](docs/ci.md#the-badge)
 
 **Find out why your MCP server's tools don't get called.**
 
-`mcp-doctor` audits MCP servers three ways: a static linter for tool names, descriptions
+`mcpcheckup` audits MCP servers three ways: a static linter for tool names, descriptions
 and schemas; a dynamic evaluator that measures whether a model actually picks the right
-tool; and a CI gate with a score badge. The badge above is mcp-doctor scoring its own
+tool; and a CI gate with a score badge. The badge above is mcpcheckup scoring its own
 `goodserver` fixture — dogfooding, and the score renders once the repo is public.
 
 > **Status: early.** Milestones 1–5 of 6 are done — you can inspect a server, lint it
 > against 22 rules, measure whether a model actually picks the right tool, gate a single
 > health score in CI with a badge and a GitHub Action, and explore any of it in a dashboard.
-> Only PyPI publishing (so `uvx mcp-doctor` needs no install) is left. This README describes
+> Only PyPI publishing (so `uvx mcpcheckup` needs no install) is left. This README describes
 > only what works today.
 
 ## Lint
 
 ```bash
-uv run mcp-doctor lint ./path/to/your/server
+uv run mcpcheckup lint ./path/to/your/server
 ```
 
 ```
@@ -79,12 +79,12 @@ a before and after.
 ### Options
 
 ```bash
-uv run mcp-doctor lint . -v                      # info findings, and every suggestion
-uv run mcp-doctor lint . --fail-on warning       # stricter gate
-uv run mcp-doctor lint . --fail-on off           # report without ever failing
-uv run mcp-doctor lint . --json                  # machine-readable, stable key order
-uv run mcp-doctor lint . --sarif > results.sarif # for GitHub code scanning
-uv run mcp-doctor lint . --no-config             # ignore any mcp-doctor.toml on disk
+uv run mcpcheckup lint . -v                      # info findings, and every suggestion
+uv run mcpcheckup lint . --fail-on warning       # stricter gate
+uv run mcpcheckup lint . --fail-on off           # report without ever failing
+uv run mcpcheckup lint . --json                  # machine-readable, stable key order
+uv run mcpcheckup lint . --sarif > results.sarif # for GitHub code scanning
+uv run mcpcheckup lint . --no-config             # ignore any mcpcheckup.toml on disk
 ```
 
 Exit codes: `0` clean, `1` a finding reached `--fail-on` (default `error`), `2` usage
@@ -92,7 +92,7 @@ error, `3` could not reach the server.
 
 ### Configuration
 
-Optional. Put an `mcp-doctor.toml` next to your server, or a `[tool.mcp-doctor]` section in
+Optional. Put an `mcpcheckup.toml` next to your server, or a `[tool.mcpcheckup]` section in
 your `pyproject.toml`:
 
 ```toml
@@ -112,8 +112,8 @@ you turned off is worse than one you never touched.
 Lint tells you two descriptions are near-identical. Eval tells you what that costs.
 
 ```bash
-uv run mcp-doctor eval ./path/to/your/server --init   # draft cases, then edit and commit them
-uv run mcp-doctor eval ./path/to/your/server          # run them
+uv run mcpcheckup eval ./path/to/your/server --init   # draft cases, then edit and commit them
+uv run mcpcheckup eval ./path/to/your/server          # run them
 ```
 
 It puts your real tool definitions in front of a real model at temperature 0 — your names,
@@ -175,8 +175,8 @@ when…"* and one that does not is the difference between 100% and a coin flip.
 Reproduce both, offline and free, from the recorded runs in this repo:
 
 ```bash
-uv run mcp-doctor eval tests/fixtures/goodserver --offline
-uv run mcp-doctor eval tests/fixtures/badserver --offline
+uv run mcpcheckup eval tests/fixtures/goodserver --offline
+uv run mcpcheckup eval tests/fixtures/badserver --offline
 ```
 
 ### How it works
@@ -207,19 +207,19 @@ The full methodology, including what the number does *not* tell you, is in
 ### Options
 
 ```bash
-uv run mcp-doctor eval . --model openai/gpt-4.1-mini   # anything LiteLLM can reach
-uv run mcp-doctor eval . --offline                     # replay a recorded cache; no key needed
-uv run mcp-doctor eval . --min-accuracy 80             # exit 1 below this
-uv run mcp-doctor eval . --max-cost 0.50               # stop once it has cost this much
-uv run mcp-doctor eval . --pace 3                      # wait between calls on a rate-limited tier
-uv run mcp-doctor eval . -v                            # every failing case, with its prompt
-uv run mcp-doctor eval . --json                        # the full confusion matrix
+uv run mcpcheckup eval . --model openai/gpt-4.1-mini   # anything LiteLLM can reach
+uv run mcpcheckup eval . --offline                     # replay a recorded cache; no key needed
+uv run mcpcheckup eval . --min-accuracy 80             # exit 1 below this
+uv run mcpcheckup eval . --max-cost 0.50               # stop once it has cost this much
+uv run mcpcheckup eval . --pace 3                      # wait between calls on a rate-limited tier
+uv run mcpcheckup eval . -v                            # every failing case, with its prompt
+uv run mcpcheckup eval . --json                        # the full confusion matrix
 ```
 
 Calling a model needs the `eval` extra; `--offline` does not.
 
 ```bash
-uv pip install 'mcp-doctor[eval]'
+uv pip install 'mcpcheckup[eval]'
 ```
 
 The default model is a free one on OpenRouter, so a first run costs nothing beyond an
@@ -232,7 +232,7 @@ Lint says what is wrong; eval says what it costs. `ci` rolls both into one 0–1
 can gate a build on and put on a badge.
 
 ```bash
-uv run mcp-doctor ci ./path/to/your/server --min-score 80
+uv run mcpcheckup ci ./path/to/your/server --min-score 80
 ```
 
 ```
@@ -265,14 +265,14 @@ error, `3` could not reach the server.
 ### Badge
 
 ```bash
-uv run mcp-doctor ci . --badge badge.json
+uv run mcpcheckup ci . --badge badge.json
 ```
 
 Writes a [shields.io endpoint](https://shields.io/badges/endpoint-badge) document. Publish it
 — a raw GitHub URL is enough — and point a badge at it:
 
 ```markdown
-![mcp-doctor](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/OWNER/REPO/main/badge.json)
+![mcpcheckup](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/OWNER/REPO/main/badge.json)
 ```
 
 ### GitHub Action
@@ -282,14 +282,14 @@ and posts a sticky pull-request comment showing the delta against your base bran
 
 ```yaml
 - uses: actions/checkout@v4
-# install your server's own dependencies here, so mcp-doctor can start it
-- uses: arijitgupta42/mcp-doctor@v1
+# install your server's own dependencies here, so mcpcheckup can start it
+- uses: arijitgupta42/mcpcheckup@v1
   with:
     target: .
     min-score: "80"
 ```
 
-Until mcp-doctor is on PyPI (that ships at launch), pin `package-spec` to a git ref so the
+Until mcpcheckup is on PyPI (that ships at launch), pin `package-spec` to a git ref so the
 Action has something to install — see [docs/ci.md](docs/ci.md) for the full input list.
 
 ## Dashboard
@@ -306,12 +306,12 @@ npm run dev      # http://localhost:5173, opens on the two fixture servers
 npm run build    # static files in dashboard/dist/, host anywhere
 ```
 
-It reads a `mcp-doctor ci --json` report — the bundled demos, a `?report=<raw-url>`, or a file
+It reads a `mcpcheckup ci --json` report — the bundled demos, a `?report=<raw-url>`, or a file
 you drop on the page. Keep a history file across runs and the third view draws your score over
 time:
 
 ```bash
-mcp-doctor ci ./your/server --history history.json --json > report.json
+mcpcheckup ci ./your/server --history history.json --json > report.json
 ```
 
 The full tour, including how to publish your own, is in [docs/dashboard.md](docs/dashboard.md).
@@ -321,7 +321,7 @@ public.
 ## Inspect
 
 ```bash
-uv run mcp-doctor inspect ./path/to/your/server
+uv run mcpcheckup inspect ./path/to/your/server
 ```
 
 Point it at a directory and it finds your server the way your MCP client does — by reading
@@ -354,10 +354,10 @@ is a different problem, and one `lint` has opinions about.
 Both commands take the same target flags:
 
 ```bash
-uv run mcp-doctor lint https://example.com/mcp             # a running server over HTTP
-uv run mcp-doctor lint ./server.py                         # a single script
-uv run mcp-doctor lint . --server backend                  # pick one from a multi-server manifest
-uv run mcp-doctor lint . --command "node dist/server.js"   # say it yourself
+uv run mcpcheckup lint https://example.com/mcp             # a running server over HTTP
+uv run mcpcheckup lint ./server.py                         # a single script
+uv run mcpcheckup lint . --server backend                  # pick one from a multi-server manifest
+uv run mcpcheckup lint . --command "node dist/server.js"   # say it yourself
 ```
 
 **Both commands are read-only.** They connect, list tools, and disconnect. Neither ever
@@ -369,14 +369,14 @@ The repo ships two fixture servers with the same API — one written well, one w
 carelessly:
 
 ```bash
-uv run mcp-doctor lint tests/fixtures/goodserver
-uv run mcp-doctor lint tests/fixtures/badserver
+uv run mcpcheckup lint tests/fixtures/goodserver
+uv run mcpcheckup lint tests/fixtures/badserver
 
-uv run mcp-doctor eval tests/fixtures/goodserver --offline
-uv run mcp-doctor eval tests/fixtures/badserver --offline
+uv run mcpcheckup eval tests/fixtures/goodserver --offline
+uv run mcpcheckup eval tests/fixtures/badserver --offline
 
-uv run mcp-doctor ci tests/fixtures/goodserver
-uv run mcp-doctor ci tests/fixtures/badserver
+uv run mcpcheckup ci tests/fixtures/goodserver
+uv run mcpcheckup ci tests/fixtures/badserver
 ```
 
 The first lints clean; the second produces 74 findings. The eval runs need no API key —
@@ -391,7 +391,7 @@ uv sync                  # base install; enough for everything except calling a 
 uv sync --extra eval     # adds LiteLLM, for `eval` without --offline
 uv run pytest
 uv run ruff check .
-uv run mypy mcp_doctor
+uv run mypy mcpcheckup
 ```
 
 Skip the tests that spawn real servers with `uv run pytest -m "not integration"`. No test
@@ -406,7 +406,7 @@ calls a model: the eval suite stubs the backend or replays the recorded caches.
 | `eval` — tool-selection accuracy and a confusion matrix | done |
 | `ci` — health score, threshold gate, badge, GitHub Action | done |
 | Dashboard — findings, confusion heatmap, score history | done |
-| Ship to PyPI so `uvx mcp-doctor` needs no install | next |
+| Ship to PyPI so `uvx mcpcheckup` needs no install | next |
 
 ## Licence
 

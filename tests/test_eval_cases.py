@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from mcp_doctor.eval.cases import (
+from mcpcheckup.eval.cases import (
     CASES_FILENAME,
     CaseFileError,
     default_cases_path,
@@ -22,7 +22,7 @@ from mcp_doctor.eval.cases import (
     validate_against,
     write_suite,
 )
-from mcp_doctor.model import CaseKind, CaseSuite, EvalCase, ToolSpec
+from mcpcheckup.model import CaseKind, CaseSuite, EvalCase, ToolSpec
 
 TOOLS = (
     ToolSpec(name="search_users", description="Find people."),
@@ -83,7 +83,7 @@ class TestPaths:
         """Prefixed, because a bare `cases.yaml` in somebody's repo root does not say who
         owns it or what it is for."""
         assert default_cases_path(tmp_path) == tmp_path / CASES_FILENAME
-        assert CASES_FILENAME.startswith("mcp-doctor")
+        assert CASES_FILENAME.startswith("mcpcheckup")
 
 
 class TestRoundTrip:

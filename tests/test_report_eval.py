@@ -20,7 +20,7 @@ from pathlib import Path
 import pytest
 from rich.console import Console
 
-from mcp_doctor.model import (
+from mcpcheckup.model import (
     ArgumentCheck,
     CaseKind,
     CaseOutcome,
@@ -30,7 +30,7 @@ from mcp_doctor.model import (
     ServerInfo,
     ToolScore,
 )
-from mcp_doctor.report import render_eval_json, render_eval_table
+from mcpcheckup.report import render_eval_json, render_eval_table
 
 GOLDEN = Path(__file__).parent / "golden" / "eval_report.txt"
 GOLDEN_VERBOSE = Path(__file__).parent / "golden" / "eval_report_verbose.txt"
@@ -78,7 +78,7 @@ def perfect() -> EvalResult:
         )
         for index in range(3)
     )
-    from mcp_doctor.eval import score
+    from mcpcheckup.eval import score
 
     return empty(scores=score(outcomes), outcomes=outcomes, cached_count=3)
 
@@ -150,7 +150,7 @@ class TestLayout:
 
     def test_a_long_thief_list_is_truncated_rather_than_wrapped(self) -> None:
         """A table row spilling onto three lines stops the table being scannable."""
-        from mcp_doctor.model import ConfusionCell
+        from mcpcheckup.model import ConfusionCell
 
         scores = EvalScores(
             selection_correct=1,

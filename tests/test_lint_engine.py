@@ -13,8 +13,8 @@ from pathlib import Path
 
 import pytest
 
-from mcp_doctor.lint import LintContext, all_rules, lint, rule_ids, run_rules
-from mcp_doctor.model import InspectResult, ServerInfo, Severity, ToolSpec
+from mcpcheckup.lint import LintContext, all_rules, lint, rule_ids, run_rules
+from mcpcheckup.model import InspectResult, ServerInfo, Severity, ToolSpec
 
 REPO_ROOT = Path(__file__).parent.parent
 DOCS = REPO_ROOT / "docs" / "rules"

@@ -13,8 +13,8 @@ import re
 import pytest
 from rich.console import Console
 
-from mcp_doctor.model import InspectResult, ServerInfo, ToolAnnotations, ToolSpec
-from mcp_doctor.report import render_inspect_table
+from mcpcheckup.model import InspectResult, ServerInfo, ToolAnnotations, ToolSpec
+from mcpcheckup.report import render_inspect_table
 
 ANSI = re.compile(r"\x1b\[[0-9;]*m")
 

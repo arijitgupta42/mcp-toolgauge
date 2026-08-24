@@ -19,9 +19,9 @@ from pathlib import Path
 import pytest
 from rich.console import Console
 
-from mcp_doctor.health import health_score
-from mcp_doctor.model import CiReport, EvalResult, HealthScore, LintResult
-from mcp_doctor.report import render_ci_markdown, render_ci_table
+from mcpcheckup.health import health_score
+from mcpcheckup.model import CiReport, EvalResult, HealthScore, LintResult
+from mcpcheckup.report import render_ci_markdown, render_ci_table
 
 GOLDEN = Path(__file__).parent / "golden" / "ci_comment.md"
 GOLDEN_DELTA = Path(__file__).parent / "golden" / "ci_comment_delta.md"
@@ -178,4 +178,4 @@ class TestMarkdownContent:
         assert render_ci_markdown(full) == render_ci_markdown(full)
 
     def test_it_credits_the_tool(self, full: CiReport) -> None:
-        assert "Measured by [mcp-doctor]" in render_ci_markdown(full)
+        assert "Measured by [mcpcheckup]" in render_ci_markdown(full)

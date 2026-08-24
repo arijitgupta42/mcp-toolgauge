@@ -18,12 +18,12 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from mcp_doctor.cli import app
-from mcp_doctor.connect import inspect_server_sync, resolve_target
-from mcp_doctor.eval.backend import build_messages
-from mcp_doctor.eval.cache import CachedCall, ResponseCache, cache_key, cache_path
-from mcp_doctor.eval.cases import CASES_FILENAME, write_suite
-from mcp_doctor.model import CaseKind, CaseSuite, EvalCase, InspectResult, tool_digest
+from mcpcheckup.cli import app
+from mcpcheckup.connect import inspect_server_sync, resolve_target
+from mcpcheckup.eval.backend import build_messages
+from mcpcheckup.eval.cache import CachedCall, ResponseCache, cache_key, cache_path
+from mcpcheckup.eval.cases import CASES_FILENAME, write_suite
+from mcpcheckup.model import CaseKind, CaseSuite, EvalCase, InspectResult, tool_digest
 
 pytestmark = pytest.mark.integration
 
@@ -251,5 +251,5 @@ class TestReadOnly:
 
         result = evaluate(tmp_path)
 
-        assert "MCP_DOCTOR_FIXTURE_TOOL_WAS_INVOKED" not in (result.stdout + result.stderr)
+        assert "MCPCHECKUP_FIXTURE_TOOL_WAS_INVOKED" not in (result.stdout + result.stderr)
         assert result.exit_code == 0

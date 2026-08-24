@@ -1,9 +1,9 @@
 {
-  "name": "mcp-doctor-dashboard",
+  "name": "mcpcheckup-dashboard",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "The mcp-doctor dashboard: findings, the confusion heatmap, and score history from a ci --json report.",
+  "description": "The mcpcheckup dashboard: findings, the confusion heatmap, and score history from a ci --json report.",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

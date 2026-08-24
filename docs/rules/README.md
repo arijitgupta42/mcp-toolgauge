@@ -1,7 +1,7 @@
 # Lint rules
 
 Every rule is deterministic and offline. No rule calls a model, sends anything
-anywhere, or invokes one of your tools -- `mcp-doctor lint` connects, lists tools,
+anywhere, or invokes one of your tools -- `mcpcheckup lint` connects, lists tools,
 disconnects, and does the rest locally. That is what makes it cheap enough to run on
 every pull request.
 
@@ -74,13 +74,13 @@ What every request pays before it reads the user.
 | `warning` | Measurably degrades selection. Shown by default, does not fail the build. |
 | `info` | Polish. Hidden unless you pass `-v`. |
 
-`mcp-doctor lint` exits `1` when any finding reaches `--fail-on`, which defaults to
+`mcpcheckup lint` exits `1` when any finding reaches `--fail-on`, which defaults to
 `error`. Use `--fail-on warning` to be stricter, or `--fail-on off` to report without
 ever failing.
 
 ## Configuration
 
-Put an `mcp-doctor.toml` next to your server, or a `[tool.mcp-doctor]` section in your
+Put an `mcpcheckup.toml` next to your server, or a `[tool.mcpcheckup]` section in your
 `pyproject.toml`. Discovery walks up from the target directory and stops at the first
 file it finds.
 
