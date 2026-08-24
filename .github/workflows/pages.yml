@@ -48,13 +48,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Pages serves from a repo subpath (https://<user>.github.io/mcp_toolgauge/), so the build
-      # is told that prefix or every asset URL 404s. A site served from a domain root sets
-      # VITE_BASE=/ instead -- which is what the self-hosted deployment does.
+      # Pages serves from a repo subpath (https://<user>.github.io/mcp-toolgauge/), so the build
+      # is told that prefix or every asset URL 404s. The subpath is the repo name, which is the
+      # hyphenated mcp-toolgauge -- the underscore mcp_toolgauge is only the Python package dir,
+      # and using it here is what made the published page render blank. A site served from a
+      # domain root sets VITE_BASE=/ instead -- which is what the self-hosted deployment does.
       - name: Build
         run: npm run build
         env:
-          VITE_BASE: /mcp_toolgauge/
+          VITE_BASE: /mcp-toolgauge/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

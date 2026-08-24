@@ -64,8 +64,8 @@ npm run build    # static files in dashboard/dist/
 
 The build is plain static files behind no server, so it hosts anywhere. This repository ships
 a GitHub Pages workflow (`.github/workflows/pages.yml`) that builds and publishes it; because
-Pages serves from a repo subpath, that build sets `VITE_BASE=/mcp_toolgauge/`. Serving from a
-domain root instead is `VITE_BASE=/`.
+Pages serves from a repo subpath, that build sets `VITE_BASE=/mcp-toolgauge/` (the repo name).
+Serving from a domain root instead is `VITE_BASE=/`.
 
 ## A note on the demo data
 
