@@ -7,7 +7,7 @@
 
 **Find out why your MCP server's tools don't get called.**
 
-![mcpcheckup finds a near-duplicate description, measures the tool-selection confusion it causes, and rolls it into one health score](docs/assets/demo.svg)
+![mcpcheckup finds a near-duplicate description, measures the tool-selection confusion it causes, and rolls it into one health score](https://raw.githubusercontent.com/arijitgupta42/mcpcheckup/main/docs/assets/demo.svg)
 
 `mcpcheckup` audits an MCP server three ways — a static **linter** for names, descriptions
 and schemas; a dynamic **evaluator** that measures whether a model actually picks the right
