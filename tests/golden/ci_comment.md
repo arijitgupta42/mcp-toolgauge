@@ -1,4 +1,4 @@
-## 🔴 mcp-doctor health: 42 / 100
+## 🔴 mcpcheckup health: 42 / 100
 
 `acme-directory` — python server.py
 
@@ -12,4 +12,4 @@
 - `search_users` captures 83% of the prompts meant for `search_orgs`.
 - `search_orgs` captures 33% of the prompts meant for `search_users`.
 
-<sub>Measured by [mcp-doctor](https://github.com/arijitgupta42/mcp-doctor).</sub>
+<sub>Measured by [mcpcheckup](https://github.com/arijitgupta42/mcpcheckup).</sub>

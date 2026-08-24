@@ -14,8 +14,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from mcp_doctor.eval.backend import Completion, ToolCall
-from mcp_doctor.eval.cache import (
+from mcpcheckup.eval.backend import Completion, ToolCall
+from mcpcheckup.eval.cache import (
     CACHE_DIRNAME,
     CACHE_FILENAME,
     CachedCall,
@@ -59,7 +59,7 @@ class TestKey:
 
 class TestPaths:
     def test_the_cache_sits_beside_the_case_file(self, tmp_path: Path) -> None:
-        path = cache_path(tmp_path / "mcp-doctor-cases.yaml")
+        path = cache_path(tmp_path / "mcpcheckup-cases.yaml")
 
         assert path.parent.name == CACHE_DIRNAME
         assert path.name == CACHE_FILENAME

@@ -15,12 +15,12 @@ from pathlib import Path
 
 import pytest
 
-from mcp_doctor.connect import ConnectionFailed, StdioTarget, inspect_server, resolve_target
-from mcp_doctor.connect.target import HttpTarget
+from mcpcheckup.connect import ConnectionFailed, StdioTarget, inspect_server, resolve_target
+from mcpcheckup.connect.target import HttpTarget
 
 pytestmark = pytest.mark.integration
 
-NEVER_CALLED_MARKER = "MCP_DOCTOR_FIXTURE_TOOL_WAS_INVOKED"
+NEVER_CALLED_MARKER = "MCPCHECKUP_FIXTURE_TOOL_WAS_INVOKED"
 
 
 def _free_port() -> int:

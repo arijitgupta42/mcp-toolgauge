@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from mcp_doctor.model import InspectResult, ServerInfo, ToolAnnotations, ToolSpec, canonical_json
+from mcpcheckup.model import InspectResult, ServerInfo, ToolAnnotations, ToolSpec, canonical_json
 
 
 def _spec(**overrides) -> ToolSpec:

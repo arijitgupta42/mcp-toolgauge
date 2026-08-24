@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import pytest
 
-from mcp_doctor.lint.text import (
+from mcpcheckup.lint.text import (
     all_words,
     content_bag,
     content_words,

@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from mcp_doctor.history import (
+from mcpcheckup.history import (
     MAX_POINTS,
     HistoryError,
     ScoreHistory,
@@ -23,7 +23,7 @@ from mcp_doctor.history import (
     record,
     write_history,
 )
-from mcp_doctor.model import CiReport, HealthPoint, HealthScore, LintResult, ServerInfo
+from mcpcheckup.model import CiReport, HealthPoint, HealthScore, LintResult, ServerInfo
 
 LINT_ONLY = HealthScore(overall=97, lint_score=97, eval_score=None, errors=0, warnings=1)
 COMPOSITE = HealthScore(overall=96, lint_score=100, eval_score=92, errors=0, warnings=0)
@@ -152,7 +152,7 @@ class TestCanonicalRoundTrip:
             ),
         )
 
-        from mcp_doctor.model import canonical_json
+        from mcpcheckup.model import canonical_json
 
         restored = CiReport.model_validate_json(canonical_json(report))
         assert restored == report

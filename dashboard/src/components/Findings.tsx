@@ -10,7 +10,7 @@ import type { CiReport, Finding, Severity } from "../types";
  */
 
 const ORDER: Severity[] = ["error", "warning", "info"];
-const DOCS = "https://github.com/arijitgupta42/mcp-doctor/blob/main/docs/rules";
+const DOCS = "https://github.com/arijitgupta42/mcpcheckup/blob/main/docs/rules";
 
 const sevColor: Record<Severity, string> = {
   error: "var(--sev-error)",

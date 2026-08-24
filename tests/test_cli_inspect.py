@@ -1,6 +1,6 @@
 """The CLI contract: what people and CI actually depend on.
 
-Exit codes matter more than output here. `mcp-doctor` is meant to sit in a pipeline, and a
+Exit codes matter more than output here. `mcpcheckup` is meant to sit in a pipeline, and a
 tool that returns 0 when it failed is worse than one that does nothing.
 """
 
@@ -13,7 +13,7 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from mcp_doctor.cli import EXIT_CONNECTION, EXIT_OK, EXIT_USAGE, app
+from mcpcheckup.cli import EXIT_CONNECTION, EXIT_OK, EXIT_USAGE, app
 
 runner = CliRunner()
 
@@ -148,4 +148,4 @@ class TestVersion:
         result = runner.invoke(app, ["--version"])
 
         assert result.exit_code == EXIT_OK
-        assert "mcp-doctor" in result.output
+        assert "mcpcheckup" in result.output

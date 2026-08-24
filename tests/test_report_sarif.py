@@ -13,9 +13,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-from mcp_doctor.lint import all_rules
-from mcp_doctor.model import Finding, LintResult, ServerInfo, Severity
-from mcp_doctor.report import render_lint_sarif
+from mcpcheckup.lint import all_rules
+from mcpcheckup.model import Finding, LintResult, ServerInfo, Severity
+from mcpcheckup.report import render_lint_sarif
 
 GOLDEN = Path(__file__).parent / "golden" / "lint_report.sarif"
 
@@ -159,7 +159,7 @@ class TestMessages:
 class TestFingerprints:
     def _fingerprint(self, item: Finding) -> str:
         result = only_run(report_of(item))["results"][0]
-        return str(result["partialFingerprints"]["mcpDoctorFinding/v1"])
+        return str(result["partialFingerprints"]["mcpCheckupFinding/v1"])
 
     def test_the_same_finding_fingerprints_the_same_way(self) -> None:
         assert self._fingerprint(finding()) == self._fingerprint(finding())

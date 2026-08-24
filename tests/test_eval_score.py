@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from mcp_doctor.eval.score import (
+from mcpcheckup.eval.score import (
     NOTABLE_SHARE,
     confusion_matrix,
     describe_confusion,
@@ -25,7 +25,7 @@ from mcp_doctor.eval.score import (
     per_tool_scores,
     score,
 )
-from mcp_doctor.model import (
+from mcpcheckup.model import (
     ArgumentCheck,
     CaseKind,
     CaseOutcome,
@@ -36,7 +36,7 @@ from mcp_doctor.model import (
 )
 
 REPO_ROOT = Path(__file__).parent.parent
-SCORE_SOURCE = REPO_ROOT / "mcp_doctor" / "eval" / "score.py"
+SCORE_SOURCE = REPO_ROOT / "mcpcheckup" / "eval" / "score.py"
 
 
 def case(
@@ -375,10 +375,10 @@ class TestPurity:
             for node in ast.walk(tree)
             if isinstance(node, ast.ImportFrom)
             and node.module
-            and node.module.startswith("mcp_doctor")
+            and node.module.startswith("mcpcheckup")
         }
 
-        assert internal == {"mcp_doctor.model"}
+        assert internal == {"mcpcheckup.model"}
 
 
 class TestKnownFixture:

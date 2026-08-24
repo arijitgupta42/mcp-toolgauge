@@ -1,6 +1,6 @@
 /*
- * The JSON shape of a `mcp-doctor ci --json` report, mirrored from the Pydantic models in
- * mcp_doctor/model/. Two things about that JSON drive every optional here:
+ * The JSON shape of a `mcpcheckup ci --json` report, mirrored from the Pydantic models in
+ * mcpcheckup/model/. Two things about that JSON drive every optional here:
  *
  *  - it is snake_case, because it is the protocol-facing form, and
  *  - it is produced by `canonical_json`, which drops nulls -- so any field the Python model

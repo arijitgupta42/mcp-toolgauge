@@ -1,6 +1,6 @@
 # The health score, the badge, and the Action
 
-`mcp-doctor ci` rolls the two signals the tool already produces -- lint findings and eval
+`mcpcheckup ci` rolls the two signals the tool already produces -- lint findings and eval
 selection accuracy -- into one 0-100 number you can gate a build on, put on a badge, and
 watch move on a pull request. This page is the methodology: what the number means, and what
 it deliberately does *not*.
@@ -56,7 +56,7 @@ prints and widened so a middling-but-honest server does not read as alarming red
 ## The command
 
 ```bash
-uv run mcp-doctor ci ./path/to/your/server
+uv run mcpcheckup ci ./path/to/your/server
 ```
 
 ```
@@ -71,17 +71,17 @@ get_user_profile captures 50% of the prompts meant for create_support_ticket.
 ```
 
 The eval half is replayed from the committed cache and never calls a model, so `ci` is
-reproducible and free. A server with no `mcp-doctor-cases.yaml` beside it is scored on lint
+reproducible and free. A server with no `mcpcheckup-cases.yaml` beside it is scored on lint
 alone and says so.
 
 ```bash
-uv run mcp-doctor ci . --min-score 80          # exit 1 below this
-uv run mcp-doctor ci . --badge badge.json       # write the shields.io endpoint JSON
-uv run mcp-doctor ci . --json                    # the full report, for --baseline later
-uv run mcp-doctor ci . --markdown comment.md     # the PR-comment body
-uv run mcp-doctor ci . --markdown comment.md --baseline main.json   # with a vs-base delta
-uv run mcp-doctor ci . --history history.json    # append this score to a trajectory
-uv run mcp-doctor ci . -v                         # the findings behind the lint score
+uv run mcpcheckup ci . --min-score 80          # exit 1 below this
+uv run mcpcheckup ci . --badge badge.json       # write the shields.io endpoint JSON
+uv run mcpcheckup ci . --json                    # the full report, for --baseline later
+uv run mcpcheckup ci . --markdown comment.md     # the PR-comment body
+uv run mcpcheckup ci . --markdown comment.md --baseline main.json   # with a vs-base delta
+uv run mcpcheckup ci . --history history.json    # append this score to a trajectory
+uv run mcpcheckup ci . -v                         # the findings behind the lint score
 ```
 
 Exit codes match the rest of the tool: `0` at or above `--min-score` (or no gate), `1` below
@@ -92,7 +92,7 @@ it, `2` a usage error, `3` could not reach the server.
 `--baseline` compares this run against one earlier one. `--history` keeps the *whole* line:
 
 ```bash
-uv run mcp-doctor ci ./server --history history.json --history-label "$(git rev-parse --short HEAD)"
+uv run mcpcheckup ci ./server --history history.json --history-label "$(git rev-parse --short HEAD)"
 ```
 
 Each run appends one point — the timestamp, an optional label, and the same `HealthScore` the
@@ -125,14 +125,14 @@ to keep their trends apart.
 document:
 
 ```json
-{ "schemaVersion": 1, "label": "mcp-doctor", "message": "96", "color": "brightgreen" }
+{ "schemaVersion": 1, "label": "mcpcheckup", "message": "96", "color": "brightgreen" }
 ```
 
 Publish that file anywhere with a raw URL -- committing it to your repo is enough -- and point
 a badge at it:
 
 ```markdown
-![mcp-doctor](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/OWNER/REPO/main/badge.json)
+![mcpcheckup](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/OWNER/REPO/main/badge.json)
 ```
 
 ## The GitHub Action
@@ -142,15 +142,15 @@ threshold, writes the badge, posts a sticky comment on the pull request, and sho
 against the score your base branch last recorded.
 
 ```yaml
-# .github/workflows/mcp-doctor.yml
+# .github/workflows/mcpcheckup.yml
 on: [push, pull_request]
 jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # Install your server's own dependencies here, so mcp-doctor can start it.
-      - uses: arijitgupta42/mcp-doctor@v1
+      # Install your server's own dependencies here, so mcpcheckup can start it.
+      - uses: arijitgupta42/mcpcheckup@v1
         with:
           target: .
           min-score: "80"
@@ -159,10 +159,10 @@ jobs:
 Inputs: `target`, `min-score`, `model`, `cases`, `badge-path`, `comment`, `track-score`,
 `package-spec`, `python-version`. Outputs: `score` and `color`.
 
-Until mcp-doctor is published to PyPI (that lands with the launch), pin `package-spec` to a
+Until mcpcheckup is published to PyPI (that lands with the launch), pin `package-spec` to a
 git ref so the Action has something to install:
 
 ```yaml
         with:
-          package-spec: git+https://github.com/arijitgupta42/mcp-doctor
+          package-spec: git+https://github.com/arijitgupta42/mcpcheckup
 ```

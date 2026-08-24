@@ -12,9 +12,9 @@ from typing import Any
 
 import pytest
 
-from mcp_doctor.eval import check_arguments, score
-from mcp_doctor.lint import LintContext, get_rule, lint
-from mcp_doctor.model import (
+from mcpcheckup.eval import check_arguments, score
+from mcpcheckup.lint import LintContext, get_rule, lint
+from mcpcheckup.model import (
     CaseKind,
     CaseOutcome,
     CaseSuite,

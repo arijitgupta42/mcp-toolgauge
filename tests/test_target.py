@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from mcp_doctor.connect.target import (
+from mcpcheckup.connect.target import (
     HttpTarget,
     StdioTarget,
     TargetResolutionError,

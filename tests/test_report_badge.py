@@ -10,8 +10,8 @@ from __future__ import annotations
 
 import json
 
-from mcp_doctor.model import HealthScore
-from mcp_doctor.report import render_badge
+from mcpcheckup.model import HealthScore
+from mcpcheckup.report import render_badge
 
 
 def badge(overall: int, **extra: object) -> dict[str, object]:
@@ -23,7 +23,7 @@ class TestBadge:
     def test_it_is_a_shields_endpoint_document(self) -> None:
         assert badge(96) == {
             "schemaVersion": 1,
-            "label": "mcp-doctor",
+            "label": "mcpcheckup",
             "message": "96",
             "color": "brightgreen",
         }
