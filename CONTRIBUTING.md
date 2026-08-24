@@ -32,7 +32,7 @@ The checks CI runs, which you can run locally:
 uv run pytest                     # the whole suite
 uv run pytest -m "not integration"  # fast subset, no subprocesses, sub-second
 uv run ruff check .
-uv run mypy mcp-toolgauge
+uv run mypy mcp_toolgauge
 ```
 
 No test calls a live model — the eval suite stubs the backend or replays a committed cache.
