@@ -178,7 +178,6 @@ function MatrixRow({
         const cls = ["hm-cell"];
         if (cell) cls.push("filled");
         if (diagonal) cls.push("diag");
-        if (cell && share >= 0.5) cls.push("hot");
 
         return (
           <div

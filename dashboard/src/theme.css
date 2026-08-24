@@ -33,8 +33,16 @@
 
   --ink: #212121;
   --ink-strong: #141414;
+  /*
+   * --grey is the reference's own faded-heading value and it is 3.36:1 on white -- which
+   * clears AA for large text and nothing else. It is therefore ONLY for display type at 24px
+   * and above (`.say .dim`). Anything at caption size uses --muted, which clears 4.5:1 in
+   * both themes. Reaching for --grey on a 12px label is the mistake this note exists to stop.
+   */
   --grey: #8c8c8c;
-  --muted: #737373;
+  /* Tuned against --sunk, not white: --muted labels sit on the grey group headers and the
+     drawer as often as on the page, and #737373 lands at 4.43:1 there. */
+  --muted: #6b6b6b;
 
   /* Two weights of line, and they are not interchangeable: --hair divides content, --rule
      is the dashed blueprint edge. */
@@ -44,7 +52,19 @@
 
   --accent: #379e0e;
   --accent-soft: rgba(55, 158, 14, 0.1);
-  --on-dark: #f5f5f5;
+
+  /*
+   * The inverted surface: the top strip, the live pill, the primary button. This is a PAIR
+   * and it must flip as a pair -- on a light page it is a near-black slab with light text, on
+   * a dark page a light slab with near-black text. It is deliberately NOT --ink-strong, which
+   * is a *text* colour and therefore inverts to white in dark mode; using that as the fill is
+   * how the strip and the live pill once ended up white-on-white.
+   */
+  --invert-bg: #141414;
+  --invert-fg: #f5f5f5;
+
+  /* The resting pill's barely-there fill, which has to darken on light and lighten on dark. */
+  --pill-bg: rgba(20, 20, 20, 0.02);
 
   --band-brightgreen: #379e0e;
   --band-green: #55a026;
@@ -57,11 +77,18 @@
   --sev-warning: #c69214;
   --sev-info: #4a69f6;
 
-  /* Heatmap inks as bare triples, so a cell can set its own alpha from its share. */
+  /*
+   * Heatmap inks as bare triples, so a cell can set its own alpha from its share.
+   *
+   * Each theme's triples are chosen to composite AWAY from that theme's text: over white they
+   * darken as the share rises, over near-black they lighten, and in both cases --ink stays
+   * legible at every alpha the runner can produce. That is why the dark set is deeper rather
+   * than being the light set brightened -- a bright triple over a dark ground makes a mid-tone
+   * cell that neither ink nor its inverse can sit on.
+   */
   --correct: 55, 158, 14;
   --steal: 237, 75, 75;
   --nothing: 150, 150, 150;
-  --on-hot: #141414;
 
   --r-btn: 10px;
   --r-pill: 28px;
@@ -99,7 +126,9 @@
 
     --ink: #ededed;
     --ink-strong: #ffffff;
-    --grey: #7d7d7d;
+    /* #7d7d7d lands at 4.48:1 on --surface -- a hair under AA for the 11-13px captions that
+       use it most, so it is lifted rather than left just short. */
+    --grey: #8f8f8f;
     --muted: #9a9a9a;
 
     --hair: #242424;
@@ -108,7 +137,11 @@
 
     --accent: #4ccc3c;
     --accent-soft: rgba(76, 204, 60, 0.14);
-    --on-dark: #f5f5f5;
+
+    --invert-bg: #ededed;
+    --invert-fg: #141414;
+
+    --pill-bg: rgba(255, 255, 255, 0.03);
 
     --band-brightgreen: #4ccc3c;
     --band-green: #77c33f;
@@ -121,8 +154,8 @@
     --sev-warning: #e0b93d;
     --sev-info: #7a91f8;
 
-    --correct: 76, 204, 60;
-    --steal: 242, 106, 106;
+    --correct: 46, 140, 36;
+    --steal: 176, 62, 62;
     --nothing: 130, 130, 130;
 
     --ring: rgba(255, 255, 255, 0.12) 0 0 0 1px;
@@ -229,6 +262,9 @@ button {
 .tok {
   font-family: var(--mono);
   font-size: 0.92em;
+  /* Ink rather than inherit: a token sits inside greyed prose as often as inked, and at
+     0.92em on its own grey chip the inherited --muted falls under contrast. */
+  color: var(--ink);
   background: var(--sunk-2);
   padding: 0.1em 0.36em;
   border-radius: 4px;
@@ -254,7 +290,7 @@ button {
 .cap {
   font-size: 13px;
   font-weight: 400;
-  color: var(--grey);
+  color: var(--muted);
   letter-spacing: 0;
 }
 
@@ -269,15 +305,15 @@ button {
   padding: 6px 12px;
   border: 0;
   border-radius: var(--r-pill);
-  background: rgba(20, 20, 20, 0.02);
+  background: var(--pill-bg);
   box-shadow: var(--pill-shadow);
   color: var(--ink);
   white-space: nowrap;
 }
 
 .pill.on {
-  background: var(--ink-strong);
-  color: var(--on-dark);
+  background: var(--invert-bg);
+  color: var(--invert-fg);
   box-shadow: none;
 }
 
@@ -299,8 +335,8 @@ button {
   padding: 8px 14px;
   font-size: 13px;
   font-weight: 500;
-  background: var(--ink-strong);
-  color: var(--on-dark);
+  background: var(--invert-bg);
+  color: var(--invert-fg);
 }
 
 .btn.quiet {
