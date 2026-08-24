@@ -9,7 +9,13 @@ name: Release
 # round.
 on:
   push:
-    tags: ["v*"]
+    # Only full version tags (vX.Y.Z) cut a release. The moving major-version tag `v1` --
+    # which the composite Action documents as its pin (README, docs/ci.md) -- is
+    # deliberately excluded: it also matches a bare `v*`, so a broad glob fires a doomed
+    # release run every time `v1` is moved onto a new release, since `1` can never equal
+    # the packaged `X.Y.Z` and the tag-match guard below rightly rejects it.
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 jobs:
   build:
