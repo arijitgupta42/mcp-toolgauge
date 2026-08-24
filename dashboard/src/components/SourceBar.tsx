@@ -53,8 +53,9 @@ export function SourceBar({
       onDragLeave={() => setDragging(false)}
       onDrop={onDrop}
     >
+      <div className="sourcebar-inner">
       <div className="source-row">
-        <div className="demo-switch" role="group" aria-label="Demo report">
+        <div className="segmented" role="group" aria-label="Demo report">
           {(["goodserver", "badserver"] as const).map((name) => {
             const active = source.kind === "demo" && source.demo === name;
             return (
@@ -80,7 +81,7 @@ export function SourceBar({
             onChange={(e) => setUrlValue(e.target.value)}
             aria-label="Report URL"
           />
-          <button className="seg go" type="submit" disabled={busy || !url.trim()}>
+          <button className="btn" type="submit" disabled={busy || !url.trim()}>
             Load
           </button>
         </form>
@@ -89,10 +90,10 @@ export function SourceBar({
       <div className="source-foot">
         <span className="eyebrow">
           {source.kind === "demo"
-            ? `demo · ${source.demo}`
+            ? `Demo · ${source.demo}`
             : source.kind === "url"
-              ? "loaded from url"
-              : `loaded · ${source.name}`}
+              ? "Loaded from URL"
+              : `Loaded · ${source.name}`}
         </span>
         <span className="drop-hint muted">
           Drop a <span className="mono">ci&nbsp;--json</span> file anywhere here. Nothing is
@@ -101,6 +102,7 @@ export function SourceBar({
       </div>
 
       {error && <p className="source-error">{error}</p>}
+      </div>
     </section>
   );
 }

@@ -9,6 +9,10 @@ import { bandVar, bandWord } from "../lib/score";
  *
  * A header, deliberately, not a fourth view. The three tabs below it are the report; this is
  * the thing that stays put above all of them.
+ *
+ * Laid out as a white card in a tray with three inset tiles, which is how mora.com draws a
+ * metric row. The emphasis is carried by the size of the numeral and the band colour, not by
+ * an inverted panel -- there is no dark ground anywhere on that site, and there is none here.
  */
 export function Scorecard({ report }: { report: CiReport }) {
   const { health, server, eval: evaluation } = report;
@@ -18,58 +22,75 @@ export function Scorecard({ report }: { report: CiReport }) {
   const lintOnly = health.eval_score == null;
 
   return (
-    <section className="scorecard" style={{ ["--band" as string]: bandVar(health.overall) }}>
-      <div className="scorecard-hero">
-        <div className="score-numeral">
-          <span className="numeral display tnum">{health.overall}</span>
-          <span className="numeral-max mono">/100</span>
+    <section className="scorecard tray">
+      <div className="scorecard-inner">
+        <div className="scorecard-head">
+          <div style={{ minWidth: 0 }}>
+            <p className="server-name">{server.name ?? "(unnamed server)"}</p>
+            <p className="server-sub mono">
+              {server.version ? `${server.version} · ` : ""}
+              {report.target}
+            </p>
+          </div>
+          <span
+            className="band-pill"
+            style={{ ["--band" as string]: bandVar(health.overall) }}
+          >
+            <span className="dot" />
+            {bandWord(health.overall)}
+          </span>
         </div>
-        <div className="score-meta">
-          <span className="eyebrow on-dark">health &middot; {bandWord(health.overall)}</span>
-          <p className="server-name display">{server.name ?? "(unnamed server)"}</p>
-          <p className="server-sub mono">
-            {server.version ? `${server.version} · ` : ""}
-            {report.target}
-          </p>
-        </div>
-      </div>
 
-      <div className="score-halves">
-        <Half
-          label="lint"
-          value={String(health.lint_score)}
-          detail={`${health.errors ?? 0} err · ${health.warnings ?? 0} warn`}
-          band={bandVar(health.lint_score)}
-        />
-        <Half
-          label="selection"
-          value={lintOnly ? "—" : `${health.eval_score}%`}
-          detail={lintOnly ? "no eval suite" : `${selCorrect} / ${selTotal} prompts`}
-          band={lintOnly ? "var(--faint)" : bandVar(health.eval_score ?? 0)}
-        />
+        <div className="score-tiles">
+          <Tile
+            hero
+            label="Health"
+            value={String(health.overall)}
+            suffix="/100"
+            detail="½ lint · ½ selection"
+            band={bandVar(health.overall)}
+          />
+          <Tile
+            label="Lint"
+            value={String(health.lint_score)}
+            detail={`${health.errors ?? 0} errors · ${health.warnings ?? 0} warnings`}
+            band={bandVar(health.lint_score)}
+          />
+          <Tile
+            label="Selection"
+            value={lintOnly ? "—" : `${health.eval_score}%`}
+            detail={lintOnly ? "no eval suite" : `${selCorrect} of ${selTotal} prompts`}
+            band={lintOnly ? "var(--faint)" : bandVar(health.eval_score ?? 0)}
+          />
+        </div>
       </div>
     </section>
   );
 }
 
-function Half({
+function Tile({
   label,
   value,
+  suffix,
   detail,
   band,
+  hero = false,
 }: {
   label: string;
   value: string;
+  suffix?: string;
   detail: string;
   band: string;
+  hero?: boolean;
 }) {
   return (
-    <div className="half">
-      <span className="eyebrow on-dark">{label}</span>
-      <span className="half-value display tnum" style={{ color: band }}>
+    <div className={hero ? "tile hero" : "tile"} style={{ ["--band" as string]: band }}>
+      <span className="tile-label">{label}</span>
+      <span className="tile-value tnum">
         {value}
+        {suffix && <span className="tile-max">{suffix}</span>}
       </span>
-      <span className="half-detail mono">{detail}</span>
+      <span className="tile-detail">{detail}</span>
     </div>
   );
 }

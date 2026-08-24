@@ -2,83 +2,134 @@
  * The dashboard's design system. One file of tokens and primitives; components carry almost
  * no CSS of their own.
  *
- * The look is lifted from spade.com, read off the live page rather than guessed: a near-black
- * ink with a green cast on warm paper, a single lime accent, a grotesque display face, and --
- * the motif that carries the whole thing -- mono uppercase eyebrow labels with wide tracking.
- * It suits a tool whose other face is a terminal.
+ * The look is lifted from mora.com, read off the live page rather than guessed. Four things
+ * carry it:
+ *
+ *   1. A near-white page (#fafafa) with white cards sitting in light grey "trays" -- a card
+ *      is rarely alone, it is nested one shade inside another.
+ *   2. Hairline *ring* shadows (0 0 0 1px) instead of drop shadows, often with a white inset
+ *      highlight along the top edge. Nothing on the page floats; it is all inlaid.
+ *   3. Generously round corners -- 20px outer, 16px card, 12px inner, 10px control -- and
+ *      pill segmented controls rather than underlined tabs.
+ *   4. Type set tight: a geometric semibold display face over a circular grotesque UI face,
+ *      with -0.01em tracking on everything at text size. Section labels are sentence case at
+ *      normal size, NOT the wide-tracked mono uppercase of the previous design.
  *
  * Colours are defined as tokens on :root and swapped under prefers-color-scheme, so light and
- * dark are one palette seen two ways. The six score bands mirror mcp_toolgauge/health.py exactly
- * (90 / 75 / 60 / 45 / 30) so the dashboard, the badge, and the terminal never disagree about
- * what a number is worth.
+ * dark are one palette seen two ways. Mora itself is light-only; the dark half is the same
+ * system inverted, so a reader on a dark OS is not flash-banged by their own dashboard.
+ *
+ * The six score bands mirror mcp_toolgauge/health.py exactly (90 / 75 / 60 / 45 / 30) so the
+ * dashboard, the badge, and the terminal never disagree about what a number is worth. The
+ * `--band-*` names are asserted by score.test.ts -- retint them freely, but do not rename.
  */
 
 :root {
-  --paper: #fbfbf9;
+  /* Three greys, stacked: the page, the tray a card sits in, the card. */
+  --paper: #fafafa;
   --surface: #ffffff;
-  --surface-2: #f3f3ee;
-  --ink: #090f05;
-  --muted: rgba(9, 15, 5, 0.6);
-  --faint: rgba(9, 15, 5, 0.4);
-  --line: rgba(9, 15, 5, 0.12);
-  --line-strong: rgba(9, 15, 5, 0.22);
+  --tray: #f5f5f5;
+  --tray-2: #ececec;
 
-  --accent: #b2eb76;
-  --accent-strong: #8fd04a;
-  --on-accent: #090f05;
+  --ink: #212121;
+  --ink-strong: #141414;
+  --muted: #737373;
+  --faint: #8c8c8c;
 
-  /* Score bands. Perceptually spaced red -> green; used for the numeral, chips, and bars. */
-  --band-brightgreen: #2ea043;
-  --band-green: #5a9e2f;
-  --band-yellowgreen: #94a626;
-  --band-yellow: #d0a824;
-  --band-orange: #e0843a;
-  --band-red: #db4c43;
+  --line: rgba(0, 0, 0, 0.09);
+  --line-strong: rgba(0, 0, 0, 0.16);
 
-  /* Severity, for the findings view. */
-  --sev-error: #db4c43;
-  --sev-warning: #d0a824;
-  --sev-info: #5b93d6;
+  --accent: #379e0e;
+  --accent-soft: rgba(55, 158, 14, 0.12);
+  --on-accent: #ffffff;
 
-  /* Heatmap ink: the hue stolen traffic is painted in. Alpha is the cell's share. */
-  --steal: 219, 76, 67;
-  --nothing: 120, 128, 116;
+  /* Score bands. Perceptually spaced across Mora's own green -> red semantic pair. */
+  --band-brightgreen: #379e0e;
+  --band-green: #55a026;
+  --band-yellowgreen: #8a9e18;
+  --band-yellow: #c69214;
+  --band-orange: #e0783a;
+  --band-red: #ed4b4b;
 
-  --radius: 12px;
-  --radius-sm: 8px;
-  --shadow: 0 1px 2px rgba(9, 15, 5, 0.06), 0 8px 24px -16px rgba(9, 15, 5, 0.24);
+  /* Severity, for the findings view. Mora's red / amber / blue. */
+  --sev-error: #ed4b4b;
+  --sev-warning: #c69214;
+  --sev-info: #4a69f6;
 
-  --mono: ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas,
-    monospace;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, system-ui,
-    sans-serif;
+  /* Heatmap inks, as bare triples so a cell can set its own alpha from its share. */
+  --correct: 55, 158, 14;
+  --steal: 237, 75, 75;
+  --nothing: 140, 140, 140;
+  /* Text for a heatmap cell whose fill is saturated enough to swamp --ink. Fixed in both
+     themes on purpose: at that end of the ramp the cell is a mid-tone regardless of theme. */
+  --on-hot: #141414;
+
+  /* Radii. Mora nests these: 20 outside 16 outside 12. */
+  --r-lg: 20px;
+  --r: 16px;
+  --r-sm: 12px;
+  --r-btn: 10px;
+
+  /*
+   * Elevation is a ring, not a shadow. `--ring` is the plain hairline; `--inlay` adds the
+   * white top-edge highlight that makes a control look pressed into the page; `--lift` is the
+   * only one with real blur, and it is nearly invisible on purpose.
+   */
+  --ring: 0 0 0 1px rgba(0, 0, 0, 0.09);
+  --inlay: inset 0 1px 1px rgba(255, 255, 255, 0.95), 0 0 0 1px rgba(0, 0, 0, 0.07);
+  --lift: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 8px 12px -4px rgba(16, 12, 12, 0.06);
+  --focus-ring: 0 0 0 1px rgba(0, 0, 0, 0.14), 0 0 0 5px rgba(0, 0, 0, 0.07);
+
+  /*
+   * Mora sets Artific (display) over Basier Circle (UI) over Geist Mono. None of the first two
+   * are freely licensed, so these are the closest Google-hosted equivalents: Plus Jakarta Sans
+   * keeps Artific's geometric semibold weight, Inter stands in for Basier's neutral circular
+   * UI face, and JetBrains Mono is the mono Mora itself falls back to.
+   */
+  --display: "Plus Jakarta Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --sans: Inter, "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica,
+    Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: #0a0e07;
-    --surface: #12160f;
-    --surface-2: #191e14;
-    --ink: #eef1e8;
-    --muted: rgba(238, 241, 232, 0.62);
-    --faint: rgba(238, 241, 232, 0.42);
-    --line: rgba(238, 241, 232, 0.14);
-    --line-strong: rgba(238, 241, 232, 0.26);
+    --paper: #0d0d0d;
+    --surface: #171717;
+    --tray: #1f1f1f;
+    --tray-2: #272727;
 
-    --band-brightgreen: #46c265;
+    --ink: #f2f2f2;
+    --ink-strong: #ffffff;
+    --muted: #a1a1a1;
+    --faint: #7d7d7d;
+
+    --line: rgba(255, 255, 255, 0.1);
+    --line-strong: rgba(255, 255, 255, 0.2);
+
+    --accent: #4ccc3c;
+    --accent-soft: rgba(76, 204, 60, 0.16);
+    --on-accent: #0d0d0d;
+
+    --band-brightgreen: #4ccc3c;
     --band-green: #77c33f;
-    --band-yellowgreen: #b6cf3a;
-    --band-yellow: #e8c53d;
+    --band-yellowgreen: #b2c53a;
+    --band-yellow: #e0b93d;
     --band-orange: #ef9a4e;
-    --band-red: #ef5f55;
+    --band-red: #f26a6a;
 
-    --sev-error: #ef5f55;
-    --sev-warning: #e8c53d;
-    --sev-info: #79aef0;
+    --sev-error: #f26a6a;
+    --sev-warning: #e0b93d;
+    --sev-info: #7a91f8;
 
-    --steal: 239, 95, 85;
-    --nothing: 150, 158, 144;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -16px rgba(0, 0, 0, 0.7);
+    --correct: 76, 204, 60;
+    --steal: 242, 106, 106;
+    --nothing: 145, 145, 145;
+
+    --ring: 0 0 0 1px rgba(255, 255, 255, 0.1);
+    --inlay: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    --lift: 0 0 0 1px rgba(255, 255, 255, 0.09), 0 8px 12px -4px rgba(0, 0, 0, 0.5);
+    --focus-ring: 0 0 0 1px rgba(255, 255, 255, 0.2), 0 0 0 5px rgba(255, 255, 255, 0.08);
   }
 }
 
@@ -95,8 +146,10 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--sans);
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 20px;
+  /* Mora tracks everything at text size in by a hair -- 14px/-0.14px, 16px/-0.16px. */
+  letter-spacing: -0.01em;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   font-variant-numeric: tabular-nums;
@@ -108,24 +161,29 @@ a {
 
 button {
   font-family: inherit;
+  letter-spacing: inherit;
   cursor: pointer;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 /* ---- Type primitives -------------------------------------------------------------- */
 
+/*
+ * The section label. Mora writes these in sentence case at body size and medium weight --
+ * it is a *name*, not a rubber stamp. (The previous design's wide-tracked mono uppercase is
+ * the single loudest thing that read as "not Mora", so it is gone everywhere.)
+ */
 .eyebrow {
-  font-family: var(--mono);
-  font-size: 11px;
+  font-family: var(--sans);
+  font-size: 14px;
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.display {
-  font-weight: 560;
-  letter-spacing: -0.02em;
-  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--ink);
 }
 
 .tnum {
@@ -135,35 +193,55 @@ button {
 
 .mono {
   font-family: var(--mono);
+  letter-spacing: -0.01em;
 }
 
 /* ---- Layout ----------------------------------------------------------------------- */
 
 .shell {
-  max-width: 1040px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 0 24px 96px;
+  padding: 0 24px 120px;
 }
 
+/* A white card, inlaid rather than floating. */
 .card {
   background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  border-radius: var(--r);
+  box-shadow: var(--ring);
 }
 
+/*
+ * The tray: the light-grey shell a white card sits inside, with just enough padding to show a
+ * sliver of itself around the edge. This nesting is the most recognisable thing on mora.com,
+ * so it is a primitive rather than a one-off.
+ */
+.tray {
+  background: var(--tray);
+  border-radius: var(--r-lg);
+  padding: 4px;
+}
+
+/*
+ * A section heading, two-tone: the first phrase in ink, the rest in grey. Straight off Mora,
+ * where every section title is a sentence that fades out halfway through.
+ */
 .section-label {
-  display: flex;
-  align-items: baseline;
-  gap: 12px;
-  margin: 40px 0 16px;
+  margin: 44px 0 18px;
 }
 
 .section-label h2 {
-  font-size: 13px;
+  font-family: var(--display);
+  font-size: 26px;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
   margin: 0;
+  color: var(--ink);
+}
+
+.section-label h2 .rest {
+  color: var(--faint);
 }
 
 /* ---- Chips ------------------------------------------------------------------------ */
@@ -172,12 +250,15 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  padding: 3px 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  padding: 5px 11px;
   border-radius: 999px;
-  border: 1px solid var(--line-strong);
+  border: 0;
+  background: var(--surface);
+  box-shadow: var(--ring);
   white-space: nowrap;
 }
 
