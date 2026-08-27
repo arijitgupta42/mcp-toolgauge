@@ -12,12 +12,12 @@ into a single score you can gate CI on (`ci`).
 
 ![mcp-toolgauge finds a near-duplicate description, measures the tool-selection confusion it causes, and rolls it into one health score](https://raw.githubusercontent.com/arijitgupta42/mcp-toolgauge/main/docs/assets/demo.svg)
 
-All three commands are read-only — they connect to your server, list its tools, and
+All three commands are read-only: they connect to your server, list its tools, and
 disconnect. None of them ever calls one of your tools for real.
 
 ## Install
 
-No install needed — [`uvx`](https://docs.astral.sh/uv/) runs it directly:
+No install needed. [`uvx`](https://docs.astral.sh/uv/) runs it directly:
 
 ```bash
 uvx mcp-toolgauge lint ./your-server
@@ -36,7 +36,7 @@ The rest of this README uses the bare `mcp-toolgauge` command; prefix any of the
 
 ## Quickstart
 
-Point any command at a directory, a script, or a URL — it finds your server the same way
+Point any command at a directory, a script, or a URL. It finds your server the same way
 an MCP client would (via `.mcp.json`, or a conventional entrypoint like `server.py`).
 
 ```bash
@@ -132,7 +132,7 @@ ticket2              12%  1/8  search_users 88%
 search_users        100%  4/4
 ```
 
-Cases are written once by `--init`, then committed and edited by hand — a run never
+Cases are written once by `--init`, then committed and edited by hand. A run never
 regenerates them silently, so scores stay comparable across runs. Every model answer is
 cached by `hash(model, prompt, tool_digest)`, so re-running an unchanged suite makes no
 network calls.
@@ -175,7 +175,7 @@ eval_score  = round(selection_accuracy * 100)
 overall     = round(0.5*lint_score + 0.5*eval_score)
 ```
 
-A server with no eval suite is scored on lint alone. `ci` never calls a model — the eval
+A server with no eval suite is scored on lint alone. `ci` never calls a model: the eval
 half always replays the committed cache, so it's reproducible in CI. See
 [docs/ci.md](docs/ci.md) for the full reasoning.
 
@@ -222,7 +222,7 @@ npm run dev      # http://localhost:5173
 npm run build    # static files in dashboard/dist/
 ```
 
-It reads a `mcp-toolgauge ci --json` report — a bundled demo, `?report=<raw-url>`, or a
+It reads a `mcp-toolgauge ci --json` report: a bundled demo, `?report=<raw-url>`, or a
 file dropped on the page. Keep a history file across runs to get the trend chart:
 
 ```bash
@@ -242,8 +242,8 @@ mcp-toolgauge lint . --command "node dist/server.js"   # say it yourself
 
 ## Try it without a server of your own
 
-The repo ships two fixture servers with the same API — one written carefully, one
-carelessly:
+The repo ships two fixture servers with the same API: one written carefully, one
+carelessly.
 
 ```bash
 uv run mcp-toolgauge lint tests/fixtures/goodserver     # 0 findings
@@ -267,7 +267,7 @@ uv run ruff check .
 uv run mypy mcp_toolgauge
 ```
 
-No test calls a live model — the eval suite stubs the backend or replays a recorded
+No test calls a live model. The eval suite stubs the backend or replays a recorded
 cache.
 
 ## Contributing
@@ -278,4 +278,4 @@ are all welcome.
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
