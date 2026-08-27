@@ -5,348 +5,55 @@
 [![CI](https://github.com/arijitgupta42/mcp-toolgauge/actions/workflows/ci.yml/badge.svg)](https://github.com/arijitgupta42/mcp-toolgauge/actions/workflows/ci.yml)
 [![licence: MIT](https://img.shields.io/badge/licence-MIT-blue)](LICENSE)
 
-**Find out why your MCP server's tools don't get called.**
+`mcp-toolgauge` audits an MCP server and helps answer why an LLM isn't calling its tools
+the way you'd expect. It checks your tool names, descriptions, and schemas for problems
+(`lint`), measures whether a model actually picks the right tool (`eval`), and rolls both
+into a single score you can gate CI on (`ci`).
 
 ![mcp-toolgauge finds a near-duplicate description, measures the tool-selection confusion it causes, and rolls it into one health score](https://raw.githubusercontent.com/arijitgupta42/mcp-toolgauge/main/docs/assets/demo.svg)
 
-`mcp-toolgauge` audits an MCP server three ways — a static **linter** for names, descriptions
-and schemas; a dynamic **evaluator** that measures whether a model actually picks the right
-tool; and a **CI gate** with a score badge — to answer the one question a server author keeps
-hitting: *why don't my tools get selected?*
+All three commands are read-only: they connect to your server, list its tools, and
+disconnect. None of them ever calls one of your tools for real.
+
+## Install
+
+No install needed. [`uvx`](https://docs.astral.sh/uv/) runs it directly:
+
+```bash
+uvx mcp-toolgauge lint ./your-server
+```
+
+Or install it properly:
+
+```bash
+uv tool install mcp-toolgauge
+# or
+pipx install mcp-toolgauge
+```
+
+The rest of this README uses the bare `mcp-toolgauge` command; prefix any of them with
+`uvx` if you didn't install it.
 
 ## Quickstart
 
-No install step — [`uvx`](https://docs.astral.sh/uv/) fetches and runs it:
+Point any command at a directory, a script, or a URL. It finds your server the same way
+an MCP client would (via `.mcp.json`, or a conventional entrypoint like `server.py`).
 
 ```bash
-uvx mcp-toolgauge lint ./your-server    # static rules, offline, no API key, free
-uvx mcp-toolgauge eval ./your-server    # does a model actually pick the right tool?
-uvx mcp-toolgauge ci   ./your-server    # roll both into one 0–100 score to gate on
+mcp-toolgauge inspect ./your-server   # list its tools
+mcp-toolgauge lint ./your-server      # check names, descriptions, schemas
+mcp-toolgauge eval ./your-server      # does a model actually pick the right tool?
+mcp-toolgauge ci ./your-server        # one 0-100 score, for gating a build
 ```
 
-Point any of them at a directory, a script, or a URL — it finds your server the way an MCP
-client does. Every command is read-only: it lists your tools and disconnects, and never
-invokes one of them. Prefer a persistent install? `uv tool install mcp-toolgauge`, or
-`pipx install mcp-toolgauge`. The examples below write it as the bare `mcp-toolgauge` command;
-`uvx mcp-toolgauge` in front of any of them works the same with nothing installed.
+## inspect
 
-> **Status.** All six milestones are built: `inspect`, `lint` against 22 rules, `eval` for
-> tool-selection accuracy with a confusion matrix, a composite `ci` health score with a badge
-> and a GitHub Action, and a dashboard. The badge above is mcp-toolgauge scoring its own
-> `goodserver` fixture — it dogfoods itself. This README describes only what works today.
-
-## Lint
+Lists the tools a server exposes, along with their parameter count and annotations
+(`readOnlyHint`, `destructiveHint`, `idempotentHint`):
 
 ```bash
-mcp-toolgauge lint ./path/to/your/server
+mcp-toolgauge inspect ./your-server
 ```
-
-```
-acme-directory 0.4.2
-python server.py
-
-(server)
-  MCP004  warning  Tool names mix conventions: 4 snake_case, 1 camelCase. The odd
-                   ones out are doStuff.
-
-  [... one tool trimmed ...]
-
-search_users
-  MCP003  warning  search_users promises user in its name, but the description never
-                   mentions it.
-  MCP013  error    search_users and search_orgs share 78% of their meaningful words
-                   -- their descriptions are near-identical.
-                   Rewrite one of them around what makes it different. If
-                   search_users and search_orgs really do the same thing, delete one;
-                   if they do not, the first sentence of each should name the thing
-                   only that one handles. Two descriptions this close are a coin flip
-                   at selection time, and the model has no way to know it guessed
-                   wrong.
-  MCP014  warning  search_users overlaps with search_orgs, and its description never
-                   says which to prefer.
-  MCP020  warning  search_users.limit has no description.
-  MCP020  warning  search_users.query has no description.
-  MCP041  warning  search_users reads as read-only but declares no readOnlyHint.
-
-  [... eight tools trimmed ...]
-
-10 tools, 74 findings   5 errors, 53 warnings, 16 info   16 hidden, -v to show
-Most common: MCP020 (25), MCP025 (10), MCP042 (6)
-```
-
-That `MCP013` line is the whole point. Two sibling tools whose descriptions are near-copies
-are a coin flip at selection time, and it is a coin flip nobody observes: the call
-succeeds, returns plausible data, and the wrong tool quietly takes a share of the traffic
-meant for its sibling.
-
-**Every rule is deterministic and offline.** No model is called, nothing is sent anywhere,
-and nothing is charged — which is what makes this runnable on every pull request. Like
-`inspect`, it never invokes one of your tools.
-
-### What it checks
-
-22 rules in five families. Each has [a page](docs/rules/README.md) explaining *why it matters*, with
-a before and after.
-
-| | |
-|---|---|
-| **[Naming](docs/rules/README.md#naming)** | Near-duplicate names, names built only from filler, names whose subject never appears in the description, mixed conventions |
-| **[Descriptions](docs/rules/README.md#description)** | Missing, fragmentary, restating the name, near-identical to a sibling's, overlapping with no guidance on which to prefer, placeholder text |
-| **[Parameters](docs/rules/README.md#parameters)** | Undocumented, restating their own name, free strings that should be enums, dates and emails with no format, untyped objects, no example values |
-| **[Annotations](docs/rules/README.md#annotations)** | Destructive tools with no `destructiveHint`, reads with no `readOnlyHint`, writes with no `idempotentHint` |
-| **[Budget](docs/rules/README.md#budget)** | A single tool definition too large, a tool surface too big in aggregate, more tools than a model selects among reliably |
-
-### Options
-
-```bash
-mcp-toolgauge lint . -v                      # info findings, and every suggestion
-mcp-toolgauge lint . --fail-on warning       # stricter gate
-mcp-toolgauge lint . --fail-on off           # report without ever failing
-mcp-toolgauge lint . --json                  # machine-readable, stable key order
-mcp-toolgauge lint . --sarif > results.sarif # for GitHub code scanning
-mcp-toolgauge lint . --no-config             # ignore any mcp-toolgauge.toml on disk
-```
-
-Exit codes: `0` clean, `1` a finding reached `--fail-on` (default `error`), `2` usage
-error, `3` could not reach the server.
-
-### Configuration
-
-Optional. Put an `mcp-toolgauge.toml` next to your server, or a `[tool.mcp-toolgauge]` section in
-your `pyproject.toml`:
-
-```toml
-[lint]
-fail_on = "error"
-
-[lint.rules]
-MCP025 = "off"      # we do not want example values in descriptions
-MCP041 = "error"    # annotations are not optional on this server
-```
-
-A typo in a rule ID is a usage error rather than a silent no-op, because a rule you think
-you turned off is worse than one you never touched.
-
-## Eval
-
-Lint tells you two descriptions are near-identical. Eval tells you what that costs.
-
-```bash
-mcp-toolgauge eval ./path/to/your/server --init   # draft cases, then edit and commit them
-mcp-toolgauge eval ./path/to/your/server          # run them
-```
-
-It puts your real tool definitions in front of a real model at temperature 0 — your names,
-your descriptions, your schemas, unedited — and counts where the traffic goes.
-
-```
-acme-directory 0.4.2
-python server.py
-openrouter/nvidia/nemotron-3.5-lightning:free   59 cases   59 from cache   free
-
-Selection accuracy     55%  31/56
-  positives            60%  24/40
-  siblings             44%   7/16
-Abstention             33%    1/3
-Argument validity      98%  50/51
-
-tool                 hit       went instead to
-doStuff               0%  0/4  (nothing) 100%
-run                   0%  0/4  (nothing) 50%, search 50%
-ticket2              12%  1/8  search_users 88%
-delete_all_tickets   62%  5/8  search_orgs 38%
-ticket               62%  5/8  (nothing) 12%, search_users 12%, ticket2 12%
-search_orgs          67%  4/6  search 33%
-search_users         67%  4/6  search 33%
-get_data            100%  4/4
-search              100%  4/4
-update              100%  4/4
-
-search_users captures 88% of the prompts meant for ticket2.
-search captures 50% of the prompts meant for run.
-search_orgs captures 38% of the prompts meant for delete_all_tickets.
-```
-
-Those last lines are the point. `ticket2` is described as "Creates a ticket." — five words —
-so almost every request meant for it is answered by the *search* tool instead. Nobody would
-ever see that from the outside: the call succeeds, returns plausible data, and the ticket is
-never filed.
-
-`run` and `doStuff` score zero. One has no description, the other says
-`TODO: document this properly`. An undocumented tool is not a tool with a poor hit rate —
-it is a tool nothing calls at all.
-
-### The two fixture servers, measured
-
-Same directory-and-ticketing API. One written carefully, one carelessly.
-
-| | goodserver | badserver |
-|---|---|---|
-| **Selection accuracy** | **92%** | **55%** |
-| positives | 91% | 60% |
-| siblings — the confusable pairs | **100%** | **44%** |
-| abstention | 33% | 33% |
-| argument validity | 100% | 98% |
-
-The sibling row is the one to read. Those are the tool pairs the linter flags as
-confusable, and the difference between a description that says *"use `search_users` instead
-when…"* and one that does not is the difference between 100% and a coin flip.
-
-Reproduce both, offline and free, from the recorded runs in this repo:
-
-```bash
-uv run mcp-toolgauge eval tests/fixtures/goodserver --offline
-uv run mcp-toolgauge eval tests/fixtures/badserver --offline
-```
-
-### How it works
-
-Three kinds of case, scored separately and never averaged together:
-
-| Kind | Asks |
-|---|---|
-| `positive` | Can this tool be found at all? |
-| `sibling` | Can it be told apart from the tool it looks like? |
-| `abstain` | Does your server know when to stay out of the way? |
-
-The sibling cases are aimed at the pairs `MCP013` and `MCP014` flag, using the same overlap
-measure — so a lint warning and an eval failure are two levels of proof about one defect.
-
-**Cases are a committed artifact.** `--init` drafts a suite once; you edit it; every run
-afterwards reads it unchanged. It refuses to overwrite without `--force`, because a suite
-that quietly regenerated itself would make two runs incomparable. **Read the drafted abstain
-cases first** — they are the ones a generator most often gets wrong.
-
-**Every answer is cached**, keyed by `hash(model, prompt, tool digest)`. A second run over an
-unchanged suite makes zero network calls and costs nothing. Commit the cache and CI replays
-the whole thing offline, forever — which is exactly what this repo does.
-
-The full methodology, including what the number does *not* tell you, is in
-[docs/eval.md](docs/eval.md).
-
-### Options
-
-```bash
-mcp-toolgauge eval . --model openai/gpt-4.1-mini   # anything LiteLLM can reach
-mcp-toolgauge eval . --offline                     # replay a recorded cache; no key needed
-mcp-toolgauge eval . --min-accuracy 80             # exit 1 below this
-mcp-toolgauge eval . --max-cost 0.50               # stop once it has cost this much
-mcp-toolgauge eval . --pace 3                      # wait between calls on a rate-limited tier
-mcp-toolgauge eval . -v                            # every failing case, with its prompt
-mcp-toolgauge eval . --json                        # the full confusion matrix
-```
-
-Calling a model needs the `eval` extra; `--offline` does not.
-
-```bash
-uv pip install 'mcp-toolgauge[eval]'
-```
-
-The default model is a free one on OpenRouter, so a first run costs nothing beyond an
-`OPENROUTER_API_KEY`. Free models are slow and heavily rate-limited — use `--pace`, or point
-`--model` at something you pay for.
-
-## CI, health score, and badge
-
-Lint says what is wrong; eval says what it costs. `ci` rolls both into one 0–100 number you
-can gate a build on and put on a badge.
-
-```bash
-mcp-toolgauge ci ./path/to/your/server --min-score 80
-```
-
-```
-acme-directory 1.0.0
-python server.py
-
-Health        96 / 100
-  lint       100   0 errors, 0 warnings
-  selection  92%   37 of 40 prompts
-```
-
-The number is `lint_score` and `eval_score` weighted equally, and it never appears without
-both halves beside it:
-
-```
-lint_score  = clamp(100 − 10·errors − 3·warnings, 0, 100)   # info is advisory
-eval_score  = round(selection_accuracy × 100)               # positives + siblings only
-overall     = round(0.5·lint_score + 0.5·eval_score)
-```
-
-The eval half is **selection accuracy alone** — abstention and argument validity are reported
-but never folded in, so a server cannot raise its badge by editing its own test suite. A
-server with no eval suite is scored on lint alone, so the badge works on day one. The full
-reasoning, and what the number does *not* tell you, is in [docs/ci.md](docs/ci.md).
-
-The eval half is replayed from the committed cache, so `ci` calls no model — it is
-reproducible and free. Exit codes: `0` at or above `--min-score`, `1` below it, `2` usage
-error, `3` could not reach the server.
-
-### Badge
-
-```bash
-mcp-toolgauge ci . --badge badge.json
-```
-
-Writes a [shields.io endpoint](https://shields.io/badges/endpoint-badge) document. Publish it
-— a raw GitHub URL is enough — and point a badge at it:
-
-```markdown
-![mcp-toolgauge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/OWNER/REPO/main/badge.json)
-```
-
-### GitHub Action
-
-The composite Action scores your server, fails the build under a threshold, writes the badge,
-and posts a sticky pull-request comment showing the delta against your base branch.
-
-```yaml
-- uses: actions/checkout@v4
-# install your server's own dependencies here, so mcp-toolgauge can start it
-- uses: arijitgupta42/mcp-toolgauge@v1
-  with:
-    target: .
-    min-score: "80"
-```
-
-`@v1` follows the latest `v1.x` release; pin an exact tag like `@v0.1.0` to freeze it. See
-[docs/ci.md](docs/ci.md) for the full input list.
-
-## Dashboard
-
-Two of the tool's best outputs do not fit a terminal — the confusion matrix is a *matrix*,
-and a health score is only interesting as a *trajectory*. The dashboard is where those live:
-three views, findings, the confusion heatmap, and score history, over a static single-page app
-with no backend and nothing uploaded.
-
-```bash
-cd dashboard
-npm install
-npm run dev      # http://localhost:5173, opens on the two fixture servers
-npm run build    # static files in dashboard/dist/, host anywhere
-```
-
-It reads a `mcp-toolgauge ci --json` report — the bundled demos, a `?report=<raw-url>`, or a file
-you drop on the page. Keep a history file across runs and the third view draws your score over
-time:
-
-```bash
-mcp-toolgauge ci ./your/server --history history.json --json > report.json
-```
-
-The full tour, including how to publish your own, is in [docs/dashboard.md](docs/dashboard.md).
-A GitHub Pages workflow (`.github/workflows/pages.yml`) builds and publishes it on every push
-to `main`.
-
-## Inspect
-
-```bash
-mcp-toolgauge inspect ./path/to/your/server
-```
-
-Point it at a directory and it finds your server the way your MCP client does — by reading
-`.mcp.json` (or `mcp.json`, `.vscode/mcp.json`, `claude_desktop_config.json`). No manifest?
-It falls back to a conventional entrypoint like `server.py`. Either way, no flags needed:
 
 ```
 acme-directory 1.0.0  protocol 2026-07-28
@@ -354,24 +61,177 @@ python server.py
 
 tool                   description                                    params  R D I
 search_users           Find individual people in the staff direct...       3  R d I
-search_organizations   Find organizations -- companies, teams, an...       3  R d I
-get_user_profile       Retrieve the full profile for one known pe...       1  R d I
 create_support_ticket  Open a new support ticket on behalf of a u...       4  r d i
-update_ticket_status   Move an existing support ticket to a new s...       3  r d i
-list_ticket_comments   Read the comment thread on one support tic...       2  R d I
-archive_ticket         Permanently archive a support ticket, remo...       2  r D I
-export_directory_csv   Export one organization's slice of the sta...       2  R d I
 
-8 tools   -v for parameter detail
+2 tools   -v for parameter detail
 ```
 
-The `R D I` column is `readOnlyHint`, `destructiveHint`, `idempotentHint`. Uppercase means
-the server declared it true, lowercase false, and `-` means it said nothing at all — which
-is a different problem, and one `lint` has opinions about.
+## lint
 
-### Other ways to point it at a server
+Static, offline checks against 22 rules covering naming, descriptions, parameters,
+annotations, and tool-surface size. No model is called and nothing leaves your machine.
 
-Both commands take the same target flags:
+```bash
+mcp-toolgauge lint ./your-server
+```
+
+```
+acme-directory 0.4.2
+python server.py
+
+search_users
+  MCP013  error    search_users and search_orgs share 78% of their meaningful words
+                   -- their descriptions are near-identical.
+  MCP020  warning  search_users.limit has no description.
+
+10 tools, 74 findings   5 errors, 53 warnings, 16 info
+```
+
+Each rule has a docs page under [docs/rules/](docs/rules/README.md) explaining why it
+matters, with a before/after fix.
+
+Useful flags:
+
+```bash
+mcp-toolgauge lint . -v                      # show info findings and suggestions
+mcp-toolgauge lint . --fail-on warning       # fail the build on warnings too
+mcp-toolgauge lint . --json                  # machine-readable output
+mcp-toolgauge lint . --sarif > results.sarif # for GitHub code scanning
+```
+
+You can configure it via `mcp-toolgauge.toml` (or `[tool.mcp-toolgauge]` in
+`pyproject.toml`):
+
+```toml
+[lint]
+fail_on = "error"
+
+[lint.rules]
+MCP025 = "off"
+```
+
+## eval
+
+Puts your real tool definitions in front of a real model and checks whether it calls the
+right one:
+
+```bash
+mcp-toolgauge eval ./your-server --init   # generate a suite of test cases, then edit it
+mcp-toolgauge eval ./your-server          # run it
+```
+
+```
+Selection accuracy     55%  31/56
+  positives            60%  24/40
+  siblings             44%   7/16
+Abstention             33%    1/3
+Argument validity      98%  50/51
+
+tool                 hit       went instead to
+ticket2              12%  1/8  search_users 88%
+search_users        100%  4/4
+```
+
+Cases are written once by `--init`, then committed and edited by hand. A run never
+regenerates them silently, so scores stay comparable across runs. Every model answer is
+cached by `hash(model, prompt, tool_digest)`, so re-running an unchanged suite makes no
+network calls.
+
+Useful flags:
+
+```bash
+mcp-toolgauge eval . --model openai/gpt-4.1-mini   # any model LiteLLM supports
+mcp-toolgauge eval . --offline                     # replay the cache, no API key needed
+mcp-toolgauge eval . --min-accuracy 80             # exit 1 below this
+mcp-toolgauge eval . --json                        # full confusion matrix
+```
+
+Calling a live model needs the `eval` extra:
+
+```bash
+uv pip install 'mcp-toolgauge[eval]'
+```
+
+The default model is free on OpenRouter, so a first run only needs an
+`OPENROUTER_API_KEY`.
+
+## ci
+
+Combines lint and eval into one 0–100 health score:
+
+```bash
+mcp-toolgauge ci ./your-server --min-score 80
+```
+
+```
+Health        96 / 100
+  lint       100   0 errors, 0 warnings
+  selection  92%   37 of 40 prompts
+```
+
+```
+lint_score  = clamp(100 - 10*errors - 3*warnings, 0, 100)
+eval_score  = round(selection_accuracy * 100)
+overall     = round(0.5*lint_score + 0.5*eval_score)
+```
+
+A server with no eval suite is scored on lint alone. `ci` never calls a model: the eval
+half always replays the committed cache, so it's reproducible in CI. See
+[docs/ci.md](docs/ci.md) for the full reasoning.
+
+Exit codes across all three commands: `0` pass, `1` threshold failure, `2` usage error,
+`3` couldn't reach the server.
+
+### Badge
+
+```bash
+mcp-toolgauge ci . --badge badge.json
+```
+
+Writes a [shields.io endpoint](https://shields.io/badges/endpoint-badge) file. Publish it
+and point a badge at it:
+
+```markdown
+![mcp-toolgauge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/OWNER/REPO/main/badge.json)
+```
+
+### GitHub Action
+
+```yaml
+- uses: actions/checkout@v4
+# install your server's own dependencies first, so mcp-toolgauge can start it
+- uses: arijitgupta42/mcp-toolgauge@v1
+  with:
+    target: .
+    min-score: "80"
+```
+
+Fails the build under `min-score`, writes the badge, and posts a pull-request comment
+with the score delta against your base branch. See [docs/ci.md](docs/ci.md) for every
+input.
+
+## Dashboard
+
+A static single-page app for the two things a terminal doesn't show well: the confusion
+matrix and score history over time.
+
+```bash
+cd dashboard
+npm install
+npm run dev      # http://localhost:5173
+npm run build    # static files in dashboard/dist/
+```
+
+It reads a `mcp-toolgauge ci --json` report: a bundled demo, `?report=<raw-url>`, or a
+file dropped on the page. Keep a history file across runs to get the trend chart:
+
+```bash
+mcp-toolgauge ci ./your-server --history history.json --json > report.json
+```
+
+More detail, including how to publish your own, is in [docs/dashboard.md](docs/dashboard.md).
+
+## Other ways to point it at a server
 
 ```bash
 mcp-toolgauge lint https://example.com/mcp             # a running server over HTTP
@@ -380,49 +240,42 @@ mcp-toolgauge lint . --server backend                  # pick one from a multi-s
 mcp-toolgauge lint . --command "node dist/server.js"   # say it yourself
 ```
 
-**Both commands are read-only.** They connect, list tools, and disconnect. Neither ever
-calls one of your tools.
-
 ## Try it without a server of your own
 
-The repo ships two fixture servers with the same API — one written well, one written
-carelessly:
+The repo ships two fixture servers with the same API: one written carefully, one
+carelessly.
 
 ```bash
-uv run mcp-toolgauge lint tests/fixtures/goodserver
-uv run mcp-toolgauge lint tests/fixtures/badserver
+uv run mcp-toolgauge lint tests/fixtures/goodserver     # 0 findings
+uv run mcp-toolgauge lint tests/fixtures/badserver      # 74 findings
 
-uv run mcp-toolgauge eval tests/fixtures/goodserver --offline
-uv run mcp-toolgauge eval tests/fixtures/badserver --offline
+uv run mcp-toolgauge eval tests/fixtures/goodserver --offline   # 92%
+uv run mcp-toolgauge eval tests/fixtures/badserver --offline    # 55%
 
-uv run mcp-toolgauge ci tests/fixtures/goodserver
-uv run mcp-toolgauge ci tests/fixtures/badserver
+uv run mcp-toolgauge ci tests/fixtures/goodserver   # 96 / 100
+uv run mcp-toolgauge ci tests/fixtures/badserver    # 28 / 100
 ```
-
-The first lints clean; the second produces 74 findings. The eval runs need no API key —
-they replay recorded answers — and score 92% against 55%. Rolled together, the two servers
-score **96** and **28** out of 100. The difference between those two servers is the entire
-point of this project.
 
 ## Development
 
 ```bash
-uv sync                  # base install; enough for everything except calling a model
+uv sync                  # base install
 uv sync --extra eval     # adds LiteLLM, for `eval` without --offline
 uv run pytest
+uv run pytest -m "not integration"   # skip tests that spawn real servers
 uv run ruff check .
 uv run mypy mcp_toolgauge
 ```
 
-Skip the tests that spawn real servers with `uv run pytest -m "not integration"`. No test
-calls a model: the eval suite stubs the backend or replays the recorded caches.
+No test calls a live model. The eval suite stubs the backend or replays a recorded
+cache.
 
 ## Contributing
 
-Ideas, rule proposals, and false-positive reports are all welcome — see
-[CONTRIBUTING.md](CONTRIBUTING.md), and the [`good first issue`](https://github.com/arijitgupta42/mcp-toolgauge/labels/good%20first%20issue)
-label for a place to start.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Rule proposals, false-positive reports, and
+[`good first issue`](https://github.com/arijitgupta42/mcp-toolgauge/labels/good%20first%20issue)s
+are all welcome.
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE).
+MIT. See [LICENSE](LICENSE).
