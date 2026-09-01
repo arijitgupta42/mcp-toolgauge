@@ -276,6 +276,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md). Rule proposals, false-positive reports, 
 [`good first issue`](https://github.com/arijitgupta42/mcp-toolgauge/labels/good%20first%20issue)s
 are all welcome.
 
+## Acknowledgements
+
+Built with [Claude Code](https://claude.com/claude-code) by [Anthropic](https://anthropic.com)
+
 ## Licence
 
 MIT. See [LICENSE](LICENSE).
